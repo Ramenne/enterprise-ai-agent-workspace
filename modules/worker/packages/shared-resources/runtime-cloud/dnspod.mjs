@@ -1,0 +1,24 @@
+import {requireThat} from './core.mjs';
+import {tencentRequest} from './tencent.mjs';
+const actions=['dnspod.domain.describe','dnspod.records.describe','dnspod.record.modify','cloud.session.issue','cloud.session.status','cloud.session.stop'];
+const record=r=>({record_id:r.RecordId,name:r.Name,type:r.Type,value:r.Value,ttl:r.TTL,status:r.Status,line:r.Line,line_id:r.LineId});
+export class DNSPodAdapter{
+ constructor(sessions,invoke=tencentRequest){this.sessions=sessions;this.invoke=invoke}
+ validate(r,t){requireThat(t.kind==='dnspod'&&actions.includes(r.action)&&typeof t.domain==='string'&&Number.isSafeInteger(t.domain_id)&&/^\d+$/.test(t.account_id),'registered_DNS_target_required');requireThat(r.operation===((r.action.endsWith('describe')||r.action==='cloud.session.status')?'read':'write'),'operation_mismatch');
+  const allowed=r.action==='dnspod.records.describe'?['offset','limit','session_id']:r.action==='dnspod.record.modify'?['record_id','value','expected_value','session_id']:r.action==='cloud.session.issue'?['duration_seconds']:['session_id'];requireThat(Object.keys(r.parameters).every(k=>allowed.includes(k)),'unregistered_DNS_parameters');
+  if(r.action==='dnspod.records.describe')requireThat((r.parameters.offset===undefined||Number.isSafeInteger(r.parameters.offset)&&r.parameters.offset>=0)&&(r.parameters.limit===undefined||Number.isSafeInteger(r.parameters.limit)&&r.parameters.limit>=1&&r.parameters.limit<=100),'bounded_DNS_pagination_required');
+  if(r.action==='dnspod.record.modify'){const scope=t.records?.find(x=>x.record_id===r.parameters.record_id);requireThat(scope&&['A','AAAA','CNAME','TXT'].includes(scope.type)&&typeof r.parameters.value==='string'&&r.parameters.value.length<=4096&&typeof r.parameters.expected_value==='string','registered_record_and_observation_required');requireThat(!scope.allowed_values||scope.allowed_values.includes(r.parameters.value),'registered_record_value_scope_denied')}
+  if(['cloud.session.status','cloud.session.stop'].includes(r.action))this.sessions.path(r.parameters.session_id);
+ }
+ async execute(r,t,c){
+  if(r.action==='cloud.session.issue'){const row=await this.sessions.issue(t,c,r.parameters.duration_seconds??300);await c.check('final');return {state:'executed',effect_id:row.provider_request_id,result:this.sessions.safe(row)}}
+  if(r.action==='cloud.session.status'){const row=await this.sessions.row(r.parameters.session_id,t,c.identity);await c.check('effect');await c.check('final');return {state:'read',result:{...this.sessions.safe(row),state:row.state==='active'&&Date.parse(row.deadline)<=Date.now()?'expired':row.state}}}
+  if(r.action==='cloud.session.stop'){await c.check('effect');c.markEffectStarted?.();const result=await this.sessions.stop(r.parameters.session_id,t,c);await c.check('final');return {state:'executed',effect_id:r.parameters.session_id,result}}
+  const secret=await this.sessions.credentials(t,{...c,sessionId:r.parameters.session_id});const check=async()=>{await c.check('effect');await this.sessions.assertActive(r.parameters.session_id,t,c.identity)};let result;
+  if(r.action==='dnspod.record.modify'){
+   const scope=t.records.find(x=>x.record_id===r.parameters.record_id);await check();const observed=await this.invoke('dnspod','DescribeRecord',null,{Domain:t.domain,DomainId:t.domain_id,RecordId:scope.record_id},secret);const live=observed.RecordInfo;
+   requireThat(live&&live.SubDomain===scope.name&&live.RecordType===scope.type&&live.Value===r.parameters.expected_value,'DNS_registered_record_or_observed_value_changed');await check();c.markEffectStarted?.();const x=await this.invoke('dnspod','ModifyRecord',null,{Domain:t.domain,DomainId:t.domain_id,RecordId:scope.record_id,SubDomain:scope.name,RecordType:scope.type,RecordLine:live.RecordLine,RecordLineId:live.RecordLineId,Value:r.parameters.value,TTL:live.TTL,Status:live.Enabled===1?'ENABLE':'DISABLE'},secret);result={state:'provider_accepted',effect_id:x.RequestId,result:{provider_request_id:x.RequestId,record_id:scope.record_id,value:r.parameters.value,completion:'requires_followup_read',atomic_compare_and_swap_supported:false}};
+  }else{await check();c.markEffectStarted?.();const list=r.action==='dnspod.records.describe';const x=await this.invoke('dnspod',list?'DescribeRecordList':'DescribeDomain',null,{Domain:t.domain,DomainId:t.domain_id,...(list?{Offset:r.parameters.offset??0,Limit:r.parameters.limit??100}:{})},secret);result={state:'read',effect_id:x.RequestId,result:{provider_request_id:x.RequestId,domain:t.domain,domain_id:t.domain_id,...(list?{records:(x.RecordList??[]).map(record),total_count:x.RecordCountInfo?.TotalCount,offset:r.parameters.offset??0,limit:r.parameters.limit??100}:{metadata:{name:x.DomainInfo?.Domain,owner:x.DomainInfo?.Owner,record_count:x.DomainInfo?.RecordCount,status:x.DomainInfo?.Status}})}}}
+  await c.check('final');return result;
+ }
+}

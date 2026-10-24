@@ -1,0 +1,7 @@
+import {z} from 'zod';
+const recipe = z.object({ name: z.string().min(1).default('unknown'), version: z.string().min(1).default('unknown'), parameters: z.record(z.string(), z.unknown()).default({}) }).strict();
+const space = z.object({ provider: z.string().min(1).default('unknown'), model: z.string().min(1).default('unknown'), dimension: z.number().int().min(1).max(16000).optional(), recipe: recipe.default({ name: 'unknown', version: 'unknown', parameters: {} }) }).strict();
+const vector = z.array(z.number().finite()).min(1).max(16000);
+export const legacyVectorRegisterSchema = z.object({ project_id: z.uuid(), material_id: z.uuid(), version_id: z.uuid(), sha256: z.string().regex(/^[a-f0-9]{64}$/), embedding: vector.optional(), space: space.optional(), segment: z.object({ byte_start: z.number().int().nonnegative(), byte_end: z.number().int().nonnegative() }).strict().optional(), coverage: z.enum(['complete', 'partial', 'unknown']).default('unknown'), idempotency_key: z.string().min(1).max(200).optional() }).strict();
+export const legacyVectorSearchSchema = z.object({ project_id: z.uuid(), embedding: vector, space: space.default({ provider: 'unknown', model: 'unknown', recipe: { name: 'unknown', version: 'unknown', parameters: {} } }), top_k: z.number().int().min(1).max(100).default(10), mode: z.enum(['exact', 'hnsw', 'ivfflat']).default('exact'), compare_exact: z.boolean().default(false) }).strict();
+export const vectorInputContracts=[['/v2/materials/vector-index',legacyVectorRegisterSchema],['/v2/materials/vector-search',legacyVectorSearchSchema]];

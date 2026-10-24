@@ -1,0 +1,271 @@
+{
+  "schema_version": "hub2-capability-help/1",
+  "intents": {
+    "discover_materials": [
+      "mem.search",
+      "mem.enumerate",
+      "mem.enumerate.page",
+      "hub.changes.snapshot",
+      "hub.changes",
+      "mem.vector.search",
+      "mem.semantic.query"
+    ],
+    "read_original": [
+      "mem.version.read"
+    ],
+    "save_work": [
+      "v8.work.save",
+      "mem.write_text",
+      "v8.work.pending_registration"
+    ],
+    "relate_and_adopt": [
+      "v8.work.related_candidates",
+      "v8.work.save",
+      "v8.adoption.set",
+      "v8.adoption.read"
+    ],
+    "handoff_and_continue": [
+      "v8.handoff.record",
+      "v8.handoff.accept",
+      "v8.context.materialize",
+      "v8.work.save",
+      "v8.handoff.read"
+    ],
+    "recover": [
+      "mem.write_text.query",
+      "mem.write_text.resume",
+      "mem.operation.get",
+      "v8.operation.get",
+      "mem.multipart.resume",
+      "mem.processing.retry",
+      "mem.processing.query",
+      "mem.processing.resume",
+      "mem.write_text.read_chunk"
+    ],
+    "correct_and_assess": [
+      "mem.source.invalidate",
+      "v8.impact.record",
+      "v8.impact.read"
+    ],
+    "organize": [
+      "mem.collection.create",
+      "mem.metadata.patch",
+      "mem.placement.patch",
+      "mem.batch",
+      "mem.material.trash",
+      "mem.material.restore_content",
+      "mem.material_equivalence.create",
+      "mem.material_equivalence.query",
+      "mem.material_equivalence.undo"
+    ],
+    "share": [
+      "mem.disclosure.create",
+      "mem.disclosure.revoke"
+    ],
+    "process": [
+      "mem.processing.start",
+      "mem.processing.finish",
+      "mem.processing.retry",
+      "mem.index.text",
+      "mem.processing.query",
+      "mem.processing.resume",
+      "mem.processing.cancel",
+      "mem.vector.index",
+      "mem.semantic.index_fixed",
+      "mem.url.import",
+      "mem.url.resume"
+    ],
+    "experience": [
+      "v8.experience.publish",
+      "v8.experience.feedback",
+      "v8.experience.read"
+    ],
+    "project": [
+      "v8.project.search",
+      "v8.project.create",
+      "v8.project.read",
+      "v8.project.convert",
+      "v8.project.manager_candidates"
+    ],
+    "identity_and_management": [
+      "hufu.whoami",
+      "hufu.credential.create",
+      "hufu.credential.revoke",
+      "hufu.qualification.grant",
+      "hufu.qualification.revoke",
+      "hufu.qualification.freeze",
+      "hufu.qualification.unfreeze",
+      "hufu.management.delegate",
+      "hufu.project.work_preset",
+      "hufu.credential.rotate"
+    ],
+    "upload_binary": [
+      "mem.upload.begin",
+      "mem.upload.ticket",
+      "mem.upload.put_complete",
+      "mem.upload.publish",
+      "mem.multipart.begin",
+      "mem.multipart.part_ticket",
+      "mem.multipart.parts",
+      "mem.multipart.complete"
+    ],
+    "history_and_offline": [
+      "v8.work.history",
+      "v8.context.history",
+      "mem.offline.prepare",
+      "mem.offline.page",
+      "v8.work.history.page",
+      "v8.statement.read_chunk",
+      "v8.context.view.page"
+    ],
+    "discover_work": [
+      "v8.project.search",
+      "v8.work.search",
+      "v8.work.read"
+    ],
+    "governance": [
+      "mem.governance.fields",
+      "v8.governance.fields",
+      "v8.impact.record",
+      "v8.work.save"
+    ],
+    "semantic_retrieval": [
+      "mem.semantic.query",
+      "mem.semantic.index_fixed"
+    ],
+    "import_materials": [
+      "mem.url.import",
+      "mem.url.resume",
+      "mem.url.status"
+    ],
+    "Agent_description_maintenance": [
+      "mem.description.read",
+      "mem.description.save",
+      "mem.description.pending",
+      "mem.description.vector_index",
+      "mem.description.vector_search",
+      "mem.semantic.index_fixed"
+    ],
+    "irreversible_destruction": [
+      "mem.gc.plan",
+      "mem.gc.scan",
+      "mem.gc.destroy",
+      "mem.gc.status",
+      "mem.gc.retry"
+    ],
+    "execute_registered_resource": [
+      "resource.execute"
+    ],
+    "discover_providers": [
+      "provider.capabilities.enumerate",
+      "provider.capabilities.read"
+    ],
+    "external_audio_transcription": [
+      "mem.asr.prepare",
+      "mem.asr.start",
+      "mem.asr.status",
+      "mem.asr.poll",
+      "mem.disclosure.create",
+      "mem.disclosure.revoke"
+    ],
+    "legacy_migration_preparation": [
+      "mem.legacy.reference_import",
+      "mem.legacy.reference_resolve"
+    ],
+    "provider_management": [
+      "provider.capabilities.enumerate",
+      "provider.capabilities.read",
+      "provider.management.plan",
+      "provider.management.status",
+      "provider.management.advance",
+      "provider.management.reconcile"
+    ],
+    "material_scope": [
+      "hub.help",
+      "mem.material.head",
+      "mem.material.move_scope"
+    ],
+    "project_privacy": [
+      "hufu.project.privacy.apply",
+      "hufu.project.privacy.requests",
+      "hufu.project.privacy.decide",
+      "hufu.project.privacy.revoke"
+    ]
+  },
+  "minimum_inputs": {
+    "v8.project.manager_candidates": [],
+    "hufu.qualification.freeze": [
+      "project_id",
+      "qualification_id",
+      "idempotency_key"
+    ],
+    "hufu.qualification.unfreeze": [
+      "project_id",
+      "qualification_id",
+      "idempotency_key"
+    ],
+    "hufu.project.work_preset": [
+      "project_id",
+      "actions",
+      "resource_selector"
+    ],
+    "hufu.whoami": [],
+    "hufu.credential.create": [
+      "label",
+      "actions",
+      "(expires_at|until_revoked)",
+      "idempotency_key"
+    ],
+    "hufu.credential.revoke": [
+      "credential_id",
+      "idempotency_key"
+    ],
+    "hufu.qualification.grant": [
+      "project_id",
+      "principal_id",
+      "actions",
+      "(expires_at|until_revoked)",
+      "idempotency_key"
+    ],
+    "hufu.qualification.revoke": [
+      "project_id",
+      "qualification_id",
+      "idempotency_key"
+    ],
+    "hufu.management.delegate": [
+      "project_id",
+      "principal_id",
+      "actions",
+      "(expires_at|until_revoked)",
+      "idempotency_key"
+    ],
+    "hufu.credential.rotate": [
+      "credential_id"
+    ],
+    "resource.execute": [
+      "project_id",
+      "area_id",
+      "operation",
+      "idempotency_key"
+    ],
+    "provider.capabilities.enumerate": [
+      "project_id"
+    ],
+    "provider.management.plan": [
+      "project_id",
+      "action"
+    ],
+    "provider.management.status": [
+      "project_id",
+      "operation_id"
+    ],
+    "provider.management.advance": [
+      "project_id",
+      "operation_id"
+    ],
+    "provider.management.reconcile": [
+      "project_id",
+      "operation_id"
+    ]
+  }
+}

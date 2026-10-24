@@ -1,0 +1,37 @@
+import {readFileSync,mkdirSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {createRequire} from 'node:module';
+import assert from 'node:assert/strict';
+import {parse,compileScript,compileStyle} from '@vue/compiler-sfc';
+import {build} from 'esbuild';
+const require=createRequire(import.meta.url);
+const {chromium}=require('/Users/developer/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const styles=[];
+const result=await build({stdin:{contents:`import {createApp,h,ref} from 'vue';import Questions from './src/ui/components/AgentQuestions.vue';const id=ref('first');window.nextQuestion=()=>id.value='next';window.nativeCustomQuestion=()=>id.value='nativeCustom';window.freeQuestion=()=>id.value='free';window.submitted=[];createApp({setup:()=>()=>h(Questions,{key:id.value,disabled:false,questions:[{id:'q',question:'文件应保存到哪里？',...(id.value==='free'?{}:{options:id.value==='nativeCustom'?[{label:'个人空间'},{label:'自定义回答'}]:[{label:'个人空间',description:'保存到当前账号的个人空间。'},{label:'群附件',description:'分享给群成员。'}]})}],onAnswer:v=>window.submitted.push(v)})}).mount('#app');`,resolveDir:process.cwd()},bundle:true,format:'iife',write:false,plugins:[{name:'sfc',setup(b){b.onLoad({filter:/\.vue$/},a=>{const{descriptor}=parse(readFileSync(a.path,'utf8'));const id='data-v-'+styles.length;let script=compileScript(descriptor,{id,inlineTemplate:true}).content;for(const s of descriptor.styles)styles.push(compileStyle({source:s.content,id,scoped:false}).code);return{contents:script,loader:'ts',resolveDir:dirname(a.path)};});}}]});
+const browser=await chromium.launch({headless:true,executablePath:'/Users/developer/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+try{
+ const page=await browser.newPage({viewport:{width:390,height:844}});
+ await page.setContent('<style>:root{--paper:#fff;--ink:#20262c;--muted:#69747c;--control-line:#d5dbe0}body{font-family:system-ui;margin:20px}.btn{padding:12px;border-radius:8px;border:1px solid #d5dbe0}</style><div id="app"></div>');
+ await page.addStyleTag({content:styles.join('\n')});await page.addScriptTag({content:result.outputFiles[0].text});
+ const submit=page.getByRole('button',{name:'提交回答'});
+ assert.equal(await submit.isDisabled(),true);
+ assert.equal(await page.getByRole('textbox').count(),0);
+ await page.getByRole('button',{name:'个人空间 保存到当前账号的个人空间。'}).click();
+ assert.equal(await page.getByRole('textbox').count(),0);await submit.click();
+ assert.deepEqual(await page.evaluate(()=>window.submitted),[{q:'个人空间'}]);
+ await page.evaluate(()=>window.nextQuestion());assert.equal(await submit.isDisabled(),true);
+ await page.getByRole('button',{name:'自定义回答'}).click();
+ await page.getByRole('textbox').fill('个人空间，保留原文件名');await submit.click();
+ assert.deepEqual(await page.evaluate(()=>window.submitted),[{q:'个人空间'},{q:'个人空间，保留原文件名'}]);
+ await page.evaluate(()=>window.nativeCustomQuestion());
+ assert.equal(await page.getByRole('button',{name:'自定义回答'}).count(),1);
+ assert.equal(await page.getByRole('textbox').count(),0);
+ await page.getByRole('button',{name:'自定义回答'}).click();
+ await page.getByRole('textbox').fill('指定目录');await submit.click();
+ assert.deepEqual(await page.evaluate(()=>window.submitted).then(rows=>rows.at(-1)),{q:'指定目录'});
+ const outline=await page.getByRole('textbox').evaluate(e=>getComputedStyle(e).outlineStyle);assert.equal(outline,'none');
+ const wide=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);assert.equal(wide,false);
+ mkdirSync('/tmp/qn-organisation-review',{recursive:true});await page.screenshot({path:'/tmp/qn-organisation-review/questions.png'});
+ await page.evaluate(()=>window.freeQuestion());assert.equal(await page.getByRole('textbox').inputValue(),'');assert.equal(await submit.isDisabled(),true);
+ console.log('PASS real Vue: choice/custom option/free text, required answer, request isolation, shared focus and narrow-screen layout. Fixture only.');
+}finally{await browser.close();}

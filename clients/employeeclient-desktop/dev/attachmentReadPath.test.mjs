@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import ts from 'typescript';
+test('message fixed metadata resolves protected download URLs without repeat descriptor reads; incomplete legacy refs still resolve',async()=>{
+ let valid=true,reads=0;const deps={captureApiLease:()=>({account:'a',valid:()=>valid}),serviceOrigin:()=> 'https://app.test',EMPLOYEECLIENT_PROJECT:'p',nativeLibraryClient:()=>({fileUrl:(_p,f)=>'/native/file?material_id='+f.material_id+'&version_id='+f.version_id}),privateDownload:async()=>{reads++;return {attachment:{},download_url:'legacy-private'};},resolveNativeFile:async()=>{reads++;return {file:{},download_url:'legacy-group'};},window:{location:{href:'https://app.test/'}}};
+ const source=await readFile(new URL('../src/chat/files.ts',import.meta.url),'utf8'),js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/^import[^\n]+\n/gm,'').replace(/^export /gm,'');const {getChatDownload}=new Function(...Object.keys(deps),js+';return {getChatDownload};')(...Object.values(deps));
+ const privateFile={id:'private:owned',sha256:'a'.repeat(64),size:3};assert.match((await getChatDownload(privateFile.id,undefined,privateFile)).download_url,/\/business\/v1\/private-attachments\/owned\/file$/);
+ const group={id:'m:v',name:'file',sha256:'b'.repeat(64),size:5,fixed_ref:{material_id:'m',version_id:'v',size:5,sha256:'b'.repeat(64)}};assert.match((await getChatDownload(group.id,undefined,group)).download_url,/\/native\/file\?/);assert.equal(reads,0);
+ await getChatDownload('old');assert.equal(reads,1);await getChatDownload(group.id,undefined,{...group,fixed_ref:{...group.fixed_ref,sha256:'c'.repeat(64)}});assert.equal(reads,2);
+ valid=false;await assert.rejects(getChatDownload(privateFile.id,undefined,privateFile),e=>e.name==='AbortError');
+});

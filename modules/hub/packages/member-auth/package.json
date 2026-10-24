@@ -1,0 +1,11 @@
+{
+  "name": "@workspace/member-auth",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Official Better Auth 1.7.7 member OAuth and optional Passkey entry for Hub2",
+  "license": "UNLICENSED",
+  "engines": {"node": ">=24 <25"},
+  "scripts": {"browser": "esbuild src/browser.mjs --bundle --minify --outfile=public/client.js", "test:local": "python3 tests/local-run.py", "test:pg18.6": "python3 tests/remote-fixture.py"},
+  "dependencies": {"@better-auth/oauth-provider": "1.7.7", "@better-auth/passkey": "1.7.7", "@modelcontextprotocol/client": "2.2.0", "@modelcontextprotocol/core": "2.2.0", "better-auth": "1.7.7", "pg": "8.23.1", "esbuild": "0.28.2"}
+}

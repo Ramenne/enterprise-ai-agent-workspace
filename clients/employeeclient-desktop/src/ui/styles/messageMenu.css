@@ -1,0 +1,18 @@
+/* Message context menu: quiet surface, reserved icon column and action groups. */
+@media(min-width:760px) and (pointer:fine){
+ html body .message-actions-mask{background:transparent}
+ html body .message-actions::after{display:none}
+ html body .message-actions .message-action-row{display:flex;flex-flow:column nowrap;align-items:stretch;justify-content:flex-start;max-height:inherit}
+ html body .message-actions .message-action-row>button{flex:none;width:100%;display:flex;flex-direction:row;justify-content:flex-start;white-space:nowrap}
+
+ html body .message-actions-mask .message-actions,html body .message-actions-mask .message-actions:focus-visible{min-width:162px;border:1px solid #dedede;border-radius:7px;padding:5px 8px;background:#f7f7f7;box-shadow:0 5px 22px #00000021}
+ html body .message-actions .message-action-row>button{position:relative;min-height:33px;padding:6px 5px 6px 28px;gap:0;border-radius:3px;color:#151515;font-size:14px;line-height:20px;font-weight:400;text-align:left}
+ html body .message-actions .message-action-row>button .icon{position:absolute;left:5px;width:15px;height:15px;color:currentColor;stroke-width:1.5}
+ html body .message-actions .message-action-row>button .menu-optional-icon{visibility:hidden}
+ html body .message-actions .message-action-row>button.menu-section-start:not(:first-child){margin-top:7px}
+ html body .message-actions .message-action-row>button.menu-section-start:not(:first-child)::before{content:'';position:absolute;left:5px;right:5px;top:-4px;height:1px;background:#e9e9e9}
+ html body .message-actions .message-action-row>button.menu-danger{color:#fa5151}
+ html body .message-actions .message-action-row>button:hover{background:#e9e9e9}
+}
+
+@media(min-width:760px) and (pointer:fine){html body .modal.forward-dialog{width:420px;max-width:calc(100vw - 32px)}html body .modal.chat-record-dialog{width:520px;max-width:calc(100vw - 32px)}html body .chat-record-dialog .modal-title h2{font-size:15px;font-weight:400;line-height:1.5}}

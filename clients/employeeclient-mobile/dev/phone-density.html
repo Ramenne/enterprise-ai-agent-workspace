@@ -1,0 +1,11 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>员工客户端真实手机比例核对 · 未发布</title>
+<style>body{margin:0;background:#e9edf0;font:13px sans-serif}label{display:block;padding:10px}select{font:inherit;padding:5px}iframe{display:block;width:390px;height:845px;border:0}</style>
+<label>手机宽度 <select aria-label="手机宽度"><option>360</option><option selected>390</option><option>430</option></select> CSS px · 使用真实登录和当前源码</label>
+<iframe title="员工客户端手机预览" src="/#/messages"></iframe>
+<script>
+const width=document.querySelector('select'),frame=document.querySelector('iframe');
+width.addEventListener('change',()=>{const value=Number(width.value);frame.style.width=value+'px';frame.style.height=Math.round(value*2772/1280)+'px';});
+</script>

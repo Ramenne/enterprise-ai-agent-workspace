@@ -1,0 +1,47 @@
+{
+  "main_text_matches_cloud_v6": true,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "local_size": 17217,
+      "cloud_size": 17217,
+      "size_matches": true
+    },
+    {
+      "path": "references/examples.md",
+      "local_size": 1974,
+      "cloud_size": 1974,
+      "size_matches": true
+    },
+    {
+      "path": "references/incremental.md",
+      "local_size": 5687,
+      "cloud_size": 5687,
+      "size_matches": true
+    },
+    {
+      "path": "references/phase-workflow.md",
+      "local_size": 5564,
+      "cloud_size": 5564,
+      "size_matches": true
+    },
+    {
+      "path": "references/review.md",
+      "local_size": 5111,
+      "cloud_size": 5111,
+      "size_matches": true
+    },
+    {
+      "path": "references/tool-library.md",
+      "local_size": 8256,
+      "cloud_size": 8256,
+      "size_matches": true
+    },
+    {
+      "path": "scripts/collect_codex_dialogue.py",
+      "local_size": 7079,
+      "cloud_size": 7079,
+      "size_matches": true
+    }
+  ]
+}

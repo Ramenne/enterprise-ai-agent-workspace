@@ -1,0 +1,111 @@
+{
+  "origin": {
+    "owner": "semantic",
+    "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+    "path": "packages/semantic-service/source/input_contracts.py",
+    "sha256": "6f3b2196da442da64dc49ebb21ac2acbe3ea6f92f057d82633ff66ae1e053915",
+    "endpoint_key": "semantic",
+    "projection": "structure-without-defaults;source-context-owned-by-protocol;domain-keeps-byte-and-UUID-checks"
+  },
+  "contracts": [
+    {
+      "path": "/semantic/description-query",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32768,
+            "x-utf8-max-bytes": 32768,
+            "description": "UTF-8 byte and model token budgets are checked by the domain."
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "hnsw",
+              "ivfflat"
+            ]
+          },
+          "compare_exact": {
+            "type": "boolean"
+          },
+          "include_historical": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "semantic",
+        "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+        "path": "packages/semantic-service/source/input_contracts.py",
+        "sha256": "6f3b2196da442da64dc49ebb21ac2acbe3ea6f92f057d82633ff66ae1e053915",
+        "endpoint_key": "semantic",
+        "projection": "structure-without-defaults;source-context-owned-by-protocol;domain-keeps-byte-and-UUID-checks"
+      }
+    },
+    {
+      "path": "/semantic/description-index",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fixed_ref": {
+            "type": "object",
+            "properties": {
+              "material_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "version_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "material_id",
+              "version_id",
+              "sha256"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "project_id",
+          "fixed_ref"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "semantic",
+        "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+        "path": "packages/semantic-service/source/input_contracts.py",
+        "sha256": "6f3b2196da442da64dc49ebb21ac2acbe3ea6f92f057d82633ff66ae1e053915",
+        "endpoint_key": "semantic",
+        "projection": "structure-without-defaults;source-context-owned-by-protocol;domain-keeps-byte-and-UUID-checks"
+      }
+    }
+  ]
+}

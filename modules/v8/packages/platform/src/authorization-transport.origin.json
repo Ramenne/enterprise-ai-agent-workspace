@@ -1,0 +1,7 @@
+{
+  "owner": "hufu",
+  "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+  "path": "packages/platform/src/authorization-transport.mjs",
+  "sha256": "631d91c0c104c516a1f18b965cb6d851ab60aeb2b9bc8c2681cc44bd3af6e2d0",
+  "maintenance": "published byte-identical copy;edit owner then republish"
+}

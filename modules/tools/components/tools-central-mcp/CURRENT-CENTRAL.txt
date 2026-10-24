@@ -1,0 +1,20 @@
+交接补记：当前已发现中枢TOOLS入口（2026-10-21本轮实测）
+
+本轮准备交付期间，中枢目录已能发现tools.library。
+通过当前FGB成员身份真实调用：
+1. tools.library {"action":"help"} 返回本人身份与非敏感操作原生Schema。
+2. tools.library {"action":"call","operation":"tools_modules","arguments":{}}
+   返回六模块当前均available/callable；硬件采购首版20261014d。
+3. tools.library {"action":"call","operation":"knowledge_list","arguments":{"query":"TOOLS MCP"}}
+   返回已存在的“TOOLS MCP · 独立连接器接入说明”目录。
+
+因此中枢应优先复用/完成现有tools.library接入，不要为了本包另建平行网关或强制改成
+tools.api.*。central-adapter是可复用的Node参考模块与隔离测试；reference是已交付的
+独立Python stdio包。模块名称、真实接线和运行时由中枢沿当前实现选择。
+
+本轮没有中枢部署源码或operation_id，不能据上述成功倒推本包已安装或部署由本会话完成。
+目前证据只支持当前成员help、模块读取及知识目录查询；其他实际读写、重放、撤权与
+其他成员验证应保留各自证据，不因目录中出现操作就宣称全部验收通过。
+
+原工程权限申请已撤回。用户已明确将部署实施交给中枢；本包是直接成果交付，
+无需先给FGB发工程资格。部署回执继续关联W-1000347。

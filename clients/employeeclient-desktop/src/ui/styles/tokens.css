@@ -1,0 +1,20 @@
+:root {
+  color-scheme:light;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;
+  --bg:#f3f4f6; --paper:#fff; --paper-soft:#f0f1f4;
+  --ink:#20242b; --muted:#535c69; --muted-soft:#535c69;
+  --line:#d0d5dd; --line-soft:#e4e7ec; --control-line:#cfd5dc;
+  --message-own:#dfeaff; --message-own-line:#b8cceb;
+  --accent:#176b60; --accent-dark:#115248; --accent-soft:#e3f2ed;
+  --green:var(--accent); --green-dark:var(--accent-dark); --green-soft:var(--accent-soft);
+  --blue:#32639b; --red:#aa3935; --red-soft:#fff0ed; --amber:#805b19;
+  --unread-dot-size:9px;
+  --message-font-size:17px; --message-line-height:1.5;
+  --message-meta-size:13px; --message-time-size:12px;
+  --message-control-size:48px; --message-avatar-size:40px;
+  --file-title-size:16px; --file-meta-size:13px; --file-card-width:260px;
+  --control-height:40px; --search-height:36px; --touch-target:44px; --dialog-heading-size:18px;
+  --radius:12px; --radius-control:8px;
+  --shadow:0 16px 48px #17332e1a; --shadow-soft:0 2px 8px #17332e05;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+}

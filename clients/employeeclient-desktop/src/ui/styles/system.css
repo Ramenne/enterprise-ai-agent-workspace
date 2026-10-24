@@ -1,0 +1,7 @@
+/* Keep the frozen prototype in a low-priority compatibility layer. */
+@import './base.css' layer(legacy);
+@import './readability.css' layer(legacy);
+@import './app.css' layer(legacy);
+@import './tokens.css';
+@import './ui-v2.css';
+@import './workspace.css';

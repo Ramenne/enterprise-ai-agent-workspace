@@ -1,0 +1,61 @@
+<!doctype html><meta charset="utf-8"><title>v4 real IndexedDB checks</title><pre id="result">RUNNING</pre>
+<script type="module">
+import * as cache from '/src/session/db.ts';
+import { setPushIdentity, receiveWebPush, matchesPushIdentity } from '/src/platform/webPushState.ts';
+const result=document.querySelector('#result'), passed=[];
+function check(value,label){ if(!value)throw Error(label);passed.push(label); }
+try {
+  let valid=true;
+  const lease=cache.withLease(()=>valid);
+  const lateWrite=lease.putMany('issues','review-a',[{id:'late',title:'old'}]);
+  valid=false;
+  await lateWrite;
+  check((await cache.getAllByAccount('issues','review-a')).length===0,'invalidated write waiting for IDB open is dropped');
+  await cache.putMany('issues','review-a',[{id:'a',title:'private'}]);
+  await cache.putMany('issues','review-b',[{id:'b',title:'other'}]);
+  await cache.metaSet('review-a','cursor',5);
+  await cache.clearAccount('review-a');
+  await lease.metaSet('review-a','cursor',6);
+  check(!(await cache.getAllByAccount('issues','review-a')).length && await cache.metaGet('review-a','cursor')===null,'atomic purge and stale cursor cannot resurrect account');
+  await cache.removeById('issues','review-a','b');
+  check((await cache.getAllByAccount('issues','review-b')).length===1,'purge and remove preserve other account');
+  await cache.putMany('tasks','review-a',[{id:'p',scope_at_creation:'personal'},{id:'c',scope_at_creation:'company'}]);
+  await cache.metaSet('review-a','list:tasks',[{id:'p',scope_at_creation:'personal'},{id:'c',scope_at_creation:'company'}]);
+  await cache.metaSet('review-a','list:projects',[{id:'private-project',scope:'personal'}]);
+  await cache.metaSet('review-a','notification_sync_version',17);
+  await cache.clearPersonalScope('review-a');
+  check((await cache.getAllByAccount('tasks','review-a')).map(t=>t.id).join(',')==='c','scope purge removes private entities but preserves company entities');
+  check((await cache.metaGet('review-a','list:tasks')).map(t=>t.id).join(',')==='c' && (await cache.metaGet('review-a','list:projects')).length===0,'scope purge clears private list snapshots');
+  check(await cache.metaGet('review-a','notification_sync_version')===17,'scope purge preserves shared notification cursor');
+  await setPushIdentity({account:'review-a',installationId:'phone-a'});
+  const message={id:'n-'+crypto.randomUUID(),recipient_username:'review-a',installation_id:'phone-a',update_version:2,title:'v2'};
+  const shown=[],display=async(m,tag)=>shown.push({version:m.update_version,tag});
+  await Promise.all([receiveWebPush(message,display),receiveWebPush(message,display),receiveWebPush({...message,update_version:1},display)]);
+  check(shown.length===1 && shown[0].version===2,'concurrent duplicate and older pushes display once');
+  const freshModule=await import('/src/platform/webPushState.ts?restart='+Date.now());
+  await freshModule.receiveWebPush(message,display);
+  check(shown.length===1,'new worker module reads persistent displayed version');
+  await freshModule.receiveWebPush({...message,update_version:3,priority:'urgent'},display);
+  check(shown.length===2 && shown[1].version===3,'newer legitimate urgent version can notify');
+  const failed={...message,id:'retry-'+crypto.randomUUID()};
+  await receiveWebPush(failed,async()=>{throw Error('OS display failed');}).catch(()=>{});
+  await receiveWebPush(failed,display);
+  check(shown.length===3,'failed display does not consume displayed version');
+  await receiveWebPush({...message,id:'wrong',installation_id:'other'},display);
+  await setPushIdentity({account:'review-b',installationId:'phone-b'});
+  await receiveWebPush({...message,update_version:4},display);
+  check(shown.length===3,'different device and old account pushes ignored');
+  await setPushIdentity({account:'review-a',installationId:'phone-a'},()=>false);
+  check(await matchesPushIdentity('review-b','phone-b'),'stale session cannot set push identity');
+  await setPushIdentity({account:'review-a',installationId:'phone-a'});
+  const removed=[];
+  await receiveWebPush({...message,id:'switch-'+crypto.randomUUID()},async()=>{await setPushIdentity(null);},async tag=>removed.push(tag));
+  check(removed.length===1,'identity revoked during display closes obsolete notification');
+  const pushDb=await new Promise((resolve,reject)=>{const r=indexedDB.open('employeeclient-push-display',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+  const records=await new Promise((resolve,reject)=>{const r=pushDb.transaction('state','readonly').objectStore('state').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+  check(records.every(r=>r===null || Object.keys(r).every(k=>['key','version','shownVersion'].includes(k))),'revoked push storage contains versions only, no message body');
+  await cache.clearAccount('review-b');
+  await cache.clearAccount('review-a');
+  result.textContent='PASS '+passed.length+'\n'+passed.join('\n');
+} catch(error){ result.textContent='FAIL '+error.stack+'\n'+passed.join('\n'); }
+</script>

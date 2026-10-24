@@ -1,0 +1,17 @@
+import {readFeedbackFixture} from './readFeedback.fixture.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import ts from 'typescript';import {ref,computed,watch,reactive,nextTick,effectScope} from 'vue';
+const flush=async()=>{await nextTick();await new Promise(r=>setImmediate(r));};
+test('detail/read updates do not refetch replies; a new reply event is queued during an in-flight fetch',async()=>{
+ const scope=effectScope(),mounted=[],unmount=[],events=[];let replyCalls=0,detailCalls=0,held;
+ const session=reactive({user:{username:'m'},status:'online'}),data=reactive({account:'m',notifications:[]});
+ const deps={useReadFeedback:readFeedbackFixture,computed,ref,watch,onMounted:f=>mounted.push(f),onUnmounted:f=>unmount.push(f),useChatStore:()=>({account:'m',members:[],refreshMembers:async()=>{}}),useDataStore:()=>data,useUiStore:()=>({overlayProps:{announcementId:'a1'},toast(){}}),useSessionStore:()=>session,usePendingWrite:()=>({pending:ref(null),valid:()=>true}),useLocalDraft:()=>({restoring:ref(false),readyToEdit:ref(true),flush:async()=>{},error:ref(''),retry:async()=>{}}),useVisibleAnnouncementReads(){},memberDisplayName:()=>'',onChatWake:f=>{events.push(f);return()=>{};},window:{innerHeight:844,visualViewport:null,addEventListener(){},removeEventListener(){}},communication:{announcement:async()=>{detailCalls++;return {announcement:{id:'a1',publisher_username:'m',body:'正文',recipient_count:1,read_count:0,unread_count:1,audience:[]}};},replies:async()=>{replyCalls++;return held?new Promise(r=>{held.resolve=r;}):{replies:[],next_cursor:0,has_more:false};}}};
+ const s=readFileSync(new URL('../src/ui/components/AnnouncementOverlay.vue',import.meta.url),'utf8').match(/<script setup lang="ts">([\s\S]*?)<\/script>/)[1];const js=ts.transpileModule(s,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/^import .*;\r?\n/gm,'');let model;
+ scope.run(()=>{model=new Function(...Object.keys(deps),js+';return {loadDetail,refresh,repliesLoaded,loading};')(...Object.values(deps));});
+ await model.loadDetail();await flush();assert.equal(replyCalls,1);assert.equal(model.repliesLoaded.value,true);
+ await model.loadDetail();await flush();assert.equal(replyCalls,1,'same announcement detail is not a new reply cursor');
+ events[0]({account:'m',mode:'live',kinds:['announcement_read'],announcementIds:['a1']});await flush();assert.equal(replyCalls,1);assert.equal(detailCalls,3);
+ for(const event of [{account:'m',mode:'live',kinds:['chat_message'],announcementIds:[]},{account:'m',mode:'live',kinds:['announcement_reply'],announcementIds:['another-ann']},{account:'other',mode:'live',kinds:['announcement_reply'],announcementIds:['a1']}])events[0](event);await flush();assert.equal(replyCalls,1,'other features, announcements and accounts must not refetch this reply stream');assert.equal(detailCalls,3);
+ held={};const pending=model.refresh();await flush();assert.equal(model.loading.value,true);assert.equal(model.repliesLoaded.value,true,'background sync does not replace the established empty state');
+ events[0]({account:'m',mode:'live',kinds:['announcement_reply'],announcementIds:['a1']});const release=held.resolve;held=null;release({replies:[],next_cursor:0,has_more:false});await pending;assert.equal(replyCalls,3,'new reply while busy must not be dropped');
+ scope.stop();for(const f of unmount)f();
+});

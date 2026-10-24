@@ -1,0 +1,18 @@
+产品服务完整授权通路（product-service-v1）
+中枢为公司产品提供基础服务。认证后在预先约定的项目/资源范围内，服务可使用完整存储、资源、上下文及可选V8功能；没有Agent工作资格、逐动作申请或逐文件通用来源任务前置。
+这不是把所有principal_kind=service都放开。自动化Agent保持原规则；只有经项目管理方明确登记并签发的产品服务凭据走这个分支。
+服务能力目录：GET /v2/services/capabilities。
+登记与授权：POST /v2/services/authorize，body={project_id,service_id}；首次新产品可用name代替service_id。默认完整基础能力，通常until_revoked=true；可按团队申报声明资源范围和期限。不需要列actions或capabilities。
+签发服务配置：POST /v2/services/credentials，body={service_id,project_ids:[实际项目],label,until_revoked:true}。管理员使用真实身份签发，输出credential仅存进运行机的0600私有文件，不进入报告、工程源或前端。
+读取授权：POST /v2/services/authorizations，body={project_id}。服务可读取自己的授权；产品成员按项目可读范围查看非秘密接入信息。
+撤销服务授权：POST /v2/services/revoke，body={authorization_id,expected_revision}。撤掉此服务授权，不删成员原资格、旧工作资格和其他产品授权。
+写入请求都保留idempotency-key；编号和实际状态由平台生成，不由客户端伪造actor。服务的/v2/me返回authorization_mode=product_service、agent_work_required=false。
+
+日常程序调用沿已有公开HTTP基础接口，无须MCP或V8工作编号：资料存储服务/v2/uploads以及受控PUT、complete、publish，读取/v2/files/read；资源通过已登记project-use；上下文和V8只按实际产品需要调用。上传技术步骤可以由客户端封装，但不会再强制做语义来源任务。
+基础服务接口不授予整台服务器、管理平台或读取所有成员私人资料的权力。真实用户身份、服务身份及数据归属不互相代签；超出约定范围时由团队反馈并更新接入范围。
+
+白泽完整产品服务配置：/etc/workspace-hub2/baize-foundation/service-token.private，运行机zm-xiaochen，baize UID拥有0600文件。沿已有白泽Worker真实actor，新增独立基础授权，不受原processing子凭据四动作上限或其旧工作资格期限牵制。
+员工客户端完整产品服务配置：/etc/workspace-hub2/employeeclient-foundation/service-token.private，运行机zm-jiaxin，hubeng-employeeclient UID拥有0600文件。手机用户的实际个人身份仍走身份权限服务用户认证；后台服务凭据不代签个人私有作业。
+两个产品都可自主选择何时、如何采用这个配置；本轮没有替换旧业务token、搬迁私人文件或强制改数据库，也没有代提交原ASR作业。
+
+已验证：实际新服务没有任何authz.qualifications记录，却可上传、发布及原字节读回；跨项目、自行授权均被拒；撤掉测试授权后旧凭据读取即时拒绝。验证过程无工作登记或processing-run。真实产品完整链路需要团队按原任务复测，不把这项通路验证等同于业务全部恢复。

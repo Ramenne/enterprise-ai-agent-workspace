@@ -1,0 +1,19 @@
+{
+  "version": "1.0.1rc1",
+  "state": "candidate_not_published",
+  "changes": [
+    "Preserve all current knowledge metadata during file upload",
+    "Require stable id/revision and complete document for replacement",
+    "Verify fixed body, metadata, placement and update identity on readback"
+  ],
+  "verification": {
+    "isolatedTests": 31,
+    "liveSchemaAndReadOnly": true,
+    "productionWrites": 0
+  },
+  "backendChanged": false,
+  "limitations": [
+    "Actual Node knowledge backend source/managed entry unavailable",
+    "Not installed into user MCP client or published at original download URL"
+  ]
+}

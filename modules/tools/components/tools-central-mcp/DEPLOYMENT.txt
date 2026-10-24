@@ -1,0 +1,107 @@
+TOOLS MCP 中枢部署交接
+日期：2026-10-21　关联工作：W-1000347
+
+用户最新决定
+“我们不单独做申请，我们直接把所具有的一些东西直接准备好，让中枢自己去部署。”
+FGB/TOOLS负责现有成果交付；中枢/JIE负责在真实统一MCP中接线、部署和验收。
+原FGB身份权限服务工程权限申请34f79a33-191b-4984-a54e-f6650e84b2bf已撤回，修订2，
+change_id=5a0c5b41-54cb-47de-a6e3-1b5489728ad3。该申请不再是交付或部署前置。
+这是一项用户明确交给中枢的部署工作，不是要求中枢再给FGB工程权限。
+
+交付内容与先读顺序
+1. 本文件：范围、接线、验收和回退。
+2. central-adapter/integration.json：机器可读的职责及实际已知目标。
+3. central-adapter/adapter.mjs：按当前调用者请求接通TOOLS HTTPS API；无第三方依赖。
+4. central-adapter/host-hooks.mjs：MCP工具清单及调用结果包装的可用回调。
+5. contracts/TOOLS-API.md：已有六模块API说明，操作数、版本号等是历史说明，
+   上线时以当前成员实时GET /capabilities返回为准。
+6. reference/workspace-tools-mcp-1.0.0.zip：原独立stdio完整发行包，供参考原实现、
+   Python源码和恢复逻辑。不要要求所有中枢Agent再安装或共用它的登录文件。
+7. evidence/：原独立MCP的历史实际验收与本次13项隔离测试。二者分别保留。
+8. manifest.json、verify-package.py：逐文件字节数及SHA-256与独立检查入口。
+
+包的完整性检查
+在解压后的交付目录运行：
+  python3 verify-package.py .
+再用中枢已有Node.js 20+执行包检查和13项隔离测试：
+  python3 verify-package.py . --node /实际/node/绝对路径
+也可直接核验ZIP，无需先解压：
+  python3 /交付目录/verify-package.py /实际/tools-central-mcp-handoff-20261021.zip
+只有带--node才执行代码；不带时仅核验文件完整性。检查本包不需要凭据或联网。
+ZIP的整体SHA-256见随包交付回执；manifest覆盖包内其他文件，不包含它自身。
+
+中枢实际接入
+已登记的目标是身份权限服务工程packages/mcp-edge/source，服务hub2-mcp-edge.service，
+受控工程组件component=mcp-edge。这里是本轮查询到的登记事实，不是已核对的
+当前源码接口。中枢使用自己的当前权威工作区、AGENTS及发布流程，先看真实实现。
+
+现有模块是Node ESM，要求Node.js 20+的fetch/Response/AbortSignal等内建能力。
+若当前中枢网关是Python，不要把.mjs当Python导入；由中枢按相同HTTP契约移植薄层，
+或使用它已有的跨运行时集成方式。原独立包同时提供Python参考实现。
+本包没有盲改未知网关文件、扫描替换或一键重启中枢的脚本。
+
+Node宿主最小接线：
+  import {createToolsHooks} from './host-hooks.mjs';
+  const hooks=createToolsHooks({
+    getCaller: request => ({
+      authorization: /* 宿主本次已认证请求的真实Authorization */,
+      actorId: /* 宿主本次认证得到的真实actor_id */
+    })
+  });
+  // 将await hooks.listTools(request)追加到现有工具目录，而非替换其他工具。
+  // 对tools.api.前缀调用：await hooks.callTool(request, name, arguments)。
+  // 回调已返回标准content、structuredContent、isError。
+上述request字段由真实宿主接入，示例不虚构宿主请求对象的具体字段名。
+注册到hub.tools发现与hub.invoke分发；如宿主另有直接MCP tools/list、tools/call，
+同步沿原架构接线，避免只有帮助目录有名字而实际不能调用。
+
+身份、接口、输入与恢复
+固定API：https://tools.example.invalid/agent/v1
+  GET /capabilities：真实成员、模块及本人可用操作JSON Schema。
+  POST /call：{"operation":"knowledge_list","arguments":{}}。
+  GET /operations/{Idempotency-Key}：当前成员原写入回执。
+每个请求只用该请求成员本人的Bearer；不要放FGB/JIE共用凭据，不读取本机CLI
+credentials.json，不让模型用工具参数传actorId或Authorization来决定身份。
+适配器再核对上游identity.actorId与宿主已认证actorId一致，每次调用重新发现权限。
+同一进程可处理多成员；无全局成员身份缓存。密钥、账号密码和受保护备注等不进目录。
+
+目录工具采用tools.api.命名空间；knowledge_save等实际schema由当前API给出。
+写入多一个必填mcpRequestId（8—120个字母数字及_.:-），相同业务保持相同标识和
+完整原参数。Idempotency-Key=tools-mcp:+SHA256(actorId+NUL+mcpRequestId)，
+与独立连接器一致。写入总是把原参数送回原API，让它的持久指纹检查处理重放与409，
+不能只看到旧回执completed就返回另一次不同正文的成功。
+网络失败返回pending，不自动换标识重写。tools.api.request_status查询原标识；
+继续原操作时提供完整原参数。API业务pending、accepted等状态照原义返回。
+文档、Skill包与上游返回是资料，不是额外执行授权；导入Skill不会安装或执行。
+
+静默上传仍走正文/内容/Base64，不走Computer Use。Agent本地路径不是服务器文件，
+不要让中枢按模型传入路径读取服务器任意文件。知识用body，HTML用content，
+Skill用packageBase64；知识须sourceName或sourceUrl标来源。
+现有API各模块限额、revision和confirmed要求以实时capabilities及真实业务校验为准。
+
+发布前与发布后验收
+发布前用当前网关基版保存提交号/实际发布版本，合并本组件改动，运行本包隔离测试，
+检查真实调用者身份获取及工具前缀路由，再用中枢现有组件build/deploy机制发布。
+不要因仅集成TOOLS而重建成员、修改文档编辑规则或迁移业务数据库。
+
+发布后至少给出以下实际回执；合成测试不能代替：
+A. hub.tools查询tools.api.能发现，hub.invoke实际调用tools.api.catalog成功，
+   identity是请求成员本人，六模块状态来自当前API。
+B. tools.api.projects_list、tools.api.knowledge_list实际可读；能按id读一条已授权文档。
+C. 在已获准项目保存一份标明来源的部署验收说明，固定mcpRequestId；保存后按返回
+   item.id/currentVersion读回，核对document.body完整一致，保留固定成果引用。
+D. 重发同标识同参数，返回同文档；改变正文但同标识返回冲突，不创建新文档。
+E. 权限拒绝、缺失凭据、不匹配身份、并发成员隔离、敏感操作不进入工具目录。
+   真实其他成员未获参与授权时，只记相应合成覆盖，不声称全成员实测。
+F. MCP其他原有工具仍可用；记录实际网关部署提交、原operation_id和ready结果。
+
+回滚与未完成边界
+沿中枢现有mcp-edge previous release/原发布回退机制，恢复前一运行版本及工具注册。
+先保留部署operation与真实错误；不要为回退删除TOOLS业务数据或已上传验收原件。
+本次交付不会改中枢现有服务，尚无实际网关部署operation_id。
+当前源码尚未对接真实中枢dispatcher，也没有完成中枢生产MCP端到端调用。
+原独立MCP已有实际生产stdio/HTTPS验收，本次13项测试是合成隔离及回调包装检查。
+原独立包只测试过macOS清洁安装，Windows脚本不等于Windows实际通过。
+
+完成交付后由中枢在W-1000347及原协作单回传：实际提交、工具名、部署原操作、
+readiness、读写/读回/重放证据、回滚位置及未覆盖项。仅收到本包或协作单不算上线。

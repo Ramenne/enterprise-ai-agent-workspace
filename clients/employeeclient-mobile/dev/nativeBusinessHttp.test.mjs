@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {createGateway} from '../server/gateway.mjs';
+import {createBusinessHandler} from '../server/business/http.mjs';
+import {createChatRepository} from '../server/business/chat-repository.mjs';
+import {PROJECT} from '../server/business/native-authority.mjs';
+test('native business HTTP sends, reads and notifies through current project authority',async t=>{
+ const db=new DatabaseSync(':memory:');t.after(()=>db.close());
+ const repository=createChatRepository(db);
+ const directory=async()=>[{actor_id:'a',display_name:'A'},{actor_id:'b',display_name:'B'}];
+ const authorize=async cookie=>{if(!['test-member=a','test-member=b'].includes(cookie))throw Object.assign(Error('no session'),{status:401,code:'login_required'});const actor=cookie.slice(-1);return {project_id:PROJECT,actor_id:actor,display_name:actor.toUpperCase(),can_read:true,can_write:true};};
+ const businessHandler=createBusinessHandler({repository,authorize,directory,resolveReference:async()=>null,resolveAttachments:async()=>[]});
+ const server=createGateway({publicOrigin:'https://app.example.com',businessHandler});await new Promise(r=>server.listen(0,'127.0.0.1',r));t.after(()=>server.close());
+ const base='http://127.0.0.1:'+server.address().port;
+ const send=await fetch(base+'/business/v1/messages',{method:'POST',headers:{origin:'https://app.example.com',cookie:'test-member=a','content-type':'application/json','idempotency-key':'original'},body:JSON.stringify({body:'真实本地HTTP测试',mention_usernames:['b']})});
+ assert.equal(send.status,201);const sent=await send.json();assert.equal(sent.message.author_username,'a');
+ const history=await fetch(base+'/business/v1/messages',{headers:{cookie:'test-member=b'}});assert.equal((await history.json()).messages[0].id,sent.message.id);
+ const inbox=await fetch(base+'/business/v1/notifications',{headers:{cookie:'test-member=b'}});assert.equal((await inbox.json()).notifications[0].object_id,sent.message.id);
+ assert.equal((await fetch(base+'/business/v1/messages')).status,401);
+ assert.equal((await fetch(base+'/business/v1/messages',{method:'POST',headers:{origin:'https://foreign.example.com',cookie:'test-member=a'}})).status,403);
+ const forged=await fetch(base+'/business/v1/messages',{method:'POST',headers:{origin:'https://app.example.com',cookie:'test-member=a','content-type':'application/json','idempotency-key':'forged'},body:JSON.stringify({body:'bad',author_username:'b'})});assert.equal(forged.status,400);
+});

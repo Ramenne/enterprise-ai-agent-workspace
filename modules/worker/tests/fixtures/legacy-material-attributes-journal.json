@@ -1,0 +1,25 @@
+{
+  "source_sha256": "4654ed644809113c5dfa440ad996b3e8bb0e8c64f018a6c8cb408303cc4dafd5",
+  "payload": {
+    "material_id": "8662ae87-2e86-405e-aa76-c2b6e807b0b1",
+    "attributes": {
+      "legacy": "retained"
+    },
+    "idempotency_key": "legacy-key"
+  },
+  "journalId": "c0fa9b27bd7f7bff57575b98cb1a06584a78c856353b1a3d338b4728af835f68",
+  "record": {
+    "signature": "e358c14e3785b7db34ba0a663038f2ce450b25feb84fa2ab62cbed5a94be0cf3",
+    "request": {
+      "project_id": "cfe3f0af-af84-4c63-a0d6-2d0677caaddd",
+      "material_id": "8662ae87-2e86-405e-aa76-c2b6e807b0b1",
+      "expected_revision": 1,
+      "properties": {
+        "attributes": {
+          "legacy": "retained"
+        }
+      },
+      "idempotency_key": "legacy-key"
+    }
+  }
+}

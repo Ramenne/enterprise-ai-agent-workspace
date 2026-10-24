@@ -1,0 +1,87 @@
+{
+  "status": "prepared_not_deployed",
+  "default_profile": "rtx5090",
+  "rental_authorized": false,
+  "model_license_accepted": false,
+  "runtime_root": "/root/autodl-tmp/krea2",
+  "backend": "comfyui",
+  "execution": {
+    "max_concurrent_gpu_jobs": 1,
+    "training_and_inference_share_lock": true
+  },
+  "profiles": {
+    "rtx5090": {
+      "gpu": "RTX 5090",
+      "vram_gb": 32,
+      "priority": 1,
+      "inference": {
+        "width": 1024,
+        "height": 1024,
+        "steps": 8,
+        "cfg": 1.0,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1.0,
+        "prompt_enhancement": false,
+        "comfy_memory_mode": "normalvram"
+      },
+      "training": {
+        "resolution": 1024,
+        "batch_size": 1,
+        "network_dim": 32,
+        "network_alpha": 32,
+        "learning_rate": 0.0001,
+        "fp8_base": true,
+        "fp8_scaled": true,
+        "blocks_to_swap": 6,
+        "gradient_checkpointing": true
+      },
+      "validation": "Initial memory settings only; no RTX 5090 GPU validation yet. Reduce swapping only after profiling."
+    },
+    "rtx4090": {
+      "gpu": "RTX 4090",
+      "vram_gb": 24,
+      "priority": 2,
+      "inference": {
+        "width": 1024,
+        "height": 1024,
+        "steps": 8,
+        "cfg": 1.0,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1.0,
+        "prompt_enhancement": false,
+        "comfy_memory_mode": "lowvram"
+      },
+      "training": {
+        "resolution": 768,
+        "batch_size": 1,
+        "network_dim": 32,
+        "network_alpha": 32,
+        "learning_rate": 0.0001,
+        "fp8_base": true,
+        "fp8_scaled": true,
+        "blocks_to_swap": 16,
+        "gradient_checkpointing": true
+      },
+      "validation": "Fallback candidate, not measured. If 768px training does not fit, smoke-test at 512px; do not silently reduce final job resolution."
+    }
+  },
+  "storage": {
+    "suggested_total_gb": 150,
+    "maximum_total_gb_for_future_review": 200,
+    "paid_storage_authorized": false,
+    "model_bytes": 54050863236,
+    "notes": "RAW training files plus ComfyUI inference FP8 files. About 54.05GB including a duplicate 254MB VAE; a free 50GB data disk is insufficient. No storage purchase authorized."
+  },
+  "sharing": {
+    "mode": "internal_authenticated_gateway_planned",
+    "gateway_deployed": false,
+    "members_granted": [],
+    "credentials": "Hufu Vault delivery; never copy tokens into profiles, reports, images or model metadata",
+    "comfy_cloud_lora_support": "supported_by_platform; current API integration under validation in api视频 生成"
+  },
+  "training_backend": "musubi-tuner",
+  "capability_contract": "krea2_turbo_shared_v1",
+  "schema_version": 2
+}

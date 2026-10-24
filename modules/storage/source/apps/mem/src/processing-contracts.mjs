@@ -1,0 +1,10 @@
+import {z} from 'zod';
+const uuid = z.uuid(), scope = { project_id: uuid }, fixed = z.object({ material_id: uuid, version_id: uuid, sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict();
+const recipe = z.object({ name: z.string().min(1).optional(), version: z.string().min(1).optional(), parameters: z.record(z.string(), z.unknown()).optional(), provider: z.string().min(1).optional(), model: z.string().min(1).optional() }).strict();
+const coverage = z.enum(['raw_export', 'user_attachment', 'agent_summary', 'partial', 'unknown']);
+const key = z.string().min(1).max(200), semantic = z.string().min(1).max(200), declaration = z.record(z.string(), z.unknown());
+export const processingStartSchema=z.object({ ...scope, idempotency_key: key.optional(), inputs: z.array(fixed).max(100).default([]), output_kind: z.enum(['transcript', 'experience', 'skill', 'context', 'summary', 'other']).default('other'), semantic_kind: semantic.optional(), recipe: recipe.default({}), coverage: coverage.default('unknown'), declaration: declaration.default({}), reuse: z.boolean().default(false) }).strict();
+export const processingQuerySchema=z.object({ ...scope, run_id: uuid }).strict();
+export const processingResumeSchema=z.object({ ...scope, run_id: uuid, idempotency_key: key.optional(), inputs: z.array(fixed).max(100).optional(), recipe: recipe.optional(), semantic_kind: semantic.optional(), coverage: coverage.optional(), declaration: declaration.optional(), expected_revision: z.number().int().positive().optional(), reclaim: z.boolean().default(false) }).strict();
+export const processingCancelSchema=z.object({ ...scope, run_id: uuid, idempotency_key: key.optional(), reason: z.string().max(2000).optional() }).strict();
+export const processingInputContracts=[['/v2/processing-runs',processingStartSchema],['/v2/processing-runs/query',processingQuerySchema],['/v2/processing-runs/resume',processingResumeSchema],['/v2/processing-runs/cancel',processingCancelSchema]];

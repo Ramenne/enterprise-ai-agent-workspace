@@ -1,0 +1,25 @@
+application-storage-binding-v2，2026-10-08
+
+原则
+一次批准所需资源后，交付实际可用的地址、空间与配置。资源需要认证时交付可用凭据本身，应用直接调用供应商；“认证需要凭据”不等于“必须新建应用专属凭据”。新CAM用户、专属密钥、IAM隔离与中枢托管代理均由应用需求决定，不构成默认关卡。应用负责其业务与安全实现。
+文件按应用对象键、前缀、属性与自身SQLite索引组织；项目可关联已有桶/前缀或新桶。内部对象不自动登记为公司资料、V8工作、处理任务或来源图。主动共享才进入公司资料规范，原固定资料引用保持兼容。
+
+员工客户端实际资源
+project_id=ad44cc0e-159e-4e0f-a5ca-73d3920240d9
+service_id=357b97c5-380c-4017-a332-c747385a7011
+package_id=70572722-1cb8-4cb3-a6b6-11eaa235129d
+item_id=585efc9d-95dd-4c7b-aaa0-cfc4912300eb
+cloud_owner_uin=100029668957
+appid=1316920087
+bucket=hub2-app-5e612def-1316920087
+region=ap-guangzhou
+endpoint=https://hub2-app-5e612def-1316920087.cos.ap-guangzhou.myqcloud.com
+配置位置=/srv/workspace-services/357b97c5-380c-4017-a332-c747385a7011/private-config/585efc9d-95dd-4c7b-aaa0-cfc4912300eb/resource-585efc9d-95dd-4c7b-aaa0-cfc4912300eb.private
+实际运行uid=899；配置0600，真实运行mount namespace可读。
+credential_strategy=existing_resource；来源storage.cos.manage，现有公司COS资源权限，不是仅限本桶的新专属凭据。
+配置包含backend/region/bucket/endpoint/access_key_id/secret_access_key及资源绑定。应用可用COS/S3兼容SDK自主put/get/list/delete/multipart与签名URL，日常操作不经过MCP。
+10GiB是原申请的容量预算，不是供应商硬配额；实际计费沿原云账号，实名和实际代付关系不由保管人身份推导。
+
+真实结果
+现有私有项目桶及标签读回通过；实际员工客户端UID899和运行namespace读取配置后上传200、下载200、Range206、列举200、删除204、清理确认404。无员工客户端新CAM用户或新密钥，无付费ASR测试、旧资料迁移、产品代码修改或应用重启。
+默认供给无需CAM用户/策略/密钥签发。团队主动选择isolated_application时仍可用已有可选发钥能力；已交付的现成配置保留，不因新默认策略重新开户或轮换。

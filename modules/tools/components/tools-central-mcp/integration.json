@@ -1,0 +1,51 @@
+{
+  "component": "TOOLS central MCP adapter",
+  "state": "prepared_for_central_team_deployment",
+  "date": "2026-10-21",
+  "target": {
+    "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+    "source": "packages/mcp-edge/source",
+    "service": "hub2-mcp-edge.service",
+    "engineering_component": "mcp-edge",
+    "current_source_and_host_hooks_verified": false
+  },
+  "adapter": {
+    "module": "adapter.mjs",
+    "runtime": "Node.js 20+ (built-in fetch; no third party dependencies)",
+    "factory": "createToolsAdapter()",
+    "discovery": "adapter.catalog({authorization: incomingRequestAuthorization, actorId: authenticatedActorId})",
+    "invocation": "adapter.invoke({authorization: incomingRequestAuthorization, actorId: authenticatedActorId}, toolName, toolArguments)",
+    "namespace": "tools.api.",
+    "mcp_result_mapping": "host-hooks.mjs maps value to structuredContent and JSON text and preserves isError.",
+    "central_registration": "Central team merges discovery and dispatch callbacks with actual hub.tools, hub.invoke and MCP transport. A Python host may port the thin HTTP adapter or use its existing integration mechanism; this Node module is not importable Python. Actual host source was not accessible to FGB.",
+    "caller_context": "Host supplies current authenticated request context outside model arguments. No shared member token, FGB credential file or extra Agent login step.",
+    "endpoint": "https://tools.example.invalid/agent/v1",
+    "file_upload": "Use native content/body/packageBase64 operations. A local Agent path is not accessible to the central server. Included stdio archive is a reference, not a prerequisite for every Agent.",
+    "request_recovery": "Writes require mcpRequestId. Uses the independent connector's original member/request key mapping. Replay exact original operation and payload; query the original receipt with tools.api.request_status. Gateway holds no document journal.",
+    "host_hooks": "host-hooks.mjs"
+  },
+  "claims_not_made": [
+    "installed_on_central",
+    "central_tools_registered",
+    "central_production_calls_passed",
+    "all_members_validated"
+  ],
+  "work_no": 1000347,
+  "delivery_owner": "FGB / TOOLS team",
+  "integration_and_deployment_owner": "central team / JIE",
+  "user_direction": "我们不单独做申请，我们直接把所具有的一些东西直接准备好，让中枢自己去部署。",
+  "engineering_application": {
+    "id": "34f79a33-191b-4984-a54e-f6650e84b2bf",
+    "state": "withdrawn",
+    "revision": 2,
+    "change_id": "5a0c5b41-54cb-47de-a6e3-1b5489728ad3",
+    "reason": "User chose central-owned deployment instead of granting FGB engineering authority. The withdrawn application is not a prerequisite for this handoff."
+  },
+  "central_team_remaining_work": [
+    "Inspect current central dispatcher and AGENTS; integrate the supplied adapter/hooks using its actual runtime.",
+    "Preserve current member/client authority and existing MCP tools; no shared administrator credentials.",
+    "Build and deploy using the central team's existing gateway component process; check original operation, readiness and rollback.",
+    "Verify real central MCP discovery, member reads, source-attributed knowledge write/readback, exact replay, member isolation and revoked permission refusal.",
+    "Return actual deployed commit, original deployment operation, readiness evidence, capability names, rollback and known limitations on W-1000347."
+  ]
+}

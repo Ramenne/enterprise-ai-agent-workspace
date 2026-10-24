@@ -1,0 +1,51 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createChatRepository} from '../server/business/chat-repository.mjs';
+import {PROJECT} from '../server/business/native-authority.mjs';
+const a={project_id:PROJECT,actor_id:'actor-a',display_name:'A',can_read:true,can_write:true};
+const b={...a,actor_id:'actor-b',display_name:'B'};
+const members=[{actor_id:a.actor_id},{actor_id:b.actor_id}];
+const message={body:'hello',mention_usernames:['actor-b'],attachment_ids:[]};
+test('native actor message, recipient inbox and outbox survive reopen; retry creates no duplicate',t=>{
+ const dir=mkdtempSync(join(tmpdir(),'qn-native-chat-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ let db=new DatabaseSync(join(dir,'business.db')),repo=createChatRepository(db,{now:()=>1000});
+ const sent=repo.send(a,message,'submit',{members});db.close();
+ db=new DatabaseSync(join(dir,'business.db'));t.after(()=>db.close());repo=createChatRepository(db,{now:()=>2000});
+ const replay=repo.send(a,message,'submit',{members});assert.equal(replay.message.id,sent.message.id);
+ assert.equal(repo.messages(b).messages[0].author_username,'actor-a');assert.equal(repo.notifications(a).notifications.length,0);
+ assert.equal(repo.notifications(b).notifications.length,1);assert.equal(db.prepare('SELECT COUNT(*) n FROM delivery_outbox').get().n,1);
+ assert.throws(()=>repo.send(a,{...message,body:'changed'},'submit',{members}),e=>e.code==='idempotency_conflict');
+});
+test('recall scrubs replay, reply quotes and notification content and expires queued delivery',t=>{
+ const db=new DatabaseSync(':memory:');t.after(()=>db.close());const repo=createChatRepository(db,{now:()=>1000});
+ const original=repo.send(a,message,'original',{members}).message;
+ const reply=repo.send(b,{body:'reply',reply_to_id:original.id},'reply',{members}).message;
+ repo.change(a,original.id,'recall','recall');
+ assert.equal(repo.send(a,message,'original',{members}).message.body,'');
+ assert.equal(repo.get(b,reply.id).reply_to.body,'');assert.equal(repo.notifications(b).notifications[0].summary,'');
+ assert.equal(db.prepare('SELECT state FROM delivery_outbox WHERE recipient_actor=?').get(b.actor_id).state,'expired');
+ assert.throws(()=>repo.change(b,original.id,'recall','bad'),e=>e.code==='recall_denied');
+});
+test('hide and inbox actions affect only current actor; denied scopes do not write',t=>{
+ const db=new DatabaseSync(':memory:');t.after(()=>db.close());const repo=createChatRepository(db,{now:()=>1000});
+ const original=repo.send(a,message,'original',{members}).message;
+ repo.change(b,original.id,'hide','hide');assert.equal(repo.get(b,original.id).body,'');assert.equal(repo.get(a,original.id).body,'hello');
+ const nid=repo.notifications(b).notifications[0].id;
+ assert.throws(()=>repo.notificationAction(a,nid,'read',{},'bad'),e=>e.code==='notification_not_found');
+ assert.throws(()=>repo.send({...a,can_write:false},message,'denied',{members}),e=>e.code==='project_write_denied');
+ assert.equal(db.prepare('SELECT COUNT(*) n FROM messages').get().n,1);
+});
+test('native team references filter correctly; old tasks and unrelated private refs are rejected',t=>{
+ const db=new DatabaseSync(':memory:');t.after(()=>db.close());const repo=createChatRepository(db,{now:()=>1000});
+ const reference={project_id:PROJECT,visibility:'team',project_title:'员工客户端',work_item_id:'work',work_title:'#1000133'};
+ repo.send(a,message,'reference',{members,reference});
+ assert.equal(repo.messages(b,{work_item_id:'work',q:'hello',related:'mentions'}).messages.length,1);
+ assert.equal(repo.messages(b,{work_item_id:'different'}).messages.length,0);
+ assert.throws(()=>repo.send(a,{...message,task_id:'old'},'old',{members}),e=>e.code==='retired_task_reference');
+ assert.throws(()=>repo.send(a,message,'private',{members,reference:{...reference,visibility:'personal'}}),e=>e.code==='reference_audience_mismatch');
+ assert.throws(()=>repo.send(a,message,'missing-directory'),e=>e.code==='member_directory_unavailable');
+});

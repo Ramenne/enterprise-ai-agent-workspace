@@ -1,0 +1,83 @@
+{
+  "status": "prepared_not_deployed",
+  "supplier": "AutoDL",
+  "model_family": "krea2_turbo_shared_v1",
+  "transport": "authenticated internal gateway to a private GPU worker; provisioning via external-browser AutoDL console",
+  "base_url": null,
+  "authentication": "caller identity from existing Hufu authorization; worker credential delivered separately via Vault",
+  "members_granted": [],
+  "operations": {
+    "preview": {
+      "gpu_execution": false,
+      "purpose": "validate request, model revision, LoRA permissions and limits"
+    },
+    "generate": {
+      "backend_action": "krea2ctl job --execute",
+      "idempotency_required": true,
+      "base": "Turbo via ComfyUI",
+      "max_batch": 1
+    },
+    "train": {
+      "backend_action": "krea2ctl job --execute",
+      "idempotency_required": true,
+      "base": "RAW",
+      "dataset_authorization_required": true,
+      "backend": "Musubi Tuner on AutoDL only"
+    },
+    "get_job": {
+      "scope": "owner or explicitly authorized project members",
+      "resubmit_on_unknown": false
+    },
+    "list_loras": {
+      "scope": "authorized, approved LoRA manifests only"
+    },
+    "download_output": {
+      "scope": "job output permission checked for current caller"
+    }
+  },
+  "lora_registry": {
+    "immutable_version_ids": true,
+    "checksum": "SHA256",
+    "approval_required": true,
+    "arbitrary_path_or_url": false,
+    "identity": [
+      "civitai_model_id",
+      "civitai_model_version_id",
+      "sha256"
+    ],
+    "provider_bindings": {
+      "comfy_cloud": "workspace + asset_id + ready",
+      "autodl": "worker_id + relative_filename + sha256 + ready"
+    }
+  },
+  "concurrency": {
+    "one_gpu_job_per_worker": true,
+    "train_and_inference_mutually_exclusive": true
+  },
+  "not_yet_implemented": [
+    "shared HTTP gateway",
+    "worker registration",
+    "member authorization binding",
+    "cross-host queue",
+    "cross-host idempotency",
+    "cloud shutdown integration",
+    "automatic upload to shared artifact storage"
+  ],
+  "existing_comfy_cloud_route": {
+    "edited_by_this_task": false,
+    "lora_import": "supported; active integration in linked thread",
+    "lora_generation_validation": "in_progress_as_reported_by_linked_thread"
+  },
+  "schema_version": 2,
+  "inference_engine": "ComfyUI on both providers",
+  "routing": {
+    "batch_images": "autodl_if_ready_and_within_authorized_window_else_comfy_cloud",
+    "sporadic_images": "comfy_cloud_without_dedicated_autodl_boot",
+    "video_reference_images": "same_as_images",
+    "video_generation": "comfy_cloud_only",
+    "lora_training": "autodl_only",
+    "autodl_preferred_gpu": "RTX 5090 32GB",
+    "autodl_fallback_gpu": "RTX 4090 24GB",
+    "possible_submission": "pin_original_provider_no_resubmission"
+  }
+}

@@ -1,0 +1,10 @@
+BEGIN;
+-- Registered engineering metadata only. No membership/grant/approval changes.
+UPDATE authz.engineering_projects SET descriptor=descriptor||jsonb_build_object('source','original_hufu2_project_adapter_with_readonly_legacy_dependency','build_profile','python_compat','deployment_profile','python_compat','runtime_host','zm-xiaochen','runtime_observation','original_hufu2_adapter_live_under_project_release;old_public_entry_retained','source_path','src','shared_source_project','hufu','rollback','previous_original_source_release;business_data_preserved')||CASE project_id
+ WHEN '3527ac31-0643-4f89-a6bd-b1e9768b2e42'::uuid THEN jsonb_build_object('service','hufu2-baize-compat.service','services',jsonb_build_array('hufu2-baize-compat.service'),'runtime_uid','baize')
+ WHEN '69197d56-41b0-4c8b-ac19-181f63e87c1f'::uuid THEN jsonb_build_object('service','hufu2-tools-compat.service','services',jsonb_build_array('hufu2-tools-compat.service'),'runtime_uid','fgb-collector-poc')
+ ELSE jsonb_build_object('service','hufu2-jiling-compat.service','services',jsonb_build_array('hufu2-jiling-compat.service','hufu2-jiling-ws.service'),'runtime_uid','jiling-relay') END
+ WHERE project_id IN('3527ac31-0643-4f89-a6bd-b1e9768b2e42','69197d56-41b0-4c8b-ac19-181f63e87c1f','6aedbc32-3768-47cc-a1e2-ff4297be5be7');
+UPDATE authz.engineering_projects SET descriptor=jsonb_set(descriptor,'{operations}',(descriptor->'operations')||'["rollback"]'::jsonb) WHERE project_id IN('3527ac31-0643-4f89-a6bd-b1e9768b2e42','69197d56-41b0-4c8b-ac19-181f63e87c1f','6aedbc32-3768-47cc-a1e2-ff4297be5be7') AND NOT ((descriptor->'operations')?'rollback');
+UPDATE authz.engineering_projects SET descriptor=descriptor||jsonb_build_object('application_gate_component',jsonb_build_object('parameter','component=application-gates','actions',jsonb_build_array('build','deploy','rollback'),'source','packages/application-gates/backend/shared','runtime_host','zm-xiaochen','scope','fixed_shared_three_files;four_new_hufu2_units_only;ordinary_core_deploy_unchanged')) WHERE project_id='fbe863aa-824f-4688-a24d-bc3398754704';
+COMMIT;

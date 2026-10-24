@@ -1,0 +1,4 @@
+import type pg from 'pg';
+import {betterAuth} from 'better-auth';
+export type StandardMemberAuth={auth:ReturnType<typeof betterAuth>;pool:pg.Pool;baseURL:string;prefix:string;mailConfigured:boolean;otpConfigured:boolean;issuer:string;resource:string;metadata:(request:Request)=>Promise<Response>;assertPolicy:()=>Promise<void>;verifyQuery:(query:string)=>Promise<boolean>;fixture:boolean};
+export function createStandardMemberAuth(config:{pool:pg.Pool;baseURL:string;secret:string;resource:string;wechat?:{appId:string;provider:{authorizationUrl:(state:string)=>URL;exchange:(code:string)=>Promise<{provider:'wechat';app_id:string;open_id:string;union_id?:string}>}};sendVerificationOTP?:(data:{email:string;otp:string;type:'sign-in'|'email-verification'|'forget-password'})=>Promise<void>;sendVerificationEmail?:(data:{user:{email:string};url:string;token:string})=>Promise<void>;fixture?:boolean}):StandardMemberAuth;

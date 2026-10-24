@@ -1,0 +1,17 @@
+{
+  "README.md": "f639b9148c1be0479642c87d98b4a58962bbb0c2d6efda4abc7fda0f82cf6954",
+  "examples/mcpServers.json": "f2c5a92248bcb9ad8360cdb9f057c30104522a086c73b688f321e7e821c43b86",
+  "pyproject.toml": "d474878a54de603c879dea458721974bbdb20d53d1e155d638bc7fe51b1174dc",
+  "release-notes.json": "b283ba395a5cca4c6ae0de46ba1d623cbf6841aca927994e5463aec1fe353a02",
+  "src/tools_mcp/__init__.py": "ceae3dccdaa88203d76842e42af819526d5ff621d69c392c63377450990a6992",
+  "src/tools_mcp/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+  "src/tools_mcp/cli.py": "6e14f1b37ca5e543392855eb32cb10fbc3a6b3bf88b3c5e69a2d5707378ca000",
+  "src/tools_mcp/config.py": "e4fc85dfd3627a4c5b586b4b550e342b36dada3ebb1b8c1e1c4ca3c28d6aeb34",
+  "src/tools_mcp/connector.py": "cb76bba2173dfe431e007396536b49e786f361089d466383de70cba04ee96db0",
+  "src/tools_mcp/server.py": "0a87908041528a6f7c0553e91b3e921ad8247d7ba753704e71a185a92b11b77f",
+  "tests/conftest.py": "b9ffa4f6be11af23a4ad48cd0d114433c73f3bd78940e5793e25dc6918cc1ab5",
+  "tests/test_connector.py": "6fd00b973fbf82368dc8c3d2a4777acd22d580eb6f7ee7f90367021e3d95354d",
+  "tests/test_knowledge_upload.py": "75844f8c5f4ab76e976e2ae6f59e9a06ad38cfc55ce5006983d48bbaaba66a92",
+  "tests/test_stdio_auth.py": "b51eb2da202374c6d475b940ac6201830be19368264f0e4d018166b0a737b45c",
+  "uploads/示例知识.md": "d1bf4e22e2d4d02083e918545bd9072bb541f561bba8073e814185bcdf14ab15"
+}

@@ -1,0 +1,581 @@
+{
+  "updated_at": "2026-10-05",
+  "mode": "retained_assets_no_auto_restart",
+  "services": [
+    {
+      "service_id": "hufu-legacy",
+      "title": "身份权限服务旧版",
+      "project": "身份权限服务",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/hufu",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "hub2-legacy-hufu"
+      ],
+      "legacy_project_id": "hufu",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 2859,
+        "sha256": "e17927bf88ae579a7112a67e484e9c06722e7cf84f6e9d1ccb5bac506b7cfc1a",
+        "version_id": "a8a6623a-6a85-4d93-a6a0-dd3d819aca5d",
+        "material_id": "d83bfc1e-490c-4340-ae85-d395ed2d0bef"
+      },
+      "reconstruction_work": {
+        "work_item_id": "39766705-df93-4541-ae8c-c8f91eea0f67",
+        "short_no": 1000038,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-hufu",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "mem-legacy",
+      "title": "资料存储服务旧版",
+      "project": "资料存储服务",
+      "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/mengstore",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "hub2-legacy-mengstore"
+      ],
+      "legacy_project_id": "mengstore",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1781,
+        "sha256": "22fddaaef57d1deaca84a695dbaaa4d0d0c5e38b83ce05a10d4dca712eb743a6",
+        "version_id": "8ada46c2-c4be-4b12-a38c-ab04a1f7e42a",
+        "material_id": "791318f7-dfb8-4b81-afc7-628bf3a919d9"
+      },
+      "reconstruction_work": {
+        "work_item_id": "25a0cf71-d2c6-4ac3-af97-d378441b5b3e",
+        "short_no": 1000039,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-mem",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "v8-legacy",
+      "title": "V8 旧版",
+      "project": "V8",
+      "project_id": "4e14ec27-e8b0-4d2e-a106-489c25efc29d",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/v8",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "hub2-legacy-v8"
+      ],
+      "legacy_project_id": "v8",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1746,
+        "sha256": "df8c567693291b7cea419bdc4d13dacd2fb5f198f1d16cfa784c9e399781e1a5",
+        "version_id": "78390fb7-d02c-430b-a756-45d6bc0b097a",
+        "material_id": "6be7ce95-6498-4a98-a372-768196a58b09"
+      },
+      "reconstruction_work": {
+        "work_item_id": "129488cf-7fa5-4214-aa01-a13251c7d0ac",
+        "short_no": 1000040,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-v8",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      },
+      "retirement": {
+        "state": "legacy_v8_service_retiring",
+        "legacy_scope": "old_v8_frontend_old_runtime_and_standalone_entry",
+        "new_v8_2_state": "retained_core_architecture",
+        "new_v8_2_role": "internal_work_and_collaboration_domain",
+        "canonical_domain": "work_collaboration",
+        "preserve": [
+          "v8.projects",
+          "v8.work_items",
+          "results",
+          "adoptions",
+          "context_manifests",
+          "handoffs",
+          "experiences",
+          "fixed_history"
+        ],
+        "retirement_work_short_no": 1000109,
+        "blockers": [
+          "active_work_1000079",
+          "active_or_open_reconstruction_work_1000040"
+        ],
+        "rule": "retire_legacy_runtime_only;do_not_close_or_delete_new_v8_domain",
+        "consumer_boundary": "central_work_domain_only",
+        "other_products": "use_memstore_sql_or_mcp_work_api;do_not_depend_on_v8_runtime",
+        "generic_backend_role": "retired"
+      }
+    },
+    {
+      "service_id": "mcp-legacy",
+      "title": "旧 MCP 后端",
+      "project": "身份权限服务",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/hufu-mcp",
+      "domains": [],
+      "units": [
+        "hub2-legacy-hufu-mcp"
+      ],
+      "legacy_project_id": "hufu-mcp",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 2859,
+        "sha256": "e17927bf88ae579a7112a67e484e9c06722e7cf84f6e9d1ccb5bac506b7cfc1a",
+        "version_id": "a8a6623a-6a85-4d93-a6a0-dd3d819aca5d",
+        "material_id": "d83bfc1e-490c-4340-ae85-d395ed2d0bef"
+      },
+      "reconstruction_work": {
+        "work_item_id": "39766705-df93-4541-ae8c-c8f91eea0f67",
+        "short_no": 1000038,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-hufu",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "employeeclient",
+      "title": "员工客户端",
+      "project": "员工客户端",
+      "project_id": "ad44cc0e-159e-4e0f-a5ca-73d3920240d9",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/proj/employeeclient",
+      "domains": [
+        "service.example.invalid/employeeclient/"
+      ],
+      "units": [],
+      "legacy_project_id": null,
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1815,
+        "sha256": "54f936c3140ccbb3a1928c4a38cfa889f5124dd4400b55d4a821f5ac93e471c4",
+        "version_id": "9e542bfb-f5fa-4372-aae3-dc2af5396840",
+        "material_id": "041a523f-1309-4864-a675-17e634208948"
+      },
+      "reconstruction_work": {
+        "work_item_id": "12829d80-ee74-4736-a57f-664d9e030296",
+        "short_no": 1000041,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-employeeclient",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "wanxiang",
+      "title": "万象",
+      "project": "万象",
+      "project_id": "98a78edd-d25d-4453-a222-9b0559362800",
+      "state": "active",
+      "server": "jiaxin",
+      "source_path": "/srv/workspace",
+      "domains": [
+        "service.example.invalid/viz/"
+      ],
+      "units": [
+        "hub2-project-wanxiang.service"
+      ],
+      "legacy_project_id": "viz",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由项目发布操作启动；当前服务已启动，停止/回退沿发布记录执行",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1783,
+        "sha256": "ea6df66f5d7773fa8312addf364dcdd3cda9d77eae9eaec7e72bd767ca372f7a",
+        "version_id": "ae2e9627-754b-4130-a362-1dd9d0e3a967",
+        "material_id": "edf4706a-ade9-4dec-aa38-e9cfae48c6b5"
+      },
+      "reconstruction_work": {
+        "work_item_id": "3df270eb-dee2-41f1-a64f-4c48cb3cd361",
+        "short_no": 1000042,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-wanxiang",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      },
+      "legacy_source_path": "/opt/proj/viz/site",
+      "current_release": "/srv/workspace",
+      "release_commit": "b6658aa37b11a6e1d16288fb1add6687b7aa5d72",
+      "deployment_operation": "bd5fc97c-6de5-49a0-a9b8-42339b94784f",
+      "start_operation": "2b677618-cfd2-4c0c-a143-dc3bb3037672",
+      "last_verified": "2026-10-06T11:14:48.589839+00:00",
+      "base_build_commit": "09e8a2c8e4a4c60588c5f759f2174644cd93e14f",
+      "hotfix": "serve-viz subpath path-root normalization; service restarted"
+    },
+    {
+      "service_id": "gitea",
+      "title": "代码托管",
+      "project": "代码托管",
+      "project_id": "b8f199b0-4da1-47b4-aeb7-4ebc3b05cd59",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/gitea",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "gitea"
+      ],
+      "legacy_project_id": null,
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1778,
+        "sha256": "72cf3a41f8ebba65914ae2b21a3d275f9bb490ad2a17b71b9255c4d5fc806e4a",
+        "version_id": "b406f396-9c51-465f-ab23-182c5df34a56",
+        "material_id": "1375f0f0-d4cc-431d-ae3e-eed00a8d1707"
+      },
+      "reconstruction_work": {
+        "work_item_id": "9528babc-5e22-4058-a1ca-e5ef674acb6a",
+        "short_no": 1000043,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-git",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "staging",
+      "title": "旧部署测试环境",
+      "project": "身份权限服务",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "state": "paused",
+      "server": "jiaxin",
+      "source_path": "/opt/proj/stage-*",
+      "domains": [
+        "service.example.invalid",
+        "service.example.invalid",
+        "service.example.invalid",
+        "service.example.invalid"
+      ],
+      "units": [
+        "hub2-legacy-proj-stage-hufu",
+        "hub2-legacy-proj-stage-meng",
+        "hub2-legacy-proj-stage-v8",
+        "hub2-legacy-proj-stage-mcp"
+      ],
+      "legacy_project_id": null,
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 2859,
+        "sha256": "e17927bf88ae579a7112a67e484e9c06722e7cf84f6e9d1ccb5bac506b7cfc1a",
+        "version_id": "a8a6623a-6a85-4d93-a6a0-dd3d819aca5d",
+        "material_id": "d83bfc1e-490c-4340-ae85-d395ed2d0bef"
+      },
+      "reconstruction_work": {
+        "work_item_id": "39766705-df93-4541-ae8c-c8f91eea0f67",
+        "short_no": 1000038,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-hufu",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "baize",
+      "title": "白泽",
+      "project": "白泽",
+      "project_id": "3527ac31-0643-4f89-a6bd-b1e9768b2e42",
+      "state": "retained_remote_running",
+      "server": "xiaochen",
+      "source_path": "/opt/baize",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "baize-api",
+        "baize-continuous",
+        "baize-meetings"
+      ],
+      "legacy_project_id": "baize",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1802,
+        "sha256": "cd5bab2cbf8f2126ccfbc973cb43630706604d5c9b58792cc77db7921fe3a13c",
+        "version_id": "c2ac0936-a7f7-4928-a831-d4f4a4e03c69",
+        "material_id": "d3c9c090-5660-427a-ae74-0c34e77fdee7"
+      },
+      "reconstruction_work": {
+        "work_item_id": "90bdb206-55e6-4622-a1ac-dcffeafe2a88",
+        "short_no": 1000044,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-baize",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "tools",
+      "title": "工具与梦空间入口",
+      "project": "工具",
+      "project_id": "69197d56-41b0-4c8b-ac19-181f63e87c1f",
+      "state": "retained_remote_running",
+      "server": "xiaochen",
+      "source_path": "/opt/fgb-tools",
+      "domains": [
+        "service.example.invalid"
+      ],
+      "units": [
+        "fgb-tools"
+      ],
+      "legacy_project_id": null,
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1813,
+        "sha256": "30fd7edcf36da14afb9530e91eee7158488d3c42ddfc58bbd58ac48d5d0afb51",
+        "version_id": "98d66cf3-e0dd-4416-a844-48fc5688cbbf",
+        "material_id": "6490d861-2cb3-4b6e-a17b-19a7470ec938"
+      },
+      "reconstruction_work": {
+        "work_item_id": "73233ec0-4797-47d1-a5e8-7e5dfa1f5abf",
+        "short_no": 1000045,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-tools",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "jiling",
+      "title": "机灵",
+      "project": "机灵",
+      "project_id": "6aedbc32-3768-47cc-a1e2-ff4297be5be7",
+      "state": "retained_remote_running",
+      "server": "xiaochen",
+      "source_path": "/opt/jiling-relay",
+      "domains": [
+        "service.example.invalid/jiling/"
+      ],
+      "units": [
+        "jiling-relay",
+        "jiling-relay-ws",
+        "jiling-updates"
+      ],
+      "legacy_project_id": null,
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1844,
+        "sha256": "0623afb678654d1f2f4bb747fecdc6aa755473b50bdb20c6f3e5e91e064a5ea3",
+        "version_id": "622eb549-6e98-4b1d-a6c7-c72cfc4b424b",
+        "material_id": "c217b76b-7e1b-46c2-aea4-683ac57898e1"
+      },
+      "reconstruction_work": {
+        "work_item_id": "4248dcf9-e31e-4513-ae89-f7f7226f18ba",
+        "short_no": 1000046,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-jiling",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    },
+    {
+      "service_id": "dsh",
+      "title": "DSH 与旧网关",
+      "project": "DSH",
+      "project_id": "16056ea9-ee8a-4651-a8a9-f669040472a4",
+      "state": "retired_entry_runtime_retained",
+      "server": "main",
+      "source_path": "/opt/dsh",
+      "domains": [
+        "dsh.dwshare.online",
+        "api.dwshare.online",
+        "router.dwshare.online",
+        "console.dwshare.online"
+      ],
+      "units": [
+        "dsh",
+        "model-router",
+        "new-api",
+        "dwd-login"
+      ],
+      "legacy_project_id": "dwdsh",
+      "configuration": "受控配置留在原资产目录，值不进入目录或日志",
+      "restart_policy": "由对应项目完成重构后明确启动；迁移不自动重启",
+      "engineering_access": "项目记录不等于SSH或工程执行授权；沿当前实际资格使用工程/凭据申请通路",
+      "handoff": {
+        "size": 1870,
+        "sha256": "9f3e34bc54a61573802fed56aa9ca260cca78033c2e1a6ea379ad1b83b9d3d3e",
+        "version_id": "aeb5cf18-3e89-4013-a4c5-88b9593e2783",
+        "material_id": "d67b4589-8746-43b2-a5c8-53d88304dff8"
+      },
+      "reconstruction_work": {
+        "work_item_id": "165e2c62-1567-4ec4-a86a-9a6495de09ff",
+        "short_no": 1000047,
+        "state": "open"
+      },
+      "engineering": {
+        "registered": true,
+        "workspace": "/srv/workspace",
+        "os_identity": "hubeng-dsh",
+        "filesystem_partition": "private_mount_namespace",
+        "discovery": {
+          "system": "hufu",
+          "method": "POST",
+          "path": "/v2/engineering/projects",
+          "body": {}
+        },
+        "authorization": "actual_project_grant_required;apply_and_supervisor_approve",
+        "runtime_start": "explicit_deploy_only"
+      }
+    }
+  ],
+  "engineering_partition_version": "2026-10-05-project-v1"
+}

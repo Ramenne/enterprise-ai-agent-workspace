@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {serviceInput,installProductServices} from '../../../apps/hufu/src/product-services.mjs';
+const id='9567d1c6-ae3c-4ee9-a9cd-55e83bd697f3',pid='3527ac31-0643-4f89-a6bd-b1e9768b2e42';
+assert.equal(serviceInput('/v2/services/authorize',{project_id:pid,service_id:id}),'service_authorize');
+assert.equal(serviceInput('/v2/services/credentials',{service_id:id,project_ids:[pid]}),'service_credential_issue');
+for(const body of [{project_id:pid,service_id:id,actor_id:id},{project_id:pid,name:'x',actions:['mem.read']},{project_id:pid,name:'x',capabilities:['storage']},{project_id:'bad',name:'x'}])assert.throws(()=>serviceInput('/v2/services/authorize',body));
+assert.throws(()=>serviceInput('/v2/services/revoke',{authorization_id:id,expected_revision:0}));
+assert.throws(()=>serviceInput('/v2/services/credentials',{service_id:id,project_ids:[]}));
+const routes={};installProductServices({get:(p,o,h)=>routes[p]=h,post:(p,o,h)=>routes[p]=h},{pool:{query:()=>{throw Error('no_database_call_expected')}},bearer:()=>{throw Error('no_auth_expected')},credentialKey:'synthetic-only'});
+const catalog=await routes['/v2/services/capabilities']();assert.equal(catalog.per_action_approval,false);assert.equal(catalog.agent_work_required,false);
+console.log('PASS: fixed full profile, no subject override or per-action grant, scope/credential/revision validation, capabilities contract');

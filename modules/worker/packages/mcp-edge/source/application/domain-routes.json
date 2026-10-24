@@ -1,0 +1,117 @@
+{
+  "generated_from": "apps/mcp/src/tools.ts",
+  "usecase_sha256": {
+    "document": "2fd27fe5238978462999b586d1a0e0889403d29bb238520edd8e92e9ea49bc39",
+    "workflows": "2ce58dff63378d65fe079552131e84ac0207729fce25fe18f1964af79f52b539",
+    "material-govern": "89cd0415a4c217fa652c6ad71bb906f22401fa1d7e1fc4487ba2183687bd0b35",
+    "material-maintenance": "0d7c24dbdd2b31f6e11b0b16866e15f545c3081a2c10a69aa3b80ebe0cca2f44"
+  },
+  "source_sha256": "f3490902630b7e5881abd97b648783d5f9819d78a04a918f6c8c3f4fa2e09a3a",
+  "routes": {
+    "mem.description.read": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/description-read",
+      "readOnly": true
+    },
+    "mem.description.save": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/description-save",
+      "readOnly": false
+    },
+    "mem.semantic.query": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/semantic/description-query",
+      "readOnly": true,
+      "endpointKey": "semantic"
+    },
+    "mem.semantic.index_fixed": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/semantic/description-index",
+      "readOnly": false,
+      "endpointKey": "semantic"
+    },
+    "mem.material.head": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/head",
+      "readOnly": true
+    },
+    "v8.project.search": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/projects/search",
+      "readOnly": true
+    },
+    "v8.work.search": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/work-items/search",
+      "readOnly": true
+    },
+    "mem.write_text": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/write-text",
+      "readOnly": false
+    },
+    "mem.write_text.resume": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/write-text/resume",
+      "readOnly": false
+    },
+    "v8.work.save": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/work-items/save",
+      "readOnly": false
+    },
+    "v8.work.read": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/work-items/read",
+      "readOnly": true
+    },
+    "v8.project.read": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/projects/read",
+      "readOnly": true
+    },
+    "mem.metadata.patch": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/metadata",
+      "readOnly": false
+    },
+    "mem.search": {
+      "service": "mem",
+      "method": "POST",
+      "path": "/v2/materials/search",
+      "readOnly": true
+    },
+    "v8.project.create": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/projects",
+      "readOnly": false
+    },
+    "v8.context.prepare": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/contexts/prepare",
+      "readOnly": false
+    },
+    "v8.context.materialize": {
+      "service": "v8",
+      "method": "POST",
+      "path": "/v2/contexts/:context_id/materialize",
+      "readOnly": true,
+      "pathParameter": "context_id"
+    }
+  }
+}

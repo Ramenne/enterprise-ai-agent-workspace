@@ -1,0 +1,122 @@
+/* Desktop-only metrics. Mobile geometry remains owned by existing components. */
+@media (min-width:760px) and (pointer:fine){
+ /* Native desktop starts at 760px; do not inherit the generic 900px sidebar gate. */
+ .shell-desktop-app .sidebar{display:flex!important;flex-direction:column;height:100dvh;min-height:0}
+ .shell-desktop-app .sidebar-brand{display:flex;align-items:center;justify-content:center}
+ .shell-desktop-app .sidebar-nav{display:flex;flex-direction:column}
+ .shell-desktop-app .sidebar-nav button{display:flex;align-items:center;justify-content:center;width:100%;border:0}
+ .shell-desktop-app .sidebar-account{display:flex;align-items:center;justify-content:center;width:100%;margin-top:auto;border:0;background:transparent}
+
+ .shell.shell-desktop-app:not(.shell-desktop-messages){position:fixed;inset:0;display:grid;grid-template-columns:var(--desktop-rail-width,60px) minmax(0,1fr);height:100dvh;min-height:0;overflow:hidden;--accent:#07a956;--accent-dark:#07934d;--bg:#fafafa;--paper:#fff;--ink:#1a1a1c;--muted:#888;--line:#dedede;--line-soft:#e6e6e6}
+ .shell-desktop-app:not(.shell-desktop-messages) .sidebar{width:var(--desktop-rail-width,60px);padding:18px 4px 10px;background:#e4e4e2;border-right:1px solid #d7d7d7;min-width:0}
+ .shell-desktop-app:not(.shell-desktop-messages) .sidebar-brand{font-size:0;padding:0 6px 24px;justify-content:center}.shell-desktop-app:not(.shell-desktop-messages) .sidebar-brand img{width:28px;height:28px;border-radius:4px}
+ .shell-desktop-app:not(.shell-desktop-messages) .sidebar-brand strong,.shell-desktop-app:not(.shell-desktop-messages) .sidebar-label,.shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav button>span,.shell-desktop-app:not(.shell-desktop-messages) .sidebar-account>span,.shell-desktop-app:not(.shell-desktop-messages) .sidebar-account>.icon{display:none}
+ .shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav{gap:8px}.shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav button{position:relative;justify-content:center;height:42px;min-height:42px;padding:8px;border-radius:0;background:transparent;box-shadow:none;color:#666}.shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav button.active{color:#07a956}.shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav .icon{width:22px;height:22px}.shell-desktop-app:not(.shell-desktop-messages) .sidebar-nav small{position:absolute;right:4px;top:0;background:#fa5151;color:white;font-size:9px;border-radius:8px;padding:0 4px;line-height:14px;min-width:14px;text-align:center}
+ .shell-desktop-app:not(.shell-desktop-messages) .sidebar-account{justify-content:center;padding:12px 0 0}.shell-desktop-app:not(.shell-desktop-messages) .workspace{display:flex;flex-direction:column;min-height:0;overflow:hidden}.shell-desktop-app:not(.shell-desktop-messages) .topbar{height:52px;min-height:52px;flex:none;padding:0 24px;border-bottom:1px solid #e3e3e3;background:#fafafa}.shell-desktop-app:not(.shell-desktop-messages) .content{flex:1;min-height:0;overflow:auto;width:100%;max-width:none;padding:24px}.shell-desktop-app:not(.shell-desktop-messages) .bottom-nav{display:none}
+ .shell-desktop-app .work-board,.shell-desktop-app .hub-detail{width:min(100%,1040px);max-width:1040px;margin:0 auto}.shell-desktop-app .work-heading h1{font-size:18px}.shell-desktop-app .work-main strong{font-size:14px}.shell-desktop-app .work-main{padding:12px 0}.shell-desktop-app .work-meta{font-size:11px}.shell-desktop-app .work-toolbar{padding:0 0 12px;background:transparent;border-radius:0}.shell-desktop-app .work-list{padding:0}.shell-desktop-app .work-search input{font-size:13px}
+ .shell.shell-desktop-messages{grid-template-columns:var(--desktop-rail-width,60px) var(--desktop-conversations-width,300px) minmax(0,1fr)!important;--bg:#fafafa;--paper:#fff;--paper-soft:#ededed;--ink:#1a1a1c;--muted:#888;--muted-soft:#999;--line:#dedede;--line-soft:#e6e6e6;--control-line:#dedede;--accent:#07a956;--accent-dark:#07934d;--accent-soft:#e8f5ec;--green-soft:#e8f5ec;--message-font-size:14px;--message-line-height:1.55;--message-meta-size:11px;--message-avatar-size:32px;--message-own:#95ec69;--message-own-line:#95ec69;--radius-control:3px}
+ .shell.shell-desktop-messages .sidebar{display:flex!important;flex-direction:column;grid-column:1;grid-row:1;width:var(--desktop-rail-width,60px);padding:18px 4px 10px;background:#e4e4e2;border-right:1px solid #d7d7d7}
+ .shell-desktop-messages .sidebar-brand{padding:0 6px 24px}.shell-desktop-messages .sidebar-brand img{width:28px;height:28px;border-radius:4px}
+ .shell-desktop-messages .sidebar-nav{display:flex;flex-direction:column;gap:8px}.shell-desktop-messages .sidebar-nav button{display:flex;align-items:center;justify-content:center;width:100%;border:0;height:42px;min-height:42px;padding:8px;border-radius:0;background:transparent!important;box-shadow:none!important;color:#666}.shell-desktop-messages .sidebar-nav button.active{color:#07a956}.shell-desktop-messages .sidebar-nav .icon{width:22px;height:22px;stroke-width:1.6}.shell-desktop-messages .sidebar-nav small{right:4px;top:0;background:#fa5151;color:#fff;font-size:9px;border-radius:8px;padding:0 4px;line-height:14px;min-width:14px;text-align:center}
+ .shell-desktop-messages .sidebar-account{display:flex;align-items:center;justify-content:center;border:0;background:transparent;margin-top:auto;padding-top:12px}.shell-desktop-messages .sidebar-account .member-avatar{border-radius:3px}
+ .shell-desktop-messages .desktop-conversations{position:relative;overflow:hidden;display:flex;flex-direction:column;grid-column:2;grid-row:1;background:#e6e6e8}
+ .shell-desktop-messages .conversation-resize{position:absolute;top:0;bottom:0;right:0;width:6px;cursor:ew-resize;touch-action:none;z-index:4;outline-offset:-3px}
+ .shell-desktop-messages .conversation-resize:hover{background:#0000000b}
+ .shell-desktop-messages .workspace{grid-column:3;grid-row:1;width:auto;min-width:0}
+ .shell-desktop-messages .conversations.embedded{flex:1;height:100%;min-height:0;overflow:auto;--conversation-avatar-size:40px;--conversation-inset:12px;--conversation-gap:10px;--conversation-title-line:20px;--conversation-preview-line:18px;--conversation-height:64px;background:#e6e6e8}
+ .shell-desktop-messages .embedded .conversation-row{min-height:64px}.shell-desktop-messages .embedded .conversation-row::after{display:none}.shell-desktop-messages .embedded .conversation-row:hover{background:#dedede}.shell-desktop-messages .embedded .conversation-row.selected{background:#19ac71;color:#fff}.shell-desktop-messages .embedded .conversation-row.pinned:not(.selected){background:#e4e4e4}
+ .shell-desktop-messages .embedded .conversation-copy strong{font-size:14px;font-weight:400}.shell-desktop-messages .embedded .conversation-copy small{font-size:12px;color:#999}.shell-desktop-messages .embedded .conversation-row time{font-size:11px;color:#9e9fa6}.shell-desktop-messages .embedded .conversation-avatar{border-radius:3px}.shell-desktop-messages .embedded .conversation-search{min-height:28px;margin:18px 12px 14px;padding:0 8px;background:#dedede;border-radius:4px}.shell-desktop-messages .embedded .conversation-search input{font-size:12px;padding:5px 0}.shell-desktop-messages .embedded .conversation-search .icon{width:14px;height:14px}.shell-desktop-messages .embedded .conversation-search input::placeholder{color:#888}
+ .shell-desktop-messages .chat-page{background:#fafafa;--message-avatar-size:32px;--message-font-size:14px;--message-meta-size:11px}
+ .shell.shell-desktop-messages .chat-heading{height:52px;min-height:52px;padding:6px 20px;background:#fafafa;border-bottom:1px solid #e3e3e3}.shell-desktop-messages .chat-heading .member-count{height:36px;min-height:36px;padding:0;gap:0;justify-content:center}.shell-desktop-messages .chat-heading .member-count strong{font-size:17px;font-weight:500;line-height:22px}.shell-desktop-messages .chat-heading .member-count small{font-size:11px;line-height:14px}.shell-desktop-messages .chat-heading .icon-btn{width:32px;height:32px;min-width:32px;min-height:32px}.shell-desktop-messages .chat-heading .icon{width:19px;height:19px}
+ .shell-desktop-messages .chat-stream{padding:18px 20px;gap:16px;background:#fafafa}.shell-desktop-messages .chat-message{gap:10px}.shell-desktop-messages .chat-message-main{max-width:min(70%,560px)}.shell-desktop-messages .chat-meta{font-size:11px;margin-bottom:4px;color:#999}.shell-desktop-messages .chat-time-divider{font-size:12px;color:#9e9fa6;margin:4px 0 12px}
+ .shell-desktop-messages .chat-bubble:not(.media-message),.shell-desktop-messages .chat-bubble.media-message>p{padding:8px 11px;border-radius:4px;font-size:14px;line-height:1.55;box-shadow:none}.shell-desktop-messages .chat-bubble p{font-size:14px;line-height:1.55}.shell-desktop-messages .chat-bubble::before{top:13px!important;width:7px!important;height:7px!important}.shell-desktop-messages .chat-avatar{border-radius:3px}.shell-desktop-messages .chat-attachment-card{border-radius:4px;box-shadow:none}
+
+ .shell-desktop-messages .chat-composer{position:relative;min-height:140px;max-height:none;flex:none;padding:10px 16px 12px;background:#fafafa;border-top:1px solid #e8e8e9;overflow:visible}
+ .shell-desktop-messages .composer-resize{position:absolute;top:-4px;left:0;right:0;height:8px;cursor:ns-resize;touch-action:none;z-index:3;outline-offset:-3px}
+ .shell-desktop-messages .composer-content{display:flex;flex-direction:column;height:100%;min-height:0;overflow:auto}
+ .shell-desktop-messages .composer-line{flex:1;min-height:64px;display:grid;grid-template-columns:28px 28px 28px minmax(0,1fr);grid-template-rows:minmax(32px,1fr) 28px;gap:4px 10px;align-items:start}
+ .shell-desktop-messages .composer-line .message-input{grid-column:1/-1;grid-row:1;width:100%;height:100%!important;min-height:32px;max-height:none;border:0!important;border-radius:0;box-shadow:none!important;padding:2px 0;background:transparent;font-size:14px;line-height:22px;resize:none}
+ .shell-desktop-messages .composer-voice,.shell-desktop-messages .composer-emoji,.shell-desktop-messages .composer-more{grid-row:2;min-width:28px!important;min-height:28px!important;width:28px!important;height:28px!important;padding:4px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#555!important}.shell-desktop-messages .composer-emoji{grid-column:1}.shell-desktop-messages .composer-more{grid-column:2}.shell-desktop-messages .composer-voice{grid-column:3}.shell-desktop-messages .composer-voice svg,.shell-desktop-messages .composer-emoji .icon,.shell-desktop-messages .composer-more svg{width:20px!important;height:20px!important}
+ .shell-desktop-messages .composer-more::before,.shell-desktop-messages .composer-voice::before{display:none!important}
+ .shell-desktop-messages .composer-send{grid-column:4;grid-row:2;justify-self:end;position:static;height:28px;min-height:28px;padding:3px 18px;border-radius:4px;font-size:13px;background:#19ac71;border-color:#19ac71;color:white}
+ .shell-desktop-messages .composer-send:disabled{background:#ededed;border-color:#ededed;color:#aaa;opacity:1}
+ .shell-desktop-messages .composer-hold{grid-column:1/-1;grid-row:1;min-height:52px}
+ .shell-desktop-messages .desktop-file-error{font-size:12px;padding:4px 0;color:#888}
+ .shell-desktop-messages .desktop-pending-files{display:flex;gap:10px;flex:none;max-height:55%;overflow:auto;padding:2px 2px 8px}
+ .shell-desktop-messages .desktop-pending-file{position:relative;flex:none;display:flex;align-items:center;gap:10px;max-width:270px;padding:10px 14px;background:#ededed;border-radius:4px;font-size:13px;min-height:60px}
+ .shell-desktop-messages .desktop-pending-file>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shell-desktop-messages .desktop-pending-file small{display:block;font-size:11px;color:#999;margin-top:4px}
+ .shell-desktop-messages .desktop-pending-file.is-image{padding:4px 22px 4px 4px;background:transparent;min-width:68px;min-height:68px}.shell-desktop-messages .desktop-pending-file img{display:block;width:auto;max-width:220px;height:auto;min-width:40px;min-height:40px;max-height:130px;object-fit:contain;border-radius:2px}
+ .shell-desktop-messages .pending-remove{position:absolute;right:0;top:0;width:20px;height:20px;background:#555;color:#fff;border:0;border-radius:50%;line-height:18px;font-size:16px;cursor:pointer}
+ .shell-desktop-messages .pending-source input{display:none}.shell-desktop-messages .pending-source{font-size:11px;text-decoration:underline;cursor:pointer}
+ .shell-desktop-messages .embedded .conversation-row.selected .conversation-copy small,.shell-desktop-messages .embedded .conversation-row.selected time{color:#d4f0e2}
+ .shell-desktop-messages .chat-bubble:not(.media-message){background:#eeeeef}.shell-desktop-messages .chat-message.own .chat-bubble:not(.media-message){background:var(--message-own)}
+ .shell-desktop-messages .transfer-card{border-radius:4px;padding:10px 12px}.shell-desktop-messages .transfer-copy strong{font-size:13px}.shell-desktop-messages .transfer-copy small{font-size:11px}.shell-desktop-messages .transfer-message .btn{font-size:12px;min-height:28px;padding:3px 10px;border-radius:3px}
+}
+@media (min-width:760px) and (pointer:fine){
+ .shell-desktop-messages .notice-strip{padding:0;background:#fafafa;position:static}
+ .shell-desktop-messages .notice-open{min-height:30px;border:0;border-bottom:1px solid #e3e3e3;border-radius:0;padding:5px 20px;background:#fafafa;font-size:11px;color:#777}
+ .shell-desktop-messages .notice-open .icon{width:13px;height:13px;color:#888}.shell-desktop-messages .notice-count{font-size:10px}
+ .shell-desktop-messages .message-file{border-radius:4px!important}.shell-desktop-messages .file-main strong{font-size:13px}.shell-desktop-messages .message-file .attachment-info small{font-size:11px}.shell-desktop-messages .file-format-mark{width:32px;height:36px;border-radius:3px}
+}
+/* Overlays are mounted outside AppShell, so desktop tokens must reach :root. */
+@media (min-width:760px) and (pointer:fine){
+ :root{--accent:#07a956;--accent-dark:#07934d;--accent-soft:#e8f5ec;--green:#07a956;--green-dark:#07934d;--green-soft:#e8f5ec;--ink:#1a1a1c;--bg:#fafafa;--paper:#fff;--paper-soft:#ededed;--line:#dedede;--line-soft:#e6e6e6;--control-line:#dedede;--radius:4px;--radius-control:3px;--control-height:32px;--touch-target:32px;--shadow:0 6px 24px #0000001a;--shadow-soft:none}
+ .overlay{background:#0003;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .overlay .modal{border-radius:4px;box-shadow:0 6px 24px #00000026;border:1px solid #ddd}
+ .overlay .modal-header{padding:12px 16px;min-height:48px}.overlay .modal-title h2{font-size:15px;font-weight:500}.overlay .modal-body{padding:16px 20px}.overlay .modal-footer{padding:12px 20px;gap:8px}.overlay .btn{min-height:30px;padding:5px 18px;border-radius:3px;font-size:13px;box-shadow:none}.overlay .icon-btn{width:28px;height:28px;min-width:28px;min-height:28px;border-radius:3px}.overlay .settings-row{min-height:44px;padding:10px 0}.overlay .settings-row strong{font-size:14px}.overlay .callout{border-radius:3px;box-shadow:none}
+ .shell-desktop-app .profile-page{width:min(100%,800px);margin:0 auto}.shell-desktop-app .profile-page .card,.shell-desktop-app .profile-hero{border-radius:4px;box-shadow:none}.shell-desktop-app .profile-page .settings-row{min-height:46px;padding:10px 16px}.shell-desktop-app .profile-page .settings-row strong{font-size:14px}
+ .shell-desktop-app .notice-strip{padding:0;background:#fafafa}.shell-desktop-app .notice-open{min-height:30px;border:0;border-bottom:1px solid #e3e3e3;border-radius:0;padding:5px 20px;background:#fafafa;font-size:11px;color:#777}.shell-desktop-app .notice-open .icon{width:13px;height:13px;color:#888}
+}
+/* Native window chrome follows the app's flat desktop surfaces. */
+@media (min-width:760px) and (pointer:fine){
+ .desktop-native .sidebar{padding-top:var(--desktop-caption-inset,50px)!important}.desktop-native .sidebar::before{content:'';position:fixed;top:0;left:0;width:var(--desktop-rail-width,60px);height:var(--desktop-caption-height,32px);-webkit-app-region:drag;z-index:2}
+ .desktop-native .embedded .conversation-search{margin-top:12px;margin-bottom:12px}.desktop-native .topbar,.desktop-native .chat-heading{-webkit-app-region:drag}.desktop-native .topbar button,.desktop-native .topbar a,.desktop-native .chat-heading button,.desktop-native .chat-heading a,.desktop-native input,.desktop-native textarea{-webkit-app-region:no-drag}
+ .desktop-native .connection-page{background:#fafafa;padding:56px 24px 32px}.desktop-native .connection-card{width:360px;max-width:100%;padding:28px;border-radius:6px;border:1px solid #e2e2e2;box-shadow:0 4px 18px #00000008}.desktop-native .connection-card .welcome-mark{width:48px;height:48px;margin-bottom:20px}.desktop-native .connection-card h2{font-size:20px;font-weight:500;line-height:1.5}.desktop-native .connection-card>p{font-size:12px;line-height:1.7;color:#888;margin:12px 0 24px}.desktop-native .connection-card small{font-size:11px}.desktop-native .connect-form .input{min-height:34px;height:34px;font-size:13px;border-radius:3px;padding:6px 10px}.desktop-native .connect-form .form-field{margin-bottom:12px}.desktop-native .connect-form .btn{min-height:32px;border-radius:3px;font-size:13px;box-shadow:none}.desktop-native .connect-form label{font-size:12px}
+ .chat-image-viewer{inset:40px!important;top:40px!important;bottom:40px!important;height:auto!important;max-height:calc(100dvh - 80px);width:auto;border:1px solid #3c3c3c;border-radius:6px;box-shadow:0 8px 36px #0006;background:#202020}.chat-image-viewer header{height:44px;padding:4px 12px;border-bottom:1px solid #ffffff0d}.chat-image-viewer header button{width:30px;height:30px;border-radius:3px}.chat-image-viewer header .icon{width:18px;height:18px}.chat-image-viewer .viewer-actions{bottom:12px;right:16px;gap:8px}.chat-image-viewer .viewer-actions button{width:32px;height:32px;border-radius:3px;padding:7px;background:#ffffff18}.chat-image-viewer .viewer-actions .icon{width:18px;height:18px}
+}
+
+/* Quiet, narrow scroll thumbs across desktop panes; the track stays transparent. */
+@media (min-width:760px) and (pointer:fine){
+ .shell-desktop-app :is(.chat-stream,.conversations.embedded,.composer-content,.message-input,.desktop-pending-files),.desktop-native :is(.modal-body,.hub-browser){scrollbar-width:thin;scrollbar-color:#00000026 transparent}
+ .shell-desktop-app :is(.chat-stream,.conversations.embedded,.composer-content,.message-input,.desktop-pending-files)::-webkit-scrollbar{width:6px;height:6px}
+ .shell-desktop-app :is(.chat-stream,.conversations.embedded,.composer-content,.message-input,.desktop-pending-files)::-webkit-scrollbar-track{background:transparent;border:0}
+ .shell-desktop-app :is(.chat-stream,.conversations.embedded,.composer-content,.message-input,.desktop-pending-files)::-webkit-scrollbar-thumb{background:#00000026;border-radius:8px}
+ .shell-desktop-app :is(.chat-stream,.conversations.embedded,.composer-content,.message-input,.desktop-pending-files)::-webkit-scrollbar-thumb:hover{background:#00000040}
+ .shell-desktop-app ::-webkit-scrollbar-button{display:none;width:0;height:0}.shell-desktop-app ::-webkit-scrollbar-corner{background:transparent}
+ .shell-desktop-app .voice-transcript{border:0;border-radius:4px;box-shadow:none;background:#eeeeef;padding:8px 11px;font-size:14px}
+ .shell-desktop-app .transcript-empty{color:#888;font-size:13px}
+}
+/* Desktop context actions use a readable vertical menu; touch keeps the compact tray. */
+@media (min-width:760px) and (pointer:fine){
+ html body .message-actions-mask.message-actions-mask{background:transparent}
+ html body .message-actions-mask .message-actions,html body .message-actions-mask .message-actions:focus-visible{min-width:180px;width:max-content;border:1px solid #d9d9d9;border-radius:5px;padding:4px;background:#fff;color:#1a1a1c;box-shadow:0 4px 14px #00000020}
+ html body .message-actions::after{display:none}
+ html body .message-actions .message-action-row{display:flex;flex-flow:column nowrap;align-items:stretch;justify-content:flex-start;max-height:inherit}
+ html body .message-actions .message-action-row>button{flex:none;width:100%;min-height:32px;padding:5px 12px;display:flex;flex-direction:row;justify-content:flex-start;gap:10px;border-radius:3px;color:#1a1a1c;font-size:13px;white-space:nowrap}
+ html body .message-actions .message-action-row>button .icon{width:16px;height:16px;color:#777}
+ html body .message-actions .message-action-row>button:hover,html body .message-actions .message-action-row>button:focus-visible{background:#ededed;outline:none}
+ html body .message-actions .message-action-row>button:active{background:#dedede}
+}
+
+/* Use native macOS typography rather than mixing a web UI face with CJK fallbacks. */
+@media (min-width:760px) and (pointer:fine){
+ :root{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;font-synthesis:none;letter-spacing:normal}
+ .shell-desktop-app{font-size:14px;line-height:1.5}
+ .shell-desktop-messages .chat-page{--message-font-size:15px;--message-meta-size:12px}
+ .shell-desktop-messages .chat-bubble:not(.media-message),.shell-desktop-messages .chat-bubble.media-message>p,.shell-desktop-messages .chat-bubble p{font-size:15px;line-height:1.5;font-weight:400;letter-spacing:normal}
+ .shell-desktop-messages .composer-line .message-input{font-size:15px;line-height:23px}
+ .shell-desktop-messages .chat-meta{font-size:12px;font-weight:400}
+ .shell-desktop-messages .embedded .conversation-copy strong{font-size:14px;font-weight:400;letter-spacing:normal}
+ .overlay .body-text,.overlay .settings-row strong{font-size:14px;font-weight:400;line-height:1.6}
+ html body .message-actions .message-action-row>button{font-size:14px;font-weight:400}
+}
+
+@media (min-width:760px) and (pointer:fine){.overlay .modal.desktop-about-modal{width:380px;max-width:calc(100vw - 32px)}.desktop-about-modal .modal-body{padding:18px 24px}.desktop-about-modal .desktop-about{border:0;margin:0;padding:8px 0 14px}}
+
+@media (min-width:760px) and (pointer:fine){
+ .shell-desktop-app .topbar .top-actions{gap:8px;align-items:center}
+ .shell-desktop-app .topbar .icon-btn,.shell-desktop-app .topbar .account-shortcut{display:flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;line-height:1}
+ .shell-desktop-app .topbar .icon-btn .icon{display:block;width:18px;height:18px}
+ .shell-desktop-app .topbar .account-shortcut .member-avatar{border-radius:3px}
+}
+

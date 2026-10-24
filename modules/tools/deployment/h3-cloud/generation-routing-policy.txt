@@ -1,0 +1,13 @@
+2026-10-21 用户最新约定（覆盖此前60秒AutoDL排队方案）
+
+普通生图、视频参考图、加载LoRA生图、视频生成，全部使用ComfyUI Cloud，不因任务集中或批量而改走AutoDL，也不等AutoDL库存或排队。
+AutoDL仅在明确的LoRA训练任务中调研/部署，需核对训练权重许可、数据集、预算及关机保护。现有训练入口只提供计划，不能描述成已实现训练。
+用户当前不要求删除AutoDL环境或数据盘。旧任务仍查原供应商/原UUID，不因新路由重复生成。
+
+生图入口：visual.image.preview / visual.image.generate。
+LoRA：visual.lora.resolve / visual.lora.import（target=comfy_cloud）/ visual.lora.list / visual.lora.get。
+视频：visual.video.*，Cloud only。
+训练：visual.training.plan，AutoDL only；执行能力待另行实际验证。
+
+批量与零散请求接受相同生图能力；批量标签保留兼容，但不再控制供应商。
+当前Cloud能力：Krea2 Turbo FP8，8步、CFG1、Euler/simple，宽高16倍数且总像素<=2MP，单个已导入LoRA。适用范围以实际MCP契约为准。

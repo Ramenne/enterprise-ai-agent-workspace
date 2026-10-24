@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import http from 'node:http';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createGallery} from '../../sites/visual-lab-server/server/index.mjs';
+const auth=http.createServer((req,res)=>{const token=req.headers.authorization?.slice(7);res.setHeader('content-type','application/json');if(!['test-member','test-other','test-outsider'].includes(token)){res.statusCode=401;return res.end('{}')}res.end(JSON.stringify({actor_id:token,member_label:token,member_role:'member',organization_id:token==='test-outsider'?'other':'fa1d73b2-bf87-45c1-abef-b7739503819a'}))});await new Promise(r=>auth.listen(0,'127.0.0.1',r));
+const state=await mkdtemp(join(tmpdir(),'gallery-loop-'));const app=await createGallery({stateDir:state,authBase:'http://127.0.0.1:'+auth.address().port,origin:'http://127.0.0.1'});await new Promise(r=>app.server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+app.server.address().port+'/visual-lab';
+const call=(name,args,who='test-member')=>fetch(base+'/api/loop/gallery.'+name,{method:'POST',headers:{'Content-Type':'application/json',...(who?{Authorization:'Bearer '+who}:{})},body:JSON.stringify(args)});
+const checks=[];const ck=(name,ok)=>{assert(ok,name);checks.push(name)};
+try{
+ ck('匿名反馈拒绝',(await call('feedback.list',{post_id:'volcano'},'')).status===401);
+ ck('异组织拒绝',(await call('feedback.list',{post_id:'volcano'},'test-outsider')).status===403);
+ const args={post_id:'volcano',body:'隔离AI观察测试',source:'agent_observation',idempotency_key:'feedback-v1'};
+ const both=await Promise.all([call('feedback.add',args),call('feedback.add',args)]);const result=await Promise.all(both.map(r=>r.json()));
+ ck('并发重复反馈只有一条',both.every(r=>r.status===200)&&result[0].feedback.id===result[1].feedback.id&&result.some(r=>r.replayed));
+ ck('作者真实身份和AI来源',result[0].feedback.author==='test-member'&&result[0].feedback.source==='agent_observation'&&result[0].feedback.body.startsWith('AI观察：'));
+ ck('同键换正文拒绝',(await call('feedback.add',{...args,body:'changed'})).status===409);
+ ck('伪造作者字段拒绝',(await call('feedback.add',{...args,author:'someone'})).status===400);
+ ck('未定义来源拒绝',(await call('feedback.add',{...args,source:'human_verified'})).status===400);
+ ck('空白正文拒绝',(await call('feedback.add',{...args,body:'  ',idempotency_key:'empty'})).status===400);
+ ck('成员之间幂等键隔离',(await(await call('feedback.add',args,'test-other')).json()).feedback.id!==result[0].feedback.id);
+ const list=await(await call('feedback.list',{post_id:'volcano'})).json();ck('同一作品点评库回读',list.total===2&&list.items.every(r=>r.source==='agent_observation'));
+ const full=await(await fetch(base+'/api/tools/get',{method:'POST',headers:{Authorization:'Bearer test-member','Content-Type':'application/json'},body:JSON.stringify({post_id:'volcano'})})).json();ck('原画廊接口可见相同点评',full.comments.length===2);
+ const form=new FormData();form.set('action','comment');form.set('postId','volcano');form.set('body','old web feedback');await fetch(base+'/api/gallery',{method:'POST',headers:{Authorization:'Bearer test-member'},body:form});
+ const again=await(await call('feedback.list',{post_id:'volcano'})).json();ck('旧网页点评来源不冒认',again.items.some(r=>r.source==='web_comment'));
+ const provenance=await(await call('provenance.get',{post_id:'volcano'})).json();ck('来源回读含参数和点评无伪造草稿',provenance.post_id==='volcano'&&provenance.feedback.length===3&&provenance.recipe===null&&Object.hasOwn(provenance,'parameters'));
+ ck('私有任务读取仍隔离',(await call('generation.get',{id:'00000000-0000-4000-8000-000000000001'},'test-other')).status===404);
+ ck('列举任务只限当前成员',(await(await call('generation.list',{})).json()).jobs.length===0);
+ ck('共同范围宽度预检拒绝',(await call('generation.preview',{prompt:'x',width:520})).status===400);
+ console.log(JSON.stringify({state:'passed',count:checks.length,checks,production_effects:0},null,2));
+}finally{await app.close();await new Promise(r=>auth.close(r));await rm(state,{recursive:true,force:true})}

@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import ts from 'typescript';
+const source=readFileSync(new URL('../src/ui/views/ChatView.vue',import.meta.url),'utf8');
+const code=ts.transpileModule(source.slice(source.indexOf('function saveViewState(){'),source.indexOf('async function restoreViewPoint')),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
+function fixture(){const events=[],ref=value=>({value}),scope={account:'a',peer:'b'},route={name:'chat'},peer=ref('b'),active=ref(true),saved={};const deps={viewActive:active,route,peer,viewResumeScope:scope,viewResumeReady:true,viewResumeBusy:ref(false),locatingDate:ref(false),restoringQuote:ref(false),session:{user:{username:'a'}},chat:{account:'a',peer:'b'},quoteOrigin:ref(null),filter:ref({peer:'b',q:'work'}),searchText:ref('work'),searchOpen:ref(true),historyDate:ref(''),historyNote:ref(''),reading:{capture:()=>{events.push('capture');return {id:'old',y:517,offset:24};}},atLatest:ref(false),unreadBelow:ref(0),filterActive:ref(false),query:{messages:ref([])},quoteView:ref(false),captureApiLease:()=>({account:'a',valid:()=>true}),viewResumeKey:p=>'resume:'+p,metaSet:async(a,k,v)=>{events.push('write');saved.value=v;},viewResumeError:ref('')};const run=new Function(...Object.keys(deps),code+';return saveViewState;')(...Object.values(deps));return {run,route,peer,active,events,saved};}
+test('visible chat saves its semantic reading anchor before navigation',()=>{const f=fixture();f.run();assert.deepEqual(f.events,['capture','write']);assert.equal(f.saved.value.point.anchor.y,517);});
+test('departed, deactivated and different-peer renders cannot overwrite the saved reading point',()=>{for(const change of [f=>f.route.name='work-detail',f=>f.active.value=false,f=>f.peer.value='c']){const f=fixture();change(f);f.run();assert.deepEqual(f.events,[]);}});

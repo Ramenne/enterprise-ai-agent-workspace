@@ -1,0 +1,18 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import ts from 'typescript';import {DatabaseSync} from 'node:sqlite';import {randomUUID,createHash} from 'node:crypto';import {EventEmitter} from 'node:events';
+import {createChatRepository} from '../server/business/chat-repository.mjs';import {createPrivateAttachments} from '../server/business/private-attachments.mjs';import {PROJECT} from '../server/business/native-authority.mjs';import {encryptedSource,encryptedSize} from '../shared/private-media.mjs';
+const a={actor_id:'sender',can_read:true,can_write:true,project_id:PROJECT},b={...a,actor_id:'recipient'};
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+test('client private upload keeps private names out of Mem, binds opaque fixed source and retains original for offline reuse',async t=>{
+ const db=new DatabaseSync(':memory:');t.after(()=>db.close());createChatRepository(db);const repo=createPrivateAttachments(db),requests=[],retained=[];let current=true,cipher,fixed,retentionDone;
+ const file=new File(['original private text'],'敏感名称.txt',{type:'text/plain',lastModified:1});
+ const session={rpc:async()=>({fixed_ref:fixed}),fileStream:async()=>new Response(cipher)};
+ const deps={captureApiLease:()=>({account:a.actor_id,valid:()=>current}),apiRequest:async(method,path,options)=>{requests.push({method,path});if(path.endsWith('/bind'))return repo.bind(a,path.split('/').at(-2),options.body,session);return repo.prepare(a,options.body,options.idempotencyKey,[a,b]);},
+  fileDigest:async f=>sha(Buffer.from(await f.arrayBuffer())),resumeIdentity:async()=> 'identity',rememberedUpload:(_id,key)=>key,rememberUpload(){},encryptedSource,encryptedSize,
+  saveNativeFile:async(source,key,metadata,signal,progress,retain)=>{assert.match(source.name,/\.qnenc$/);assert.ok(!source.name.includes('敏感'));assert.equal(source.type,'application/octet-stream');assert.deepEqual(metadata,{internal_encrypted:true});assert.equal(retain,false);cipher=Buffer.from(await(await source.readPart(0,source.size)).arrayBuffer());fixed={material_id:randomUUID(),version_id:randomUUID(),sha256:sha(cipher),size:cipher.length};return {fixed_ref:fixed};},
+  retainUploadedAttachment:(attachment,context,original)=>retentionDone=(async()=>{assert.equal(context.account,a.actor_id);assert.equal(attachment.size,file.size);retained.push(await original.text());})(),serviceOrigin:()=>'',window:{location:{href:'http://localhost'}},
+ };
+ const source=await readFile(new URL('../src/chat/private-files.ts',import.meta.url),'utf8'),js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/^import[^\n]+\n/gm,'').replace(/^export /gm,'');const client=new Function(...Object.keys(deps),js+';return {uploadPrivateFile};')(...Object.values(deps));
+ const result=await client.uploadPrivateFile(file,'first',b.actor_id,'file',undefined,undefined,()=>{});assert.match(result.id,/^private:/);await retentionDone;assert.deepEqual(retained,['original private text']);assert.equal(requests.length,2);
+ const response=new EventEmitter(),parts=[];response.writeHead=()=>{};response.write=part=>{parts.push(part);return true;};response.end=()=>{};await repo.stream(a,result.id.slice(8),session,response,new AbortController().signal);assert.equal(Buffer.concat(parts).toString(),'original private text');
+ current=false;await assert.rejects(client.uploadPrivateFile(file,'next',b.actor_id,'file',undefined,undefined,()=>{}),e=>e.name==='AbortError');assert.equal(requests.length,2);
+});

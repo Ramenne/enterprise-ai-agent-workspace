@@ -1,0 +1,6 @@
+{
+ "extends":"../../tsconfig.json",
+ "compilerOptions":{"rootDir":"src","outDir":"dist"},
+ "include":["src/transport.ts","src/credentials.ts","src/projection.ts","src/local-files.ts","src/replay.ts","src/index.ts","src/adapters.ts","src/cli.ts"],
+ "exclude":["dist"]
+}

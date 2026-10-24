@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import ts from 'typescript';
+const compiled=ts.transpileModule(readFileSync(new URL('../src/collaboration/pending.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ES2022}}).outputText;
+const {savePending,loadPending,clearPending}=await import('data:text/javascript;base64,'+Buffer.from(compiled).toString('base64'));
+test('collaboration pending: identity isolation, stale callbacks, no message persistence',()=>{
+ const store=new Map();globalThis.localStorage={getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)};
+ savePending('a',{id:'old',computer:'mac1',thread:'task1',message:'private text'});
+ assert.equal(JSON.stringify([...store.values()]).includes('private text'),false);
+ assert.equal(loadPending('b'),null);
+ savePending('a',{id:'new',computer:'mac2',thread:'task2'});
+ clearPending('a','old');assert.equal(loadPending('a').id,'new');
+ clearPending('a','new');assert.equal(loadPending('a'),null);
+ assert.throws(()=>savePending('',{id:'x',computer:'m',thread:'t'}));
+ store.set('employeeclient:collaboration:pending:a','{}');assert.throws(()=>loadPending('a'));
+ globalThis.localStorage.setItem=()=>{throw new Error('quota');};
+ assert.throws(()=>savePending('a',{id:'x',computer:'m',thread:'t'}),/quota/);
+ delete globalThis.localStorage;
+});

@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdtempSync,writeFileSync,rmSync,readFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {randomBytes,randomUUID} from 'node:crypto';
+const dir=mkdtempSync(join(tmpdir(),'hardware-routes-'));writeFileSync(join(dir,'home.html'),readFileSync(new URL('../../视频图片采集/web/static/home.html',import.meta.url)));
+const app=spawn(process.execPath,['--import','./tests/hardware-mock.mjs','server.mjs'],{cwd:new URL('../',import.meta.url),env:{...process.env,PORT:'3097',XIANYU_KEY:randomBytes(32).toString('base64'),DATA_PATH:join(dir,'data.sqlite'),TOOLS_HOME:join(dir,'home.html')}});let errors='';app.stderr.on('data',x=>errors+=x);
+const request=(path,init={})=>fetch('http://127.0.0.1:3097'+path,{redirect:'manual',...init});
+const origin='https://tools.example.invalid/';
+try{
+ await new Promise((resolve,reject)=>{app.stdout.once('data',resolve);app.once('exit',c=>reject(Error(errors+' exit '+c)));setTimeout(()=>reject(Error('listen timeout')),10000).unref()});
+ for(const path of ['/hardware/api/orders','/hardware/api/options','/hardware/api/file?id='+randomUUID()])assert.equal((await request(path)).status,401);
+ assert.equal((await request('/hardware/')).headers.get('location'),'/login');
+ const login=async email=>{const r=await request('/login',{method:'POST',headers:{Origin:origin},body:'email='+email+'&otp=123456'});assert.equal(r.status,303);return {Cookie:r.headers.get('set-cookie').split(';')[0],Origin:origin,'Content-Type':'application/json'}};
+ const h=await login('viewer@example.test'),other=await login('spoof@example.test');const roster=(await (await request('/hardware/api/options',{headers:h})).json()).members;assert.equal(roster.length,4);
+ const home=await request('/',{headers:h});assert.match(await home.text(),/href="\/hardware\/"/);
+ for(const path of ['/hardware/','/hardware/assets/app.js','/hardware/assets/app.css'])assert.equal((await request(path,{headers:h})).status,200);
+ assert.equal((await request('/hardware/api/projects',{headers:h})).status,200);
+ const b={operationId:randomUUID(),platform:'淘宝',buyerId:roster[0].id,purchasedAt:'2026-10-14',paidAmount:'22.00',lines:[{name:'HTTP 隔离测试板',quantity:2,unitPrice:'10'}],newFiles:[{name:'凭证.png',base64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII='}],projectId:'69197d56-41b0-4c8b-ac19-181f63e87c1f'};
+ const post=(path,body,headers=h)=>request(path,{method:'POST',headers,body:JSON.stringify(body)});
+ assert.equal((await post('/hardware/api/save',b,{...h,Origin:'https://evil.test'})).status,403);
+ const save=await post('/hardware/api/save',b);assert.equal(save.status,201);let row=(await save.json()).item;assert.equal(row.registrarId,'cfe3f0af-af84-4c63-a0d6-2d0677caaddd');assert.equal((await post('/hardware/api/save',b)).status,201);
+ const list=(await (await request('/hardware/api/orders',{headers:other})).json());assert.equal(list.total,1);assert.equal(list.items[0].canEdit,false);
+ const detail=await (await request('/hardware/api/detail?id='+row.id,{headers:other})).json();const file=await request('/hardware/api/file?id='+detail.files[0].id,{headers:other});assert.equal(file.status,200);assert.equal(file.headers.get('content-type'),'image/png');assert.match(file.headers.get('content-disposition'),/^attachment;/);assert.equal((await file.arrayBuffer()).byteLength,68);
+ assert.equal((await post('/hardware/api/save',{...b,id:row.id,revision:row.revision,operationId:randomUUID()},other)).status,403);
+ const archive=await post('/hardware/api/archive',{id:row.id,revision:row.revision,operationId:randomUUID(),action:'archive'});assert.equal(archive.status,200);row=(await archive.json()).item;
+ assert.equal((await (await request('/hardware/api/orders',{headers:h})).json()).total,0);assert.equal((await (await request('/hardware/api/orders?archived=true',{headers:other})).json()).total,1);assert.equal((await request('/hardware/api/file?id='+detail.files[0].id,{headers:other})).status,200);
+ assert.equal((await post('/hardware/api/archive',{id:row.id,revision:row.revision,operationId:randomUUID(),action:'restore'})).status,200);
+ assert.equal((await request('/healthz')).status,200);console.log('PASS unified login/anonymous gate, assets/home integration, live roster and project adapter, caller-derived registrar, cross-origin denial, shared member reads, file bytes/download headers, edit ownership, archive/restore and stable retry (isolated database)');
+}finally{if(app.exitCode===null){app.kill('SIGTERM');await new Promise(resolve=>app.once('exit',resolve))}rmSync(dir,{recursive:true,force:true})}

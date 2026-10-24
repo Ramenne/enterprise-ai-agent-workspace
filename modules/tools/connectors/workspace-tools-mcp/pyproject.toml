@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "workspace-tools-mcp"
+version = "1.0.1rc1"
+description = "Standalone stdio MCP connector for the Workspace TOOLS collection"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["mcp==2.3.0", "httpx2==2.15.1", "jsonschema>=4.23,<5"]
+
+[project.scripts]
+tools-mcp = "tools_mcp.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

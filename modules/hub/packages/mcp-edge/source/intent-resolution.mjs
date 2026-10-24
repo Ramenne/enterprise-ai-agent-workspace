@@ -1,0 +1,12 @@
+// Domain cues only rank an existing catalog tool; never infer send arguments or execute.
+export function employeeclientIntentScore(value){
+ const q=String(value||'').normalize('NFKC').toLowerCase();
+ const brand=/(员工客户端|\bemployeeclient\b)/u.test(q);
+ const messaging=/(消息|聊天|联系人|会话|助手|群|发到|发给|发送|转发|分享|通知|查看|查询|读取|接口|调用|mcp|\bsend\b|\bpost\b|\bmessage[s]?\b|\bchat\b|\bshare\b|\bread\b|\blist\b)/u.test(q);
+ if(brand&&(messaging||q.trim()==='员工客户端'||q.trim()==='employeeclient'))return 32;
+ const channel=/(工作群|公司群|公司工作群|文件传输助手)/u.test(q);
+ return channel&&messaging?20:0;
+}
+
+const intentWords=s=>{const aliases=[['权限','permission access authorization'],['项目','project'],['工程','engineering resource'],['申请','application request apply'],['审批','decide approve application'],['服务','service runtime'],['资料','material document file'],['文件','material document file'],['数据库','database table'],['凭据','credential vault'],['密钥','credential secret vault'],['交付','delivery'],['工作','work task'],['项目负责人','manager owner'],['权限分布','permission distribution overview'],['查询','read search list'],['读取','read get list'],['写入','write update'],['部署','deploy'],['运行','runtime status']];let text=String(s||'').toLocaleLowerCase();for(const [a,b] of aliases)text=text.split(a).join(' '+b+' ');return text.split(/[\s,，。；;:：/\\|]+/).map(x=>x.trim()).filter(x=>x.length>0);};
+export const resolveIntent=(all,args)=>{const intent=String(args?.intent||'').trim();const q=(intent+' '+String(args?.domain||'')).toLocaleLowerCase();const words=intentWords(q);const limit=Math.min(20,Math.max(1,Number(args?.limit)||8));const candidates=all.map(t=>{const text=(String(t.name||'')+' '+String(t.description||'')).toLocaleLowerCase();let score=t.name==='employeeclient'?employeeclientIntentScore(q):0;for(const w of words){if(text.includes(w))score+=w.length>3?2:1;}if(text.includes(q)&&q)score+=5;return{score,name:t.name,purpose:t.description,read_only:t.annotations?.readOnlyHint??t.readOnly??null,destructive:t.annotations?.destructiveHint??null};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).slice(0,limit).map(({score,...x})=>({...x,match_score:score}));return{state:candidates.length?'resolved':'no_match',intent,mode:args?.mode||'read',candidates,next_step:candidates.length?'call hub.help for one candidate,then hub.invoke':'search hub.tools by group or query',catalog_scope:'current_authorized_tool_catalog'};};

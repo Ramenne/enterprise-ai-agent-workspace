@@ -1,0 +1,3 @@
+import {z} from 'zod';
+export const governanceSchema = z.object({ project_id: z.uuid(), material_id: z.uuid().optional(), collection_id: z.uuid().optional(), mode: z.enum(['self', 'project']).default('self'), dynamic_containers: z.array(z.string().min(1).max(240)).max(20).default([]), window_start: z.iso.datetime().optional(), window_end: z.iso.datetime().optional(), max_objects: z.number().int().min(1).max(200).default(100), max_requests: z.number().int().min(1).max(500).default(200), max_paths: z.number().int().min(1).max(200).default(200) }).strict();
+export const governanceInputContracts=[['/v2/governance/fields',governanceSchema]];

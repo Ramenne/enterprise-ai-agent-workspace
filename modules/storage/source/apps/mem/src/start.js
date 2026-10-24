@@ -1,0 +1,33 @@
+import {withLegacyArchiveReads} from '../../../packages/storage-tiers/src/legacy-tier.mjs';
+import {withRestoreRequired} from '../../../packages/storage-tiers/src/storage-tier-flow.mjs';
+import {DomainError} from '../../../packages/platform/src/http.js';
+import { loadBudget } from '../../../packages/platform/src/machine-budget.js';
+import { closeUsage, usageStatus } from '../../../packages/platform/src/usage.js';
+import { S3Uploads } from './s3-upload.js';
+import { createServer } from './server.js';
+import { run } from '../../../packages/platform/src/http.js';
+import { loadRuntime, objectStoreConfig } from '../../../packages/platform/src/runtime.js';
+import { installDatabaseReadiness } from '../../../packages/platform/src/readiness.js';
+const runtime = await loadRuntime('mem');
+const tierModule=await import('../../../packages/storage-tiers/src/runtime.mjs');
+const storageTierProvider=await tierModule.loadTierProvider(runtime);
+const databaseUrl = runtime.optional('database_url', 'MEM_DATABASE_URL') ?? '', serviceKey = runtime.required('service_key', 'MEM_SERVICE_KEY');
+const store = await objectStoreConfig(runtime, process.env['HUB_OBJECT_STORE_SECRET_REF'] ?? 'bao:hub2/object-store/mem');
+const ioBudget = await loadBudget(runtime, 'mem');
+const uploads = store ? new S3Uploads(store) : undefined;
+const historyModule=await import('/srv/workspace');
+const objectAdapter=uploads?withLegacyArchiveReads(historyModule.withShanghaiHistory(withRestoreRequired(uploads,DomainError),{socketPath:'/run/hub2-legacy-source770/reader.sock',DomainError}),{provider:storageTierProvider,DomainError}):undefined;
+const pool = await runtime.databasePool('MEM_DATABASE_URL');
+const usagePool = await runtime.databasePool('MEM_DATABASE_URL', { max: 1 });
+const usageSpoolDirectory = process.env['HUB_USAGE_SPOOL_DIR'] ?? '/srv/workspace';
+const gcURL = runtime.optional('gc_executor_url', 'HUB2_GC_EXECUTOR_URL');
+const gcKey = gcURL ? runtime.required('gc_executor_key', 'HUB2_GC_EXECUTOR_KEY') : undefined;
+const modelRPC = runtime.optional('external_model_rpc', 'HUB2_EXTERNAL_MODEL_RPC');
+const modelKeys = runtime.optional('external_model_keys', 'HUB2_EXTERNAL_MODEL_KEYS');
+const app = createServer({storageTierProvider, ...(modelRPC ? { externalModelRPC: JSON.parse(modelRPC) } : {}), ...(modelKeys ? { externalModelKeys: JSON.parse(modelKeys) } : {}), ioBudget, ...(gcURL && gcKey ? { gcExecutor: { url: gcURL, key: gcKey } } : {}), legacyVectorWritesEnabled: process.env['HUB2_ENABLE_LEGACY_VECTOR_WRITES'] === 'true', databaseUrl, pool, usagePool, usageSpoolDirectory, serviceKey, hufuUrl: process.env['HUFU_URL'] ?? 'http://127.0.0.1:4611', audience: 'mem', ...(uploads ? { objectAdapter, uploads } : {}) });
+installDatabaseReadiness(app, pool, { object_store: uploads ? 'configured_not_provider_verified' : 'configuration_required', secrets: runtime.mode }, () => ({ usage: usageStatus(app), pool_coverage: 'business_SQL_excludes_usage', capacity: ioBudget.status() }));
+if (uploads)
+    app.addHook('onClose', async () => uploads.close());
+app.addHook('onClose', async () => { await closeUsage(app); await pool.end(); await ioBudget.close(); await runtime.close(); });
+await run(app, Number(process.env['MEM_PORT'] ?? 4612));
+//# sourceMappingURL=start.js.map

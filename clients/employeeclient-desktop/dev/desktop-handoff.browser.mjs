@@ -1,0 +1,50 @@
+// Actual packaged app and OS handoffs, isolated simulated accounts only.
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {startMediaForwardPreview} from './mediaForward.preview.mjs';
+const {_electron,chromium}=createRequire(import.meta.url)('/Users/developer/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const origin='http://127.0.0.1:5345',out='../verification/desktop-0.2.0-handoff';mkdirSync(out,{recursive:true});
+const server=startMediaForwardPreview(5345);await new Promise(r=>server.listening?r():server.once('listening',r));
+const profile='handoff-'+process.pid,executablePath=fileURLToPath(new URL('../../delivery/0.2.0-arm64/员工客户端.app/Contents/MacOS/Electron',import.meta.url));
+const options={executablePath,env:{...process.env,EMPLOYEECLIENT_DESKTOP_QA_ORIGIN:origin,EMPLOYEECLIENT_DESKTOP_QA_PROFILE:profile}};
+let app,browser;const report={scope:'packaged arm64 actual OS handoff; two simulated same-account clients; no production sends; no real sleep/phone',checks:[],errors:[],completed:false};
+const escape=()=>execFileSync('/usr/bin/osascript',['-e','tell application "System Events" to key code 53'],{timeout:5000});
+try{
+ app=await _electron.launch(options);let page=await app.firstWindow();page.setDefaultTimeout(12000);page.on('pageerror',e=>report.errors.push(e.message));
+ await app.evaluate(async({session})=>session.defaultSession.cookies.set({url:'http://127.0.0.1:5345',name:'simulation_member',value:'sim-a',expirationDate:Date.now()/1000+86400}));await page.goto(origin);
+ const row=name=>page.locator('.desktop-conversations .conversation-row').filter({hasText:name});
+ await row('文件传输助手').click();await page.locator('.message-input:not([disabled])').waitFor();await page.locator('.message-input').fill('助手原文字草稿');
+ const path=fileURLToPath(new URL('../../verification/row-drop.txt',import.meta.url));writeFileSync(path,'row-target-bytes');const cdp=await page.context().newCDPSession(page);
+ const b=await row('公司工作群').boundingBox(),point={x:Math.round(b.x+b.width/2),y:Math.round(b.y+b.height/2)},data={items:[],files:[path],dragOperationsMask:1};
+ const count=async peer=>(await(await page.request.get(origin+'/business/v1/messages?peer='+peer,{headers:{'user-agent':'EmployeeClientDesktopQA/0.2'}})).json()).messages.length;const before=await count('');
+ for(const type of ['dragEnter','dragOver','drop'])await cdp.send('Input.dispatchDragEvent',{type,...point,data});
+ await page.getByRole('button',{name:'发送文件（1）',exact:true}).waitFor();assert.equal(new URL(page.url()).hash,'#/chat');assert.equal(await count(''),before);assert.equal(await page.locator('.message-input').inputValue(),'');
+ await page.getByRole('button',{name:'发送文件（1）',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.transfer-message'));assert.equal(await count(''),before+1);assert.equal(await count('sim-a'),0);
+ await row('文件传输助手').click();await page.waitForFunction(()=>document.querySelector('.message-input')?.value==='助手原文字草稿');assert.equal(await page.locator('.message-input').inputValue(),'助手原文字草稿');await page.locator('.message-input').fill('');
+ report.checks.push('real disk drop onto conversation row changes recipient, waits for confirmation, sends once only to selected group and preserves other draft');
+ await row('公司工作群').click();await page.getByRole('button',{name:'打开文件 row-drop.txt',exact:true}).click();await page.locator('.full-text').filter({hasText:'row-target-bytes'}).waitFor();await page.locator('.collaboration-media-preview').getByRole('button',{name:'关闭',exact:true}).click();
+ await app.evaluate(({shell,ShareMenu,BrowserWindow})=>{globalThis.__handoffs={opens:[],shares:[],drags:[]};const open=shell.openPath;shell.openPath=async function(path){const result=await open.call(this,path);globalThis.__handoffs.opens.push({path,result});return result;};const popup=ShareMenu.prototype.popup;ShareMenu.prototype.popup=function(options){globalThis.__handoffs.shares.push(true);return popup.call(this,options);};const wc=BrowserWindow.getAllWindows()[0].webContents,drag=wc.startDrag;wc.startDrag=function(options){globalThis.__handoffs.drags.push(options.file);return drag.call(this,options);};});
+ const menu=()=>page.locator('.message-file').filter({hasText:'row-drop.txt'}).getByRole('button',{name:'保存或分享文件',exact:true});
+ await menu().click();await page.getByRole('button',{name:'使用系统应用打开',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.file-menu'));
+ const opened=await app.evaluate(()=>globalThis.__handoffs.opens);assert.equal(opened.length,1);assert.equal(opened[0].result,'');assert.equal(readFileSync(opened[0].path,'utf8'),'row-target-bytes');
+ await app.evaluate(({BrowserWindow})=>{BrowserWindow.getAllWindows()[0].show();BrowserWindow.getAllWindows()[0].focus();});
+ report.checks.push('renderer requests actual macOS system open of verified original bytes; OS accepted handoff (external app editing/delivery not asserted)');
+ await menu().click();await page.getByRole('button',{name:'用其他应用分享',exact:true}).click();await new Promise(r=>setTimeout(r,700));escape();await page.waitForFunction(()=>!document.querySelector('.file-menu'));assert.equal(await app.evaluate(()=>globalThis.__handoffs.shares.length),1);escape();
+ report.checks.push('actual Electron/macOS share menu opens; cancelled without selecting any external recipient');
+ await menu().click();const drag=page.getByRole('button',{name:'拖出文件',exact:true});await drag.waitFor();const d=await drag.boundingBox();await page.mouse.move(d.x+d.width/2,d.y+d.height/2);await page.mouse.down();await page.mouse.move(d.x+d.width/2+65,d.y+d.height/2+10,{steps:8});escape();await page.mouse.up();
+ const dragged=await app.evaluate(()=>globalThis.__handoffs.drags);assert.equal(dragged.length,1);assert.equal(readFileSync(dragged[0],'utf8'),'row-target-bytes');escape();
+ report.checks.push('real pointer drag invokes actual native startDrag with verified original file; gesture cancelled, Finder destination copy not asserted');
+ await row('文件传输助手').click();browser=await chromium.launch({headless:true,executablePath:'/Users/developer/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'});const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});await context.addCookies([{url:origin,name:'simulation_member',value:'sim-a'}]);const phone=await context.newPage();await phone.goto(origin+'/#/chat?peer=sim-a');await phone.locator('.message-input:not([disabled])').waitFor();
+ await page.locator('.message-input').fill('电脑向助手同步');await page.locator('.message-input').press('Enter');await phone.getByText('电脑向助手同步',{exact:true}).waitFor();
+ await phone.locator('.message-input').fill('另一客户端向助手同步');await phone.getByRole('button',{name:'发送',exact:true}).click();await page.locator('.chat-stream').getByText('另一客户端向助手同步',{exact:true}).waitFor();
+ report.checks.push('two independent same-account clients send to assistant and both receive messages without sending to other users');
+ await page.context().setOffline(true);await phone.locator('.message-input').fill('离线期间待补消息');await phone.getByRole('button',{name:'发送',exact:true}).click();await phone.getByText('离线期间待补消息',{exact:true}).waitFor();await page.context().setOffline(false);await page.locator('.chat-stream').getByText('离线期间待补消息',{exact:true}).waitFor({timeout:30000});assert.equal(await page.locator('.chat-stream').getByText('离线期间待补消息',{exact:true}).count(),1);
+ report.checks.push('network interruption recovers automatically and catches up one assistant message without duplicate or manual reload');
+ await page.screenshot({path:out+'/assistant-sync.png'});await app.evaluate(async({session})=>session.defaultSession.cookies.flushStore());await app.close();app=null;
+ app=await _electron.launch(options);page=await app.firstWindow();page.setDefaultTimeout(15000);await page.locator('.desktop-conversations .conversation-row').filter({hasText:'文件传输助手'}).click();await page.locator('.chat-stream').getByText('离线期间待补消息',{exact:true}).waitFor();assert.equal(await page.getByRole('textbox',{name:'本人邮箱'}).count(),0);report.checks.push('process relaunch with same isolated profile retains simulated login and restores assistant history');
+ assert.deepEqual(report.errors,[]);report.completed=true;
+}catch(e){report.failure=String(e);if(app){const p=await app.firstWindow().catch(()=>null);if(p){report.lastBody=await p.locator('body').innerText().catch(()=>null);await p.screenshot({path:out+'/failure.png'}).catch(()=>{});}}throw e;}
+finally{writeFileSync(out+'/result.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));escape();await browser?.close();await app?.close();server.closeAllConnections();await new Promise(r=>server.close(r));}

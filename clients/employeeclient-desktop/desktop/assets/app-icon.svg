@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- macOS canvas: transparent 100px inset; 824px visible rounded tile. -->
+  <rect x="100" y="100" width="824" height="824" rx="184" fill="#178f88"/>
+  <!-- Existing public/employeeclient.svg mark, unchanged paths and colors. -->
+  <g transform="translate(100 100) scale(12.875)">
+    <path d="M12 29 32 16 27 30 49 20 38 40 20 48 24 35Z" fill="#fff"/>
+    <path d="m27 30 11 10-14-5Z" fill="#abe1d7"/>
+  </g>
+</svg>

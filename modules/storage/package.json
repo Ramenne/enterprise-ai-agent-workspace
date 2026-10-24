@@ -1,0 +1,45 @@
+{
+  "name": "@workspace/hub2",
+  "version": "2.0.0-dev.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node packages/member-auth/tests/copy-runtime.mjs && node deploy/copy-material-runtime.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "migrate": "node dist/deploy/migrate.js",
+    "hufu": "node dist/apps/hufu/src/start.js",
+    "mem": "node dist/apps/mem/src/start.js",
+    "v8": "node dist/apps/v8/src/start.js",
+    "mcp": "node dist/apps/mcp/src/start.js",
+    "worker": "node dist/apps/worker/src/start.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1144.0",
+    "@aws-sdk/s3-request-presigner": "3.1144.0",
+    "@better-auth/oauth-provider": "1.7.7",
+    "@better-auth/passkey": "1.7.7",
+    "@modelcontextprotocol/client": "2.2.0",
+    "@modelcontextprotocol/core": "2.2.0",
+    "@modelcontextprotocol/fastify": "2.0.0",
+    "@modelcontextprotocol/node": "2.1.0",
+    "@modelcontextprotocol/server": "2.2.0",
+    "@opentelemetry/api": "1.9.0",
+    "better-auth": "1.7.7",
+    "cos-nodejs-sdk-v5": "3.0.0",
+    "fastify": "5.12.5",
+    "hono": "4.13.12",
+    "pg": "8.23.1",
+    "pg-boss": "12.35.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.2",
+    "@types/node": "24.19.0",
+    "@types/pg": "8.15.5",
+    "typescript": "7.0.2"
+  }
+}

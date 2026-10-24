@@ -1,0 +1,9 @@
+{
+  "owner": "hufu",
+  "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+  "source": "packages/platform/src/change-contracts.ts",
+  "source_sha256": "68d05161bd684358be8215e5bd0d4d74e8b1fdc9de1df41c937b262f0bb8404c",
+  "artifact": "packages/platform/src/change-contracts.ts",
+  "artifact_sha256": "68d05161bd684358be8215e5bd0d4d74e8b1fdc9de1df41c937b262f0bb8404c",
+  "maintenance": "Published copy; edit the Hufu owner and republish. Original domain authorization/transaction/cursor remain local."
+}

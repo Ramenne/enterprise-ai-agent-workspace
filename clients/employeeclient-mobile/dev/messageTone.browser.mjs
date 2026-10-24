@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {readFileSync,writeFileSync} from 'node:fs';import {startMediaForwardPreview} from './mediaForward.preview.mjs';
+const require=createRequire(import.meta.url),{chromium}=require('/Users/developer/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'),url='data:text/javascript;base64,'+readFileSync(new URL('../src/platform/messageTone.mjs',import.meta.url)).toString('base64');
+const server=startMediaForwardPreview(5262);await new Promise(r=>server.listening?r():server.once('listening',r));const browser=await chromium.launch({headless:true,executablePath:'/Users/developer/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+try{
+ const page=await browser.newPage();await page.goto('http://127.0.0.1:5262/health');
+ const before=await page.evaluate(async url=>{window.tone=await import(url);window.release=window.tone.prepareMessageTone();document.body.innerHTML='<button>允许页面播放提示音</button>';return window.tone.playMessageTone();},url);assert.equal(before,false);
+ await page.getByRole('button',{name:'允许页面播放提示音'}).click();const after=await page.evaluate(()=>window.tone.playMessageTone());assert.equal(after,true);await page.evaluate(()=>window.release());assert.equal(await page.evaluate(()=>window.tone.playMessageTone()),false);
+ writeFileSync('/Users/developer/Downloads/超强学习/research/employeeclient-chain-research-20261015/v121-tone-result.json',JSON.stringify({beforeGesture:before,afterGesture:after,afterDispose:false,evidence:'real browser Web Audio runs after user interaction; physical speaker loudness not verified'},null,2));console.log({before,after});
+}finally{await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}

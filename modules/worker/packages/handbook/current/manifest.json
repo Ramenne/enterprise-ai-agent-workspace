@@ -1,0 +1,499 @@
+{
+  "version": "2.7.0",
+  "documents": [
+    {
+      "id": "handbook",
+      "title": "企业 AI 协作平台 · 总纲",
+      "filename": "handbook.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4637,
+        "sha256": "ab2e340817f59ae4113e1ddb9953523802a0ea66a36b3e0be071a1fc593d5fcf",
+        "file_no": "1001135",
+        "display_no": "F-1001135-018",
+        "version_id": "f1b04387-4665-4cf7-a57b-9303b33833da",
+        "material_id": "ba8aae1d-e596-4eb1-ae4f-54dc2099797e",
+        "file_display_no": "F-1001135",
+        "local_version_no": "18"
+      }
+    },
+    {
+      "id": "mcp-guide",
+      "title": "MCP与API · 实际调用说明",
+      "filename": "mcp-guide.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4156,
+        "sha256": "861541792737685412505d2e268830e62e321883c3e5bcf2b96b2d8f5c13e1f5",
+        "file_no": "1001138",
+        "display_no": "F-1001138-006",
+        "version_id": "e3d25876-ff0e-410f-a33d-c7b2de15e5fb",
+        "material_id": "1ba22cfe-a004-4d0e-a7de-9dd9c912dc82",
+        "file_display_no": "F-1001138",
+        "local_version_no": "6"
+      }
+    },
+    {
+      "id": "agent-preset",
+      "title": "企业 AI 协作平台 · Agent 协作预设",
+      "filename": "agent-preset.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 6172,
+        "sha256": "a67c098020ca374958b6d1a8fec9e89220eaf7ee4f143551eb797dc93d84adbe",
+        "file_no": "1001137",
+        "display_no": "F-1001137-010",
+        "version_id": "162bb1c6-6106-4764-ad27-da4b78fa7af9",
+        "material_id": "9847b5f0-4d5a-498b-a54d-0453ae62f3f8",
+        "file_display_no": "F-1001137",
+        "local_version_no": "10"
+      }
+    },
+    {
+      "id": "start-guide",
+      "title": "初始接入 · 给成员与 Agent",
+      "filename": "start-guide.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 2385,
+        "sha256": "b305eb5f3c1b3d471a13f51a1374f5f040844fccadc8dc7f6d6228f62a496d37",
+        "file_no": "1001136",
+        "display_no": "F-1001136-005",
+        "version_id": "148418b7-8bd4-442f-a726-e42dd341c1c4",
+        "material_id": "030bdeb7-d46b-4318-aee5-87c6a863c271",
+        "file_display_no": "F-1001136",
+        "local_version_no": "5"
+      }
+    },
+    {
+      "id": "material-storage",
+      "title": "资料存储服务 · 文件、属性、关系与存储",
+      "filename": "material-storage.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 10821,
+        "sha256": "39c9c029f035283c9e44b2fc88c00171cef206ada784cc6006d3407a4624c733",
+        "file_no": "1000665",
+        "display_no": "F-1000665-009",
+        "version_id": "074b0d6c-3ecd-4423-a13d-d9f33e392a4e",
+        "material_id": "3e00304b-2391-4bf3-ac0e-c97f98daedad",
+        "file_display_no": "F-1000665",
+        "local_version_no": "9"
+      }
+    },
+    {
+      "id": "hufu-guide",
+      "title": "身份权限服务 · 身份、权限和凭据",
+      "filename": "hufu-guide.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4195,
+        "sha256": "1409a0bb675eee40da2c778a2a89811f11d579646798fcf089ff78948c10a1b3",
+        "file_no": "1001163",
+        "display_no": "F-1001163-007",
+        "version_id": "cb4425d3-c414-493b-a158-fc21fb3cff72",
+        "material_id": "0684fcdc-7244-4782-a143-8a034e1d1a70",
+        "file_display_no": "F-1001163",
+        "local_version_no": "7"
+      }
+    },
+    {
+      "id": "sql-data",
+      "title": "SQL数据层 · 当前结构与治理",
+      "filename": "sql-data.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 5806,
+        "sha256": "c1370b7bdcaf58d459fc3e32bc5215dbc555cbbc6c99f385f6ec6f9f2fd412c0",
+        "file_no": "1000715",
+        "display_no": "F-1000715-006",
+        "version_id": "783647e1-a57f-40df-a316-3b7ea99baff7",
+        "material_id": "8ab27005-3f38-4e5a-aeee-bddea4a0dd99",
+        "file_display_no": "F-1000715",
+        "local_version_no": "6"
+      }
+    },
+    {
+      "id": "v8-guide",
+      "title": "V8 · 项目、工作与上下文接续",
+      "filename": "v8-guide.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 12991,
+        "sha256": "8b419977ffe57ba0bd69fde60346d83f4f4598a24f06d88d2f03c7a57025a7cd",
+        "file_no": "1000716",
+        "display_no": "F-1000716-015",
+        "version_id": "a07c6c51-fb56-45e1-aa91-d5439426088b",
+        "material_id": "3a6803b8-0196-4c2d-a0cb-636bc5e6dd2a",
+        "file_display_no": "F-1000716",
+        "local_version_no": "15"
+      }
+    },
+    {
+      "id": "integrations",
+      "title": "上层产品与兼容接入 · 当前边界",
+      "filename": "integrations.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4605,
+        "sha256": "84605a1a83adcbae2b21ffe84c50e18acbc5603d1710dcbafdb35a40fce8a2d0",
+        "file_no": "1000717",
+        "display_no": "F-1000717-011",
+        "version_id": "ea3eb621-0c87-459b-aba1-dbcaff1e1409",
+        "material_id": "3ee11f67-8b28-4703-a1e5-6722d13ac013",
+        "file_display_no": "F-1000717",
+        "local_version_no": "11"
+      }
+    },
+    {
+      "id": "operations",
+      "title": "运行、资源与恢复",
+      "filename": "operations.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 3373,
+        "sha256": "295cd64c268e0810e8349a2591fb6f890447bcc6233fc4aeecc9c3212effe57b",
+        "file_no": "1000718",
+        "display_no": "F-1000718-012",
+        "version_id": "9193acf7-3521-481d-a01d-c530bf675750",
+        "material_id": "298a75d2-50f5-4324-a73a-f1381a572084",
+        "file_display_no": "F-1000718",
+        "local_version_no": "12"
+      }
+    },
+    {
+      "id": "api-reference",
+      "title": "MCP/API接口参考",
+      "filename": "api-reference.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4437,
+        "sha256": "b5b02168b93195c11c0b6d632e00252fe4b2411121f9f5409f9c254443e9f77e",
+        "file_no": "1000719",
+        "display_no": "F-1000719-011",
+        "version_id": "90bd300d-e4c3-4e96-a93e-8cf872b3004d",
+        "material_id": "007e7cfa-f68f-445e-ad35-fd246f5cf9b7",
+        "file_display_no": "F-1000719",
+        "local_version_no": "11"
+      }
+    },
+    {
+      "id": "source-coverage",
+      "title": "源码与运行范围",
+      "filename": "source-coverage.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 1657,
+        "sha256": "975933aa72b9ebb350af0104045c3337885dfede6a3f3e36e2d52a52690f5cf0",
+        "file_no": "1000720",
+        "display_no": "F-1000720-005",
+        "version_id": "739ac744-ff21-4233-a8f0-8cade4606b3d",
+        "material_id": "0e402312-c542-4904-adcc-e6ef4a7a8d2b",
+        "file_display_no": "F-1000720",
+        "local_version_no": "5"
+      }
+    },
+    {
+      "id": "material-classification",
+      "title": "资料四级分类与回执规则",
+      "filename": "material-classification.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4760,
+        "sha256": "b673478f0552258680216d60984ce84044a7dfcc0e52ee0ecaa03201f663d39c",
+        "file_no": "1000758",
+        "display_no": "F-1000758-004",
+        "version_id": "9ea7ec30-6529-4e8e-a962-39eda0e80509",
+        "material_id": "4658a2b0-ed94-4564-af3a-8d474306de2e",
+        "file_display_no": "F-1000758",
+        "local_version_no": "4"
+      }
+    },
+    {
+      "id": "service-migration",
+      "title": "服务与资产迁移",
+      "filename": "service-migration.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 1285,
+        "sha256": "cca0d96dad2ff3114efd67b447e8df300dcc2b8dbca83487bc3ee8bced5a06cd",
+        "file_no": "1000810",
+        "display_no": "F-1000810-005",
+        "version_id": "f6cc633d-e1e4-48d7-a9e5-2ea9fe0d7e06",
+        "material_id": "6e4dcdca-ba1c-4664-af2f-93b7883cfc85",
+        "file_display_no": "F-1000810",
+        "local_version_no": "5"
+      }
+    },
+    {
+      "id": "project-engineering",
+      "title": "项目工程分区 · 成员与 Agent 使用说明",
+      "filename": "project-engineering.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 3891,
+        "sha256": "32ae8c61205d777d1d223f9eea6ee56d597d0d0e7bab340b22d247f850e8d73c",
+        "file_no": "1001139",
+        "display_no": "F-1001139-008",
+        "version_id": "04d273ef-a578-4606-a029-8f995784b2b3",
+        "material_id": "58522f4c-b33d-48b7-a2f3-6e7bcc7fdd93",
+        "file_display_no": "F-1001139",
+        "local_version_no": "8"
+      }
+    },
+    {
+      "id": "agent-engineering-approval",
+      "title": "AI代办工程申请与审批",
+      "filename": "agent-engineering-approval.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 1799,
+        "sha256": "42718dd9e817078a4e9a463b1d9167f0478581a32f74e166b6f7dd7f254507df",
+        "file_no": "1001140",
+        "display_no": "F-1001140-003",
+        "version_id": "0340a3ca-4eb3-4470-aba8-c74bb1849d1a",
+        "material_id": "58c610c7-6dfe-440c-a1bd-0a6dd23d0b55",
+        "file_display_no": "F-1001140",
+        "local_version_no": "3"
+      }
+    },
+    {
+      "id": "database-permissions",
+      "title": "身份权限服务 · 数据库权限分发",
+      "filename": "database-permissions.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 5506,
+        "sha256": "7d95fa0946b3acee23f9edad5c2a4864f0563a98a7b935713f202d0607addb50",
+        "file_no": "1000845",
+        "display_no": "F-1000845-002",
+        "version_id": "89c05c98-a2cf-4456-a88f-b8df32b21778",
+        "material_id": "69a82ade-9093-49cb-af9c-a125a1895c48",
+        "file_display_no": "F-1000845",
+        "local_version_no": "2"
+      }
+    },
+    {
+      "id": "project-authorization",
+      "title": "身份权限服务 · 全项目授权与资源接入",
+      "filename": "project-authorization.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4549,
+        "sha256": "16c4920da425132d93ac4b61300041fab2fa372b4fded922c8a253a1c74ce233",
+        "file_no": "1001146",
+        "display_no": "F-1001146-004",
+        "version_id": "84db7e25-4cc4-4628-acb8-8725ec0b2ed4",
+        "material_id": "88bd36d4-4f06-4b9e-a948-3b9dd6d35787",
+        "file_display_no": "F-1001146",
+        "local_version_no": "4"
+      }
+    },
+    {
+      "id": "function-index",
+      "title": "企业 AI 协作平台 · 功能索引",
+      "filename": "function-index.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 1761,
+        "sha256": "c83c33e82c7d470cb39d00ebbe1001740b685803d8fd2d712a596d12f2ff8ef7",
+        "file_no": "1001298",
+        "display_no": "F-1001298-010",
+        "version_id": "daa80e2d-fe4f-43e3-adaa-80cc90074f3a",
+        "material_id": "db861024-5b8d-49f0-a65d-530b124c88d7",
+        "file_display_no": "F-1001298",
+        "local_version_no": "10"
+      }
+    },
+    {
+      "id": "authorization-guide",
+      "title": "身份权限服务 · 申请规范与交付对象绑定",
+      "filename": "authorization-guide.md",
+      "updated_at": "2026-10-17",
+      "project_id": "ab817207-5829-4429-a165-bf1159ae4de0",
+      "fixed_ref": {
+        "size": 2370,
+        "sha256": "2fb687e452593c485a381ef1f9370c608a6c62501d9b170794e5872625e1db78",
+        "file_no": "1001185",
+        "display_no": "F-1001185-003",
+        "version_id": "8147ac17-c717-47e7-ad89-b311f0163ce7",
+        "material_id": "2f97bb4b-4b1e-4ef2-a5fb-1b4112f8f641",
+        "file_display_no": "F-1001185",
+        "local_version_no": "3"
+      }
+    },
+    {
+      "id": "vault-delivery",
+      "title": "身份权限服务 · 敏感文件交付",
+      "filename": "vault-delivery.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4481,
+        "sha256": "e3e13a92014e2b47ac824722881f895d908cf2e169f2b327778007b7205ed000",
+        "file_no": "1001299",
+        "display_no": "F-1001299-004",
+        "version_id": "bd86880a-8cad-423f-a923-2b005ab94d97",
+        "material_id": "63100269-36b1-45cd-aa63-3c362c670ce9",
+        "file_display_no": "F-1001299",
+        "local_version_no": "4"
+      }
+    },
+    {
+      "id": "vault-plaintext",
+      "title": "普通模型密钥 · 明文领取与使用",
+      "filename": "vault-plaintext.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4969,
+        "sha256": "514517be29a58d79b9580925d90b516e93b83ec7cd33ca74b89af97ba5a3c22d",
+        "file_no": "1005003",
+        "display_no": "F-1005003-002",
+        "version_id": "6d10562f-c755-4260-a16e-4e273d920d9c",
+        "material_id": "0028de74-9a8b-429d-aa5d-7519a0d05d61",
+        "file_display_no": "F-1005003",
+        "local_version_no": "2"
+      }
+    },
+    {
+      "id": "service-boundary",
+      "title": "中枢主控 · 服务职责",
+      "filename": "service-boundary.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 1463,
+        "sha256": "976eb72198c736017255d8125768193ccf93d66075af1d5a66d055a05b81cc66",
+        "file_no": "1005004",
+        "display_no": "F-1005004-003",
+        "version_id": "28d69fb8-f4bf-4265-a6d8-d56f40dec9b1",
+        "material_id": "e80c42f2-51eb-43d9-a934-13bed4016954",
+        "file_display_no": "F-1005004",
+        "local_version_no": "3"
+      }
+    },
+    {
+      "id": "release-notes",
+      "title": "企业 AI 协作平台 · 当前版本说明",
+      "filename": "release-notes.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 911,
+        "sha256": "350630acdcf27abc70e0c5b33cac73f105d96e60563badd279e04d3e1f1e93d7",
+        "file_no": "1005316",
+        "display_no": "F-1005316-015",
+        "version_id": "8e849c99-5476-4e28-a988-1499a1a7a89a",
+        "material_id": "c22b2b01-43b5-4e19-adb4-3f44d89feaa6",
+        "file_display_no": "F-1005316",
+        "local_version_no": "15"
+      }
+    },
+    {
+      "id": "release-policy",
+      "title": "企业 AI 协作平台 · 系统版本和说明书发布机制",
+      "filename": "release-policy.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 3510,
+        "sha256": "f04a6cbcea53238fea199e7ed6059addadd78cf1c840c8085b5e1ea72bf6afc8",
+        "file_no": "1005317",
+        "display_no": "F-1005317-007",
+        "version_id": "0311b8f0-5886-4d98-a20e-0fe5a3a41ce3",
+        "material_id": "92637ebd-ba63-4c30-aa8d-2cfa9c8ba73d",
+        "file_display_no": "F-1005317",
+        "local_version_no": "7"
+      }
+    },
+    {
+      "id": "member-work",
+      "title": "成员工作 · 唯一维护方与稳定查询",
+      "filename": "member-work.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4000,
+        "sha256": "479f830857e880bb1957a6bf56b7ee88b7a2897a31ed5e109f82c0c55a68d494",
+        "file_no": "1005756",
+        "display_no": "F-1005756-004",
+        "version_id": "0f1e8c69-0cf2-4f43-a5ba-a844d09d7605",
+        "material_id": "426fde23-7915-49f8-aedf-5c7d8f981bcb",
+        "file_display_no": "F-1005756",
+        "local_version_no": "4"
+      }
+    },
+    {
+      "id": "task-points",
+      "title": "任务板与积分 · 成员操作和主管账目",
+      "filename": "task-points.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 20297,
+        "sha256": "bc458b732085fa03e80d42437beaa5353750bcc66832ba38dfdabd36fb057d65",
+        "file_no": "1005757",
+        "display_no": "F-1005757-006",
+        "version_id": "5955a58d-6ef5-4326-a81c-322f0062610f",
+        "material_id": "3ba02249-09c3-45e8-a4a8-c8d7289f7805",
+        "file_display_no": "F-1005757",
+        "local_version_no": "6"
+      }
+    },
+    {
+      "id": "xingxiu",
+      "title": "星宿 · 成员与项目的派生理解",
+      "filename": "xingxiu.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 3813,
+        "sha256": "2c2546837a71fbeda07df3509e7a64f2b1bb556a2b0aa8395c9e0dd81da10d57",
+        "file_no": "1005758",
+        "display_no": "F-1005758-004",
+        "version_id": "50194a40-b1bd-4bd7-a008-d576031c2035",
+        "material_id": "2d70438d-add9-405b-ac7f-076d1c943719",
+        "file_display_no": "F-1005758",
+        "local_version_no": "4"
+      }
+    },
+    {
+      "id": "project-feedback",
+      "title": "项目反馈 · 成员、Codex与产品接入参考",
+      "filename": "project-feedback.md",
+      "updated_at": "2026-10-17",
+      "project_id": "d5027a95-f21b-483d-a9f1-06a91db45551",
+      "fixed_ref": {
+        "size": 4592,
+        "sha256": "13be7d2a0f243d57a17e240bd396a2ad0e4e1fdccd9b9a8857170db39bcb7549",
+        "file_no": "1005863",
+        "display_no": "F-1005863-002",
+        "version_id": "56dd6b62-8cb7-4fa1-a6c7-c5c167e5fa0b",
+        "material_id": "59d32578-d0e1-447c-a4ec-624c911fb76c",
+        "file_display_no": "F-1005863",
+        "local_version_no": "2"
+      }
+    }
+  ],
+  "publication": "formal current manifest is served by /v2/manuals/catalog"
+}

@@ -1,0 +1,338 @@
+[
+  {
+    "name": "visual.capabilities",
+    "description": "读取统一绘画与视频能力；生图和视频只用ComfyUI Cloud，AutoDL仅用于LoRA训练。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.image.preview",
+    "description": "预览Krea2 Cloud生图参数、LoRA和供应商；零散与批量统一Cloud，不等待AutoDL。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 2048,
+          "multipleOf": 16
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 2048,
+          "multipleOf": 16
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "lora_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lora_strength": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2
+        },
+        "demand": {
+          "type": "string",
+          "enum": [
+            "sporadic",
+            "batch"
+          ]
+        },
+        "generation_authorized": {
+          "type": "boolean"
+        },
+        "estimated_credits": {
+          "type": "number"
+        },
+        "budget_credits": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.image.generate",
+    "description": "通过ComfyUI Cloud提交一张Krea2图或视频参考图；稳定UUID重试只查原任务，历史任务仍按原供应商观察。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 2048,
+          "multipleOf": 16
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 2048,
+          "multipleOf": 16
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "lora_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lora_strength": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2
+        },
+        "demand": {
+          "type": "string",
+          "enum": [
+            "sporadic",
+            "batch"
+          ]
+        },
+        "generation_authorized": {
+          "type": "boolean"
+        },
+        "estimated_credits": {
+          "type": "number"
+        },
+        "budget_credits": {
+          "type": "number"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "prompt",
+        "generation_authorized",
+        "estimated_credits",
+        "budget_credits",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.lora.resolve",
+    "description": "Civitai链接预检，由执行供应商解析；中枢不访问Civitai。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.lora.import",
+    "description": "固定Civitai版本并导入ComfyUI Cloud，用于加载LoRA生图；AutoDL仅保留训练用途。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "comfy_cloud",
+            "autodl"
+          ]
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "url",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.lora.list",
+    "description": "列出当前成员LoRA及绑定；Cloud ready不代表AutoDL已就绪。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.lora.get",
+    "description": "查询原LoRA导入，保留原ID，不重新导入。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.job.get",
+    "description": "查询原图/视频任务；不会重发；可查询已有Cloud API的历史本地任务ID。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "training"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.output.get",
+    "description": "读取当前成员任务的图像，返回原始图片MCP内容；视频返回鉴权下载路径。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "asset_id",
+        "kind"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.video.capabilities",
+    "description": "读取原生MiniMax H3 Ref2VA工作流参数；视频始终Comfy Cloud。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.video.preview",
+    "description": "预览视频工作流，参数使用video.capabilities及调用说明；不会提交。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.video.generate",
+    "description": "原生MiniMax H3 Ref2VA视频提交，沿用API费用授权、参考资产、稳定UUID规则；仅Cloud。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "request",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "visual.training.plan",
+    "description": "AutoDL专用LoRA训练计划；不租卡、不执行训练，执行能力需另行验证。",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "dataset_id": {
+          "type": "string"
+        },
+        "output_name": {
+          "type": "string"
+        },
+        "max_train_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "dataset_id",
+        "output_name"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

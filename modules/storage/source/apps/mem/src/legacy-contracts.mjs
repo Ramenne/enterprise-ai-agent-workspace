@@ -1,0 +1,7 @@
+import {z} from 'zod';
+const uuid = z.uuid(), hash = z.string().regex(/^[a-f0-9]{64}$/);
+export const legacyFixedSchema = z.object({ material_id: uuid, version_id: uuid, sha256: hash, size: z.number().int().nonnegative() }).strict();
+export const legacyImportSchema = z.object({ project_id: uuid, import_scope_id: uuid, source_system: z.string().min(1).max(200), idempotency_key: z.string().min(1).max(200), items: z.array(z.object({ category: z.enum(['file_alias', 'plan_versions', 'code_versions', 'artifact_addresses', 'issue_sources', 'supplement_sources', 'activity_sources', 'personal_archive', 'group_attachment']), source_id: z.string().min(1).max(256), field_path: z.string().min(1).max(1024), original_address: z.string().max(8192).default(''), reference_kind: z.enum(['fixed', 'latest', 'unknown', 'unfinished']), expected_revision: z.number().int().nonnegative(), legacy_version: z.number().int().nonnegative().optional(), fixed_ref: legacyFixedSchema.optional(), material_id: uuid.optional(), source_record_sha256: hash.optional(), original_content_sha256: hash.optional(), declaration: z.record(z.string(), z.unknown()).default({}) }).strict()).min(1).max(100) }).strict();
+export const legacyResolveSchema = z.object({ project_id: uuid, binding_id: uuid }).strict();
+
+export const legacyInputContracts=[['/v2/legacy/references/import',legacyImportSchema],['/v2/legacy/references/resolve',legacyResolveSchema]];

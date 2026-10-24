@@ -1,0 +1,12 @@
+interface:
+  display_name: "员工客户端消息与协作"
+  short_description: "用自然语言查询员工客户端消息，发送内容、讨论结论和文件到助手或工作群"
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "workspace"
+      description: "现有企业 AI 协作平台连接中的员工客户端查询与发送能力"
+      transport: "streamable_http"
+      url: "https://hufu.example.invalid/mcp"

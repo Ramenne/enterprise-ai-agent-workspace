@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "workspace-tools": {
+      "command": "/安装目录/.venv/bin/python",
+      "args": [
+        "-m",
+        "tools_mcp",
+        "serve",
+        "--credential-file",
+        "/本人私有目录/credentials.json",
+        "--upload-root",
+        "/明确允许上传的目录"
+      ]
+    }
+  }
+}

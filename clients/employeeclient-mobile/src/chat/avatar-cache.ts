@@ -1,0 +1,6 @@
+import {apiRequest,captureApiLease} from '@/api/client';import {metaGet,metaSet} from '@/session/db';
+const ready=new Map<string,{valid:()=>boolean;url:string}>();
+const flights=new Map<string,{valid:()=>boolean;promise:Promise<string>}>();
+export async function avatarUrl(actor:string,version:string):Promise<string>{const lease=captureApiLease(),key='avatar:'+actor+':'+version;if(!lease.account||!version)return '';const id=lease.account+':'+key,hit=ready.get(id);if(hit?.valid())return hit.url;if(hit)ready.delete(id);const cached=await metaGet<string>(lease.account,key).catch(()=>null);if(!lease.valid())return '';if(cached){ready.set(id,{valid:lease.valid,url:cached});return cached;}const prior=flights.get(id);if(prior?.valid())return prior.promise;
+ const run=(async()=>{const r=await apiRequest<{data_url:string;avatar_version:string}>('GET','/business/v1/members/'+encodeURIComponent(actor)+'/avatar');if(!lease.valid()||r.avatar_version!==version||!/^data:image\/jpeg;base64,/.test(r.data_url))return '';await metaSet(lease.account,key,r.data_url,lease.valid).catch(()=>{});if(!lease.valid())return '';ready.set(id,{valid:lease.valid,url:r.data_url});return r.data_url;})();const entry={valid:lease.valid,promise:run};flights.set(id,entry);try{return await run;}finally{if(flights.get(id)===entry)flights.delete(id);}
+}

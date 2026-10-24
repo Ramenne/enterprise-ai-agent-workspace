@@ -1,0 +1,26 @@
+{
+  "service": "hub2-semantic.service",
+  "owner_project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+  "logical_domain": "Mem description indexing and retrieval; Mem remains final authority",
+  "maintained_source": "packages/semantic-service/source",
+  "code_files": [
+    "warm_service.py",
+    "semantic_adapter.py",
+    "model-manifest.json",
+    "export-result.json",
+    "input_contracts.py"
+  ],
+  "runtime_source_directory": "/srv/workspace",
+  "python": "/srv/workspace",
+  "model_directory": "/srv/workspace",
+  "observed_dependencies": {
+    "numpy": "2.3.5",
+    "onnxruntime": "1.23.2",
+    "tokenizers": "0.22.2"
+  },
+  "model_integrity": "The current source checks tokenizer/config/ONNX digests using the paired model-manifest.json and export-result.json. Model weights are not copied into this repository.",
+  "build_command": "node packages/semantic-service/build-source.mjs --check-contract",
+  "publication": "Publish the reviewed code_files together to the existing runtime source directory using authorized infrastructure maintenance. Preserve model_dir, interpreter, paired model metadata and per-request caller forwarding unless their contract is intentionally changed. Rebuild/check the MCP input projection from input_contracts.py; do not hand-edit its consumer copy.",
+  "scope": "Source maintenance and reproducible public-code bundle; no new service, privilege, database schema or framework.",
+  "history": "Prior implementation evidence remains in work #1000123 and the owning repository Git history."
+}

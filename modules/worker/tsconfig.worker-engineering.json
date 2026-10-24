@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "include": [
+    "apps/worker/src/start.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

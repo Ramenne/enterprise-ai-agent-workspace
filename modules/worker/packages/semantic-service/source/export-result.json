@@ -1,0 +1,21 @@
+{
+  "exported_onnx_sha256": "86f4fbf9cd7d230ed09bf73c900dd20bfd71cf6083116e92fe9e34a01785f491",
+  "size_bytes": 94834118,
+  "duration_seconds": 0.7377150420070393,
+  "torch": "2.9.1",
+  "transformers": "4.57.6",
+  "onnx": "1.20.0",
+  "onnxruntime": "1.23.2",
+  "architecture": "arm64",
+  "system": "Darwin",
+  "opset": 17,
+  "pooling": "CLS",
+  "precision": "float32",
+  "device": "CPU",
+  "torch_threads": 4,
+  "ort_threads": 4,
+  "public_fixture_parity_max_abs_error": 5.7220458984375e-06,
+  "parity_passed": true,
+  "private_text_processed": false,
+  "jiaxin_execution_verified": false
+}

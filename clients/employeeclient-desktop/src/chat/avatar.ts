@@ -1,0 +1,5 @@
+// Decode only a user-selected local picture, crop a square, strip EXIF and normalize.
+export async function normalizeAvatar(file:File):Promise<{mime:string;bytes_base64:string;preview:string}>{
+ if(!file.type.startsWith('image/')||file.type==='image/svg+xml'||file.size>10*1024*1024)throw Error('请选择10MB以内的照片');
+ let bitmap:ImageBitmap;try{bitmap=await createImageBitmap(file);}catch{throw Error('这张照片暂无法读取，请选择 JPG、PNG 或 WebP 图片');}try{if(bitmap.width*bitmap.height>40000000)throw Error('照片尺寸过大，请选择较小图片');const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const ctx=canvas.getContext('2d');if(!ctx)throw Error('当前设备无法处理照片');const side=Math.min(bitmap.width,bitmap.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,256,256);ctx.drawImage(bitmap,(bitmap.width-side)/2,(bitmap.height-side)/2,side,side,0,0,256,256);const preview=canvas.toDataURL('image/jpeg',0.85),bytes_base64=preview.split(',')[1];if(bytes_base64.length>87000)throw Error('照片处理后仍过大，请换一张照片');return {mime:'image/jpeg',bytes_base64,preview};}finally{bitmap.close();}
+}

@@ -1,0 +1,57 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "declaration": true,
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "/srv/workspace"
+    ],
+    "paths": {
+      "pg": [
+        "/srv/workspace"
+      ]
+    }
+  },
+  "include": [
+    "apps/v8/src/discovery.ts",
+    "apps/v8/src/expansion.ts",
+    "apps/v8/src/governance-inbox.d.mts",
+    "apps/v8/src/governance.ts",
+    "apps/v8/src/server.ts",
+    "apps/v8/src/start.ts",
+    "packages/database-leases/src/rotating-pool.ts",
+    "packages/platform/src/canonical.ts",
+    "packages/platform/src/changes.ts",
+    "packages/platform/src/db.ts",
+    "packages/platform/src/decision.ts",
+    "packages/platform/src/http.ts",
+    "packages/platform/src/observed-scope.ts",
+    "packages/platform/src/readiness.ts",
+    "packages/platform/src/runtime.ts",
+    "packages/platform/src/s3.ts",
+    "packages/platform/src/source.ts",
+    "packages/platform/src/usage-spool.ts",
+    "packages/platform/src/usage.ts",
+    "packages/secrets/src/index.ts",
+    "packages/secrets/src/types.ts",
+    "apps/v8/src/relation-properties.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "reference"
+  ]
+}

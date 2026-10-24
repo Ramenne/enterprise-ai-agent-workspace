@@ -1,0 +1,10 @@
+{
+  "purpose": "One-time setup of protected company project-storage issuer in existing account 100029668957",
+  "target_current_management_uin": "100052344235",
+  "temporarily_needed_cam_actions": ["name/cam:AddUser", "name/cam:GetUser", "name/cam:CreatePolicy", "name/cam:GetPolicy", "name/cam:AttachUserPolicy", "name/cam:ListAttachedUserPolicies", "name/cam:CreateAccessKey", "name/cam:ListAccessKeys", "name/cam:UpdateAccessKey"],
+  "resource_scope_required_by_cam": ["*"],
+  "application_receives_management_permission": false,
+  "after_setup": "remove temporary CAM policy from existing management user; retain original policies; dedicated issuer kept only in protected core platform",
+  "application_data_scope": "hub2-app-5e612def-1316920087 in ap-guangzhou;no CAM or other buckets",
+  "status": "prepared;not_granted;Tencent_console_authentication_needed"
+}

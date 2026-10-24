@@ -1,0 +1,6 @@
+{
+  "project": "fbe863aa-824f-4688-a24d-bc3398754704",
+  "path": "packages/platform/src/failure-contract.mjs",
+  "sha256": "e3e11ef21685bf93541fb3e155bf88dcf3e0c850adf9be7d9995ced44d069f14",
+  "maintenance": "edit canonical Hufu source then publish identical copies; consumers do not fork policy"
+}

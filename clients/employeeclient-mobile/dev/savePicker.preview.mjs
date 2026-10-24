@@ -1,0 +1,12 @@
+// Local OS-picker acceptance using production saving code; no accounts or external services.
+import {createServer} from 'node:http';import {build} from 'esbuild';import {createHash} from 'node:crypto';import {resolve} from 'node:path';
+const bytes=Buffer.from('员工客户端系统保存窗口验证原件\n'),hash=createHash('sha256').update(bytes).digest('hex');
+const result=await build({stdin:{contents:"import {prepareBrowserSave} from './src/platform/saveFile.ts';import {fetchDownloadResponse} from './src/native/download-stream.mjs';window.QNSave={prepareBrowserSave,fetchDownloadResponse};",resolveDir:process.cwd()},alias:{'@':resolve('src')},bundle:true,write:false,format:'iife',platform:'browser'});
+const server=createServer((req,res)=>{
+ if(req.url==='/bundle.js'){res.setHeader('content-type','text/javascript');res.end(result.outputFiles[0].contents);return;}
+ if(req.url==='/file'||req.url==='/corrupt'){res.setHeader('content-type','application/octet-stream');res.end(req.url==='/file'?bytes:Buffer.alloc(bytes.length));return;}
+ res.setHeader('content-type','text/html;charset=utf-8');res.end(`<!doctype html><meta charset="utf-8"><title>员工客户端本机保存验收</title><style>body{font:18px sans-serif;margin:36px}button{padding:14px;margin:8px}pre{white-space:pre-wrap}</style><h1>员工客户端本机系统保存窗口</h1><p>只保存本地验证文件。使用真实系统窗口，不替代 File Picker。</p><button id="save">保存原件</button><button id="corrupt">校验错误文件</button><button id="cancel">打开后取消</button><pre id="result">等待验证</pre><script src="/bundle.js"></script><script>
+ window.qa=[];const expected={size:${bytes.length},sha256:'${hash}'};
+ for(const id of ['save','corrupt','cancel'])document.getElementById(id).onclick=async()=>{const show=document.getElementById('result');show.textContent='正在打开系统窗口';try{const target=await QNSave.prepareBrowserSave('employeeclient-os-picker-check.txt');if(id==='cancel'){target.cancel();throw new DOMException('已暂停','AbortError');}const response=await QNSave.fetchDownloadResponse(id==='corrupt'?'/corrupt':'/file');const receipt=target.saveStream?await target.saveStream(response.body,expected,()=>true,new AbortController().signal):await target.save(await response.blob());qa.push({id,state:receipt.state});show.textContent=JSON.stringify(qa);}catch(e){qa.push({id,error:e.name,message:e.message});show.textContent=JSON.stringify(qa);}};
+ </script>`);
+});server.listen(5306,'127.0.0.1',()=>console.log('LOCAL OS PICKER ONLY http://127.0.0.1:5306'));

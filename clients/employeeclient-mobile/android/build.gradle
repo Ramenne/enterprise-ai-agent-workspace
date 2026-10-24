@@ -1,0 +1,33 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//
+// 本文件只保留 google() + mavenCentral()：员工客户端 Android 首期已取消第三方／厂商推送且不保留备用实现
+// （2026-09-10 最新决定），因此阿里云移动推送 Maven 仓、华为 HMS 仓与 google-services（FCM）classpath
+// 已整体删除，不是注释掉备用。消息由应用内存活连接拉取后经 @capacitor/local-notifications 弹本地系统通知，
+// 不依赖任何厂商推送服务与 google-services.json / agconnect-services.json。
+
+buildscript {
+    
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply from: "variables.gradle"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

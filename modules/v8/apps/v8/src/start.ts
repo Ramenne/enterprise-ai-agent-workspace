@@ -1,0 +1,14 @@
+import {closeUsage,usageStatus} from '../../../packages/platform/src/usage.js';
+import { createServer } from './server.js';
+import { run } from '../../../packages/platform/src/http.js';
+import {loadRuntime} from '../../../packages/platform/src/runtime.js';
+import {database} from '../../../packages/platform/src/db.js';
+import {installDatabaseReadiness} from '../../../packages/platform/src/readiness.js';
+const runtime=await loadRuntime('v8');
+const databaseUrl=runtime.optional('database_url','DATABASE_URL')??'',pool=await runtime.databasePool('DATABASE_URL');
+const usagePool=await runtime.databasePool('DATABASE_URL',{max:1});
+const usageSpoolDirectory=process.env['HUB_USAGE_SPOOL_DIR']??'/srv/workspace';
+const app=createServer({audience:'v8',pool,usagePool,usageSpoolDirectory,databaseUrl,hufuUrl:process.env['HUFU_URL']??'http://127.0.0.1:4611',serviceKey:runtime.required('service_key','HUFU_V8_SERVICE_KEY')});
+installDatabaseReadiness(app,pool,{secrets:runtime.mode},()=>({usage:usageStatus(app),pool_coverage:'business_SQL_excludes_usage'}));
+app.addHook('onClose',async()=>{await closeUsage(app);await pool.end();await runtime.close();});
+await run(app,Number(process.env['PORT']??4613));

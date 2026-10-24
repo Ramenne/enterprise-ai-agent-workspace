@@ -1,0 +1,50 @@
+[
+  {
+    "repo": "krea/Krea-2-Raw",
+    "revision": "6b0ece7fffb640c5e3bcbe0a7f10f66b8e60a603",
+    "file": "raw.safetensors",
+    "size": 26283332608,
+    "lfs": {
+      "sha256": "f99bb0ff8e362b77342bc4994e0c50906fe7ef7074864b181b7d48d2fa6d03d7",
+      "size": 26283332608,
+      "pointerSize": 136
+    },
+    "gated": "auto"
+  },
+  {
+    "repo": "krea/Krea-2-Turbo",
+    "revision": "98e0fe118d17c9e3547fbb2e25acdbae2cadf7c7",
+    "file": "turbo.safetensors",
+    "size": 26283332608,
+    "lfs": {
+      "sha256": "78bbf8f4165eda19cea3cb06c78089221932a39e2eed8af9da741f942c47ffb3",
+      "size": 26283332608,
+      "pointerSize": 136
+    },
+    "gated": "auto"
+  },
+  {
+    "repo": "Comfy-Org/Qwen3-VL",
+    "revision": "02f0d3eefb59528799653d16735818801177ef1f",
+    "file": "text_encoders/qwen3vl_4b_bf16.safetensors",
+    "size": 8875719384,
+    "lfs": {
+      "sha256": "36f3ff447ef59201722e8f9ce6020c9819fdcfba6aa2608c4e09b1c0ce114e34",
+      "size": 8875719384,
+      "pointerSize": 135
+    },
+    "gated": false
+  },
+  {
+    "repo": "Comfy-Org/Krea-2",
+    "revision": "1171f4dc7e325bf3734586942e737872506c73e1",
+    "file": "vae/qwen_image_vae.safetensors",
+    "size": 253806246,
+    "lfs": {
+      "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+      "size": 253806246,
+      "pointerSize": 134
+    },
+    "gated": false
+  }
+]

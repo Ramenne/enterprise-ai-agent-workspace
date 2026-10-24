@@ -1,0 +1,11 @@
+import { createServer } from './server.js';
+import { run } from '../../../packages/platform/src/http.js';
+import {registerMcpReadiness} from './readiness.js';
+const urls={hufu:process.env['HUFU_URL']??'http://127.0.0.1:4611',mem:process.env['MEM_URL']??'http://127.0.0.1:4612',v8:process.env['V8_URL']??'http://127.0.0.1:4613'};
+const issuer=process.env['HUFU_MCP_OAUTH_ISSUER'],resource=process.env['HUFU_MCP_OAUTH_RESOURCE'];
+if(Boolean(issuer)!==Boolean(resource))throw new Error('oauth_issuer_resource_pair_required');
+const url_import_url=process.env['URL_IMPORT_URL'];
+const semantic_url=process.env['SEMANTIC_URL'];
+const app=createServer({urls,...(semantic_url?{semantic_url}:{}),...(url_import_url?{url_import_url}:{}),...(issuer&&resource?{oauth:{issuer,resource}}:{})});
+registerMcpReadiness(app,urls,semantic_url,url_import_url);
+await run(app,Number(process.env['MCP_PORT']??4614));

@@ -1,0 +1,95 @@
+[
+  {
+    "label": "semantic-direct",
+    "ok": true,
+    "body_sha256": "bf0e18857314c1a0c5ec92e69bcb681284c2f2742ddccc8242245700c5f23fc8"
+  },
+  {
+    "label": "semantic-payload",
+    "ok": true,
+    "body_sha256": "bf0e18857314c1a0c5ec92e69bcb681284c2f2742ddccc8242245700c5f23fc8"
+  },
+  {
+    "label": "semantic-mixed",
+    "ok": true,
+    "body_sha256": "bf0e18857314c1a0c5ec92e69bcb681284c2f2742ddccc8242245700c5f23fc8"
+  },
+  {
+    "label": "semantic-defaults-explicit",
+    "ok": true,
+    "body_sha256": "206621c5b5d6453e0eddd9e5c8112b156b132e8affc111b17560826a7f3e230f"
+  },
+  {
+    "label": "semantic-utf8-budget",
+    "ok": true,
+    "body_sha256": "1ef6ed5affe6b4c14dc42652dde7cc9d422c7ee839906db578d4f2c608d7e0d9"
+  },
+  {
+    "label": "semantic-blank",
+    "ok": true,
+    "body_sha256": "a354ef30d75031c044eaffb0316ab6a645ba61aa86c9db7bc1a8c59ee6565009"
+  },
+  {
+    "label": "semantic-invalid-top",
+    "ok": false
+  },
+  {
+    "label": "semantic-unknown",
+    "ok": false
+  },
+  {
+    "label": "semantic-compact-uuid",
+    "ok": false
+  },
+  {
+    "label": "semantic-index",
+    "ok": true,
+    "body_sha256": "f626b0d4555d3c0cf61c084e944455f93ab0bbf1dccb72eab2d63a5be4a6beca"
+  },
+  {
+    "label": "semantic-index-newline-hash",
+    "ok": false
+  },
+  {
+    "label": "semantic-payload-source",
+    "ok": false
+  },
+  {
+    "label": "url-direct",
+    "ok": true,
+    "body_sha256": "71e6c7826aaddce6aa9c40ba66659a6e5660b46bd2f4c5742a4c9f8a64df66b2"
+  },
+  {
+    "label": "url-payload",
+    "ok": true,
+    "body_sha256": "71e6c7826aaddce6aa9c40ba66659a6e5660b46bd2f4c5742a4c9f8a64df66b2"
+  },
+  {
+    "label": "url-mixed",
+    "ok": true,
+    "body_sha256": "71e6c7826aaddce6aa9c40ba66659a6e5660b46bd2f4c5742a4c9f8a64df66b2"
+  },
+  {
+    "label": "url-invalid-revision",
+    "ok": false
+  },
+  {
+    "label": "url-extra-key",
+    "ok": false
+  },
+  {
+    "label": "url-resume-direct",
+    "ok": true,
+    "body_sha256": "6cdf1f7906a056f7d5bf63d97cf44cb206d288a4bbdd9806f583ba772ad8bcf3"
+  },
+  {
+    "label": "url-resume-payload",
+    "ok": true,
+    "body_sha256": "6cdf1f7906a056f7d5bf63d97cf44cb206d288a4bbdd9806f583ba772ad8bcf3"
+  },
+  {
+    "label": "url-status",
+    "ok": true,
+    "body_sha256": "c127c45b2087546291bb46146db5f3d7c250436430a4deed9adb5b5e532f9e41"
+  }
+]

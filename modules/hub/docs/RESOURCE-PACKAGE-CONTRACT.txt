@@ -1,0 +1,9 @@
+应用资源包通路，2026-10-08
+公开HTTP：/v2/services/resource-packages/request、read、decide、delivery。
+request：project_id、service_id、summary、resources:[{kind,requirements}]，可选source_ref引用既有报告/协作。kind包含storage/server/domain/secret/resource/context/other，仅列实际需要的项；真实操作者由凭据产生，resource item_id由平台生成。既有团队协作/报告也是有效入口，管理方可直接据其创建整包，不要求团队重填或二次申请。
+read：package_id，可选project_id，返回申请、整包决定、实际交付明细，不含秘密。
+decide：package_id、expected_revision、decision:approve/reject，可选note。当前项目管理方只作一次整包决定，批准覆盖全部原始资源清单，不再逐项申请。approved表示配置交付有依据，不表示资源已可用，也不自动执行外部云效果。
+delivery：package_id、expected_revision、items:[{item_id,status:delivered/pending/failed,receipt:{实际配置回执}}]。平台执行资源配置后记录实际结果，是交付记录而不是第二次审批。全部完成才为delivered；其余partially_delivered。接收运行环境/路径/资源地址可记录，密钥值不进入此接口。
+写入使用idempotency-key；CAS冲突读原包再继续，外部不明效果查询原配置，不盲目再创建云资源。
+日常运行不调用这些审批接口。凭据、空间、运行区域、域名、资源能力和真实密钥配置交付完成后，应用直接使用。扩展资源另作增量包，不为原范围正常操作再申请。
+秘密由管理方配置交付通道发送到批准的应用运行环境；真实明文值由后端进程直接读取，不强制每次MCP、reveal或代理。整包记录只保存事实，不存秘密。此通路复用真实项目管理权；其他成员和服务不能自行批准。

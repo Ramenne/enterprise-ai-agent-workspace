@@ -1,0 +1,120 @@
+{
+  "purpose": "Current maintained source and observed runtime boundary for optional semantic and URL import adapters; not a deployment or permission grant",
+  "owner_project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+  "facts_owner": "Mem remains the owner of content, fixed versions, descriptions, publication CAS and final permissions. These adapters own inference or URL acquisition workflow only.",
+  "verified_at": "2026-10-18T09:33:55.088761+00:00",
+  "semantic": {
+    "service": "hub2-semantic.service",
+    "endpoint_key": "semantic",
+    "maintained_source": "packages/semantic-service/source",
+    "build_command": "node packages/semantic-service/build-source.mjs --check-contract",
+    "runtime_profile": "packages/semantic-service/runtime-profile.json",
+    "files": [
+      {
+        "source": "packages/semantic-service/source/warm_service.py",
+        "artifact": "dist/semantic-source/warm_service.py",
+        "runtime": "/srv/workspace",
+        "sha256": "c53a6fc36786c9b932b438cee2b64d94c725ceee52758728e4241f7bf851a975",
+        "exact_bytes_equal": true
+      },
+      {
+        "source": "packages/semantic-service/source/semantic_adapter.py",
+        "artifact": "dist/semantic-source/semantic_adapter.py",
+        "runtime": "/srv/workspace",
+        "sha256": "73f000d9034bb322980ce383c1b973739b5f2bbe653a845abd0874f1f314d466",
+        "exact_bytes_equal": true
+      },
+      {
+        "source": "packages/semantic-service/source/model-manifest.json",
+        "artifact": "dist/semantic-source/model-manifest.json",
+        "runtime": "/srv/workspace",
+        "sha256": "6c41202d8e1273499c727c9f5410ce1ca2df5b8d18a71606fe9e7cae44827f8c",
+        "exact_bytes_equal": true
+      },
+      {
+        "source": "packages/semantic-service/source/export-result.json",
+        "artifact": "dist/semantic-source/export-result.json",
+        "runtime": "/srv/workspace",
+        "sha256": "dc2a83ebd895ad5d034e0012eaa6fe2ee7ec065dba01c378c3c5eb6db7995eb0",
+        "exact_bytes_equal": true
+      },
+      {
+        "source": "packages/semantic-service/source/input_contracts.py",
+        "artifact": "dist/semantic-source/input_contracts.py",
+        "runtime": "/srv/workspace",
+        "sha256": "6f3b2196da442da64dc49ebb21ac2acbe3ea6f92f057d82633ff66ae1e053915",
+        "exact_bytes_equal": true
+      }
+    ],
+    "verification": "maintained source, artifact and runtime bytes equal for all five files; model manifests unchanged",
+    "publication_state": "domain-owned Python input validation and generated MCP structural projection are active",
+    "input_contract_owner": "packages/semantic-service/source/input_contracts.py",
+    "mcp_contract": {
+      "producer": "dist/semantic-source/mcp-input.json",
+      "consumer": "apps/mcp/src/domain-contracts/semantic-input.json",
+      "source_copy_exact": true,
+      "compiled_json_value_equal": true,
+      "source_sha256": "6f3b2196da442da64dc49ebb21ac2acbe3ea6f92f057d82633ff66ae1e053915"
+    }
+  },
+  "url_import": {
+    "service": "hub2-url-import.service",
+    "endpoint_key": "url_import",
+    "maintained_sources": [
+      "apps/mem/src/url-import-start.ts",
+      "apps/mem/src/url-import-worker.ts",
+      "apps/mem/src/url-download.ts",
+      "apps/mem/src/url-import-contracts.ts"
+    ],
+    "files": [
+      {
+        "source": "apps/mem/src/url-import-start.ts",
+        "source_sha256": "10105e9ffe5dd20367438cb2b464df161b7ceb8715fb7121959ce367dd9b0e07",
+        "compiled": "dist/url-source-check/apps/mem/src/url-import-start.js",
+        "compiled_sha256": "feb935a497e387fd64d590ac342233c543bd56dd8f15c12a63d46f926e73bc65",
+        "runtime": "/srv/workspace",
+        "runtime_sha256": "f9eafdc09652707504acccd9275ef95cc5fda0430402b1a5c4ef7371199551cf",
+        "comparison": "exact text except final sourceMappingURL comment",
+        "aligned": true
+      },
+      {
+        "source": "apps/mem/src/url-import-worker.ts",
+        "source_sha256": "389fe2417e59dc605b563bde4452020e5bbb2c5c4edbcbbb46c798254f7db698",
+        "compiled": "dist/url-source-check/apps/mem/src/url-import-worker.js",
+        "compiled_sha256": "d7c78e7b1b9286eb75b0e98eb4d7bea3be4b0b376ab09b1a1321946390786666",
+        "runtime": "/srv/workspace",
+        "runtime_sha256": "d7c78e7b1b9286eb75b0e98eb4d7bea3be4b0b376ab09b1a1321946390786666",
+        "comparison": "exact bytes",
+        "aligned": true
+      },
+      {
+        "source": "apps/mem/src/url-download.ts",
+        "source_sha256": "d092674293e50d7836fc6fa12c9ef754187a0a2e88ff526e57c40b180fb02342",
+        "compiled": "dist/url-source-check/apps/mem/src/url-download.js",
+        "compiled_sha256": "baa72d20e36f0abd02eb09a1b74f5d37d96a490c701ae88eda8e62b45b865cb1",
+        "runtime": "/srv/workspace",
+        "runtime_sha256": "57e2b310e170fca8eb0ab5d2e8f17b278ae0f29a8a644c73b9ce57698ab6e604",
+        "comparison": "exact text except final sourceMappingURL comment",
+        "aligned": true
+      },
+      {
+        "source": "apps/mem/src/url-import-contracts.ts",
+        "source_sha256": "310e03ad3dbeac78cca2ff1c62580f7f2029065ddb27a41a645aff0cc4a81c3d",
+        "compiled": "dist/url-source-check/apps/mem/src/url-import-contracts.js",
+        "compiled_sha256": "d33b924e8817c246e5089d62f179013362d91d0f3cba3999da28bbbed370a6eb",
+        "runtime": "/srv/workspace",
+        "runtime_sha256": "d33b924e8817c246e5089d62f179013362d91d0f3cba3999da28bbbed370a6eb",
+        "comparison": "exact bytes",
+        "aligned": true
+      }
+    ],
+    "build_command": "node /srv/workspace --ignoreConfig --target ES2023 --module NodeNext --moduleResolution NodeNext --strict --skipLibCheck --esModuleInterop --resolveJsonModule --types node --rootDir . --outDir dist/url-source-check apps/mem/src/url-import-start.ts",
+    "verification": "four business/input modules match current runtime; worker/input module selected publication updated, existing shared dependencies retained",
+    "dependency_boundary": "The active fixed release retains its own shared platform and package dependencies. This comparison does not claim that every dependency equals current Hufu HEAD. Do not replace the full release solely to align versions.",
+    "state_boundary": "Keep existing owned import state, original keys, journals, source/target CAS and one-worker flock when publishing reviewed changes.",
+    "input_contract_owner": "apps/mem/src/url-import-contracts.ts",
+    "mcp_contract_runtime": "/srv/workspace"
+  },
+  "maintenance": "Edit only the declared owning source. Rebuild the relevant adapter and compare the affected modules and runtime profile before publishing. Mem main HTTP and the independent endpoints remain distinct; generated MCP descriptions must select the actual endpoint owner.",
+  "history": "Prior sources and execution evidence remain in owning Git history and work #1000123 fixed artifacts."
+}

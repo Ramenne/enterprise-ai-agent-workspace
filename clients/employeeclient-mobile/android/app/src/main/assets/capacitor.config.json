@@ -1,0 +1,11 @@
+{
+	"appId": "com.workspace.employeeclient",
+	"appName": "员工客户端",
+	"webDir": "dist",
+	"android": {
+		"allowMixedContent": false
+	},
+	"server": {
+		"androidScheme": "https"
+	}
+}

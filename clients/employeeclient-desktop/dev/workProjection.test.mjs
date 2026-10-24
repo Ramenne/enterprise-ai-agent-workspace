@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createWorkProjection} from '../src/native/work-projection.mjs';
+test('compatibility entry uses one bounded page instead of the removed project version loop',async()=>{const calls=[];const p=createWorkProjection({get:async()=>null,put:async()=>{},remove:async()=>{},rpc:async(n,a)=>{calls.push([n,a]);return n==='hub.query.checkpoint'?{cursor:'c'}:{items:[],unchanged_ids:[],coverage:{complete:true},next_scan_cursor:null};}});await p.read({account:'a',epoch:1,valid:()=>true},{project_id:'p'});assert.deepEqual(calls.map(x=>x[0]),['v8.work.catalog']);assert.equal(calls[0][1].page_mode,true);assert.ok(!calls[0][1].revisions_only);});

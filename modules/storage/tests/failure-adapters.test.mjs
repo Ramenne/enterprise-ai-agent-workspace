@@ -1,0 +1,21 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {z} from 'zod';
+import {server,bearer,DomainError} from '../source/packages/platform/src/http.js';
+import {registerMaterialLocate} from '../source/apps/mem/src/material-locate.mjs';import {registerReferenceResolve} from '../source/apps/mem/src/reference-resolve.mjs';
+import {createStagedSearch} from '../source/apps/mem/src/staged-search.mjs';import {registerCompensation} from '../source/apps/mem/src/compensation.js';import {registerAgentFlow} from '../source/apps/mem/src/agent-flow.js';
+const id=n=>String(n).repeat(8)+'-'+String(n).repeat(4)+'-4'+String(n).repeat(3)+'-8'+String(n).repeat(3)+'-'+String(n).repeat(12),ref={project_id:id(1),material_id:id(2),version_id:id(3),sha256:'a'.repeat(64)},headers={authorization:'Bearer SYNTHETIC_TEST_IDENTITY'};
+for(const [install,url] of [[registerMaterialLocate,'/v2/materials/locate'],[registerReferenceResolve,'/v2/references/resolve']])test(url+': identity revoked after initial lookup remains 401',async t=>{
+ const app=server('locate-auth-test');t.after(()=>app.close());let reason='unauthenticated';install(app,{z,bearer,DomainError,sourceFromRequest:()=>({}),pool:{},sqlFunction:async()=>ref.project_id,call:async()=>{throw Object.assign(Error(reason),{code:'42501'});},hufuUrl:'http://127.0.0.1:4611',fetcher:async()=>new Response(JSON.stringify({actor_id:id(4)}))});
+ for(const [message,status]of[['unauthenticated',401],['scope_revoked',403]]){reason=message;const r=await app.inject({method:'POST',url,payload:{material_id:ref.material_id,version_id:ref.version_id},headers});assert.equal(r.statusCode,status);assert.equal(r.json().error_code,status===401?'unauthenticated':'forbidden');}
+});
+test('search does not convert revoked identity into successful empty results',async()=>{
+ let reason='unauthenticated';const search=createStagedSearch({call:async(t,s,name)=>{if(name==='search_materials')return{items:[{fixed_ref:ref,logical_path:'test'}]};if(name==='material_head')throw Object.assign(Error(reason),{code:'42501'});throw Error(name);},semantic:async()=>({items:[]}),findNumber:async()=>({})});
+ await assert.rejects(search('synthetic',{}, {project_id:ref.project_id,query:'test',semantic:false}),e=>e.message==='unauthenticated');reason='resource_scope_denied';const r=await search('synthetic',{}, {project_id:ref.project_id,query:'test',semantic:false});assert.equal(r.items.length,0);
+});
+test('compensation keeps earlier successful items when identity expires on a later item',async t=>{
+ const app=server('compensation-test');t.after(()=>app.close());let calls=0;registerCompensation(app,async()=>{if(++calls===1)return{state:'compensated',operation_id:id(5)};throw Object.assign(Error('unauthenticated'),{code:'42501'});});
+ const r=await app.inject({method:'POST',url:'/v2/compensations/apply',headers,payload:{project_id:ref.project_id,idempotency_key:'original',choices:[1,2].map(n=>({operation_id:id(n+4),action:'mem.write',material_id:ref.material_id,effect_ids:[id(7)]}))}});assert.equal(r.statusCode,200);assert.equal(r.json().state,'partial');assert.equal(r.json().items[0].state,'compensated');assert.equal(r.json().items[1].error_code,'unauthenticated');assert.equal(r.json().items[1].retained_state,'later_writes_and_prior_successful_items_preserved');
+});
+test('draft publication failure retains original resume and logical intent',async t=>{
+ const app=server('draft-test');t.after(()=>app.close());const body={project_id:ref.project_id,logical_path:'synthetic.txt',text:'synthetic',idempotency_key:'original'},draft={resume_id:id(8),idempotency_key:'original',body};let failure;registerAgentFlow(app,{}, {},async(t,s,name)=>{if(name==='save_text_draft')return draft;throw failure;});
+ for(const [code,message,status]of[['42501','unauthenticated',401],['55P03','lock wait',503],['40001','revision',409]]){failure=Object.assign(Error(message),{code});const r=await app.inject({method:'POST',url:'/v2/materials/write-text',headers,payload:body});assert.equal(r.statusCode,status,r.body);assert.equal(r.json().resume_id,draft.resume_id);assert.equal(r.json().idempotency_key,'original');assert.equal(r.json().retained_state,'durable_text_draft');assert.equal(r.json().next_step,'query_or_resume_same_text_draft');}
+});

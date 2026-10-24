@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { build } from 'esbuild';
+import { readFile } from 'node:fs/promises';
+const result=await build({stdin:{contents:await readFile(new URL('../src/chat/history.ts',import.meta.url),'utf8'),loader:'ts'},write:false,format:'esm'});
+const {findChatDate,findChatMessage}=await import('data:text/javascript;base64,'+Buffer.from(result.outputFiles[0].text).toString('base64'));
+const row=(seq,day)=>({id:'m'+seq,seq,created_at:new Date(day+'T12:00:00').getTime()});
+test('date search reads beyond cache and completes target day across pages',async()=>{let rows=[row(6,'2026-09-17')],pages=0;const result=await findChatDate({messages:()=>rows,hasOlder:()=>pages<3,older:async()=>{pages++;rows=[...([[],[row(4,'2026-09-16'),row(5,'2026-09-16')],[row(2,'2026-09-15'),row(3,'2026-09-16')],[row(1,'2026-09-14')]][pages]),...rows]},error:()=>'',valid:()=>true},'2026-09-16');assert.equal(result.id,'m3');assert.equal(pages,2);});
+test('missing date and empty complete history are empty, not fake matching messages',async()=>{const source={messages:()=>[row(1,'2026-09-14'),row(2,'2026-09-17')],hasOlder:()=>false,older:async()=>{},error:()=>'',valid:()=>true};assert.equal(await findChatDate(source,'2026-09-16'),null);assert.equal(await findChatDate({...source,messages:()=>[]},'2026-09-16'),null);});
+test('account invalidation stops paging and no-progress fails instead of looping',async()=>{let valid=true,calls=0;const s={messages:()=>[row(5,'2026-09-17')],hasOlder:()=>true,older:async()=>{calls++;valid=false},error:()=>'',valid:()=>valid};assert.equal(await findChatDate(s,'2026-09-16'),null);assert.equal(calls,1);await assert.rejects(findChatDate({...s,valid:()=>true,older:async()=>{}},'2026-09-16'),/未能继续/);});
+
+test('quote location loads older pages and stops at original',async()=>{let rows=[row(8,'2026-09-17')],calls=0;const source={messages:()=>rows,hasOlder:()=>true,older:async()=>{calls++;rows=[row(8-calls,'2026-09-16'),...rows]},error:()=>'',valid:()=>true};assert.equal((await findChatMessage(source,'m6')).id,'m6');assert.equal(calls,2);});
+test('quote location cancels on account change and detects stalled paging',async()=>{let valid=true;const source={messages:()=>[row(8,'2026-09-17')],hasOlder:()=>true,older:async()=>{valid=false},error:()=>'',valid:()=>valid};assert.equal(await findChatMessage(source,'m1'),null);await assert.rejects(findChatMessage({...source,valid:()=>true,older:async()=>{}},'m1'),/未能继续/);});
+test('date location skips hidden messages while retaining pagination sequence',async()=>{const rows=[{...row(1,'2026-09-17'),hidden:true},row(2,'2026-09-17')];assert.equal((await findChatDate({messages:()=>rows,hasOlder:()=>false,older:async()=>{},error:()=>'',valid:()=>true},'2026-09-17')).id,'m2');});

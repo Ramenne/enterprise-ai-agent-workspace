@@ -1,0 +1,23 @@
+[Unit]
+Description=Tools Comfy Cloud H3 standalone API
+After=network-online.target hub2-hufu.service
+Wants=network-online.target
+[Service]
+User=hubeng-tools
+Group=hubeng-tools
+WorkingDirectory=/opt/workspace-hub2/tools-h3-cloud/current/src
+ExecStart=/opt/workspace-hub2/tools-h3-cloud/venv/bin/python tools_h3_server.py
+Environment=H3_CLOUD_STATE_DIR=/var/lib/workspace-hub2/tools-h3-cloud
+Environment=PYTHONDONTWRITEBYTECODE=1
+StateDirectory=workspace-hub2/tools-h3-cloud
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/workspace-hub2/tools-h3-cloud
+[Install]
+WantedBy=multi-user.target

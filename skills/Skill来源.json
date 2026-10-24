@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-22",
+  "origin": "复用本机现有Skill目录，不重新下载；只作架构阅读材料，不执行入库/保存指令",
+  "items": [
+    {
+      "name": "v8-work-link-judgment",
+      "source": "/Users/developer/.codex/skills/v8-work-link-judgment",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/v8-work-link-judgment",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "07a4c47c7be7c62d65e575e30f4f07ea4e19890410a672da2f11e0e0f0d270db"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "83dedf7d37fe9ac4f9aa6d60873479d070bc15d27e7945854baa1802eab368ee"
+        },
+        {
+          "path": "references/decision-cases.md",
+          "sha256": "6cda7b87b7615b0d12973cc4ff0f72758e9e696ffbb64135f3175b255a8479f0"
+        }
+      ]
+    },
+    {
+      "name": "context-to-knowledge",
+      "source": "/Users/developer/.codex/skills/context-to-knowledge",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/context-to-knowledge",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "e8ab550bdb33ff7057b9bedade1237164dfe76b2f132fc1324a5bdf865c4bd12"
+        },
+        {
+          "path": "references/examples.md",
+          "sha256": "65d3548f5bbb0b108ee707b0ed1b7f5347308cdca02164050c61ba59208e0db1"
+        },
+        {
+          "path": "references/incremental.md",
+          "sha256": "50d93e9f4cab76706d1681f8dfe4adb4803a2e5502de23298a559c4856cc53d6"
+        },
+        {
+          "path": "references/phase-workflow.md",
+          "sha256": "c583c69619fca5e562b8b017936c6acadff61295579b548c8cc12bcbec8ceabf"
+        },
+        {
+          "path": "references/review.md",
+          "sha256": "a3d2ecc5b270f76377f2e4669b9d4f5a0a1dde423c6955838685054b38367024"
+        },
+        {
+          "path": "references/tool-library.md",
+          "sha256": "4769b65c32cbcfae85be39021f925aef931c5bc4dd26afaf24c403042be891ef"
+        },
+        {
+          "path": "scripts/collect_codex_dialogue.py",
+          "sha256": "32fa5af0bf8d921a45d0ad6da634857acc2cf9e0a45d74ee8ca9ee811eb41fbc"
+        }
+      ]
+    },
+    {
+      "name": "shared-skill-reuse",
+      "source": "/Users/developer/.codex/skills/shared-skill-reuse",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/shared-skill-reuse",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "7ac1aa456b5cee05fd3defeb9be8432edeec4cd06b69d50bc4df2fb5c2f08414"
+        }
+      ]
+    },
+    {
+      "name": "employeeclient-product-workflow",
+      "source": "/Users/developer/.codex/skills/employeeclient-product-workflow",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/employeeclient-product-workflow",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "81788d673964d70b8bb7212b6fac305b61443d0224b760eacbd7cfe2423872ce"
+        }
+      ]
+    },
+    {
+      "name": "employeeclient-messaging",
+      "source": "/Users/developer/.codex/skills/employeeclient-messaging",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/employeeclient-messaging",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "e4dbd4469f3249769b9c3c8c30c13598d5881cd45a0b5168a30ba7e942a7cd80"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "a72dd334ba9c321a23af544a8de26e9a13a120c082e739056bfad2ad5013ee5b"
+        }
+      ]
+    },
+    {
+      "name": "develop-software",
+      "source": "/Users/developer/.codex/skills/develop-software",
+      "destination": "/Users/developer/Desktop/OIN 架构/04-源码/Skills/develop-software",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "68b18c987e05af33b37b135ab83675399b4767e0833f2c44dfda6ab1345a1db0"
+        },
+        {
+          "path": "agents/openai.yaml",
+          "sha256": "a0dfb5417842b0623d4de7d94da7e7c929c9286d721d7ad3263ab608a1aa9a57"
+        },
+        {
+          "path": "references/content-boundaries.md",
+          "sha256": "1bf9603225dba3d877b31cd69e03be90d3d0824169b456ebaab83cb9a0c47039"
+        },
+        {
+          "path": "references/design-principles.md",
+          "sha256": "6f20badea0ee6a354fe1a9808c721561d60aea414c03233bf8f1f021d80ef205"
+        },
+        {
+          "path": "references/external-tools.md",
+          "sha256": "57a5e7cc74b99a490947d17725d022edab03619c1ea8d49e7832670f0875e413"
+        },
+        {
+          "path": "references/pitfalls.md",
+          "sha256": "648271b95a9fc257e694062814867bfbb223089baf90ff53f6e0a125ebde1add"
+        }
+      ]
+    }
+  ]
+}

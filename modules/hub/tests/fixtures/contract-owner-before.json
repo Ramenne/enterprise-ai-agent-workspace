@@ -1,0 +1,265 @@
+[
+  {
+    "label": "legacy-direct",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "reference_kind": "latest",
+          "expected_revision": 0
+        }
+      ]
+    },
+    "ok": true,
+    "body": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "original_address": "",
+          "reference_kind": "latest",
+          "expected_revision": 0,
+          "declaration": {}
+        }
+      ]
+    }
+  },
+  {
+    "label": "legacy-payload",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "payload": {
+        "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+        "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+        "source_system": "synthetic-contract-owner",
+        "idempotency_key": "synthetic-original-legacy-key",
+        "items": [
+          {
+            "category": "file_alias",
+            "source_id": "synthetic",
+            "field_path": "synthetic.address",
+            "reference_kind": "latest",
+            "expected_revision": 0
+          }
+        ]
+      }
+    },
+    "ok": true,
+    "body": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "original_address": "",
+          "reference_kind": "latest",
+          "expected_revision": 0,
+          "declaration": {}
+        }
+      ]
+    }
+  },
+  {
+    "label": "legacy-mixed",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "reference_kind": "latest",
+          "expected_revision": 0
+        }
+      ],
+      "payload": {
+        "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+        "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+        "source_system": "synthetic-contract-owner",
+        "idempotency_key": "synthetic-original-legacy-key",
+        "items": [
+          {
+            "category": "file_alias",
+            "source_id": "synthetic",
+            "field_path": "synthetic.address",
+            "reference_kind": "latest",
+            "expected_revision": 0
+          }
+        ]
+      }
+    },
+    "ok": true,
+    "body": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "original_address": "",
+          "reference_kind": "latest",
+          "expected_revision": 0,
+          "declaration": {}
+        }
+      ]
+    }
+  },
+  {
+    "label": "legacy-omitted-outer",
+    "name": "mem.legacy.reference_import",
+    "input": {},
+    "ok": true,
+    "body": {}
+  },
+  {
+    "label": "legacy-invalid-category",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "invented",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "reference_kind": "latest",
+          "expected_revision": 0
+        }
+      ]
+    },
+    "ok": false
+  },
+  {
+    "label": "legacy-extra-key",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "import_scope_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "source_system": "synthetic-contract-owner",
+      "idempotency_key": "synthetic-original-legacy-key",
+      "items": [
+        {
+          "category": "file_alias",
+          "source_id": "synthetic",
+          "field_path": "synthetic.address",
+          "reference_kind": "latest",
+          "expected_revision": 0
+        }
+      ],
+      "unexpected": true
+    },
+    "ok": false
+  },
+  {
+    "label": "legacy-payload-missing",
+    "name": "mem.legacy.reference_import",
+    "input": {
+      "payload": {
+        "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d"
+      }
+    },
+    "ok": false
+  },
+  {
+    "label": "legacy-resolve",
+    "name": "mem.legacy.reference_resolve",
+    "input": {
+      "payload": {
+        "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+        "binding_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d"
+      }
+    },
+    "ok": true,
+    "body": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "binding_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d"
+    }
+  },
+  {
+    "label": "privacy-request",
+    "name": "hufu.project.privacy.requests",
+    "input": {
+      "view": "mine",
+      "limit": 1
+    },
+    "ok": true,
+    "body": {
+      "view": "mine",
+      "limit": 1
+    }
+  },
+  {
+    "label": "privacy-apply-valid",
+    "name": "hufu.project.privacy.apply",
+    "input": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "until_revoked": true,
+      "idempotency_key": "synthetic-original-legacy-key"
+    },
+    "ok": true,
+    "body": {
+      "project_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "until_revoked": true,
+      "idempotency_key": "synthetic-original-legacy-key"
+    }
+  },
+  {
+    "label": "privacy-decide-valid",
+    "name": "hufu.project.privacy.decide",
+    "input": {
+      "request_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "expected_revision": 1,
+      "decision": "withdraw",
+      "idempotency_key": "synthetic-original-legacy-key"
+    },
+    "ok": true,
+    "body": {
+      "request_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "expected_revision": 1,
+      "decision": "withdraw",
+      "idempotency_key": "synthetic-original-legacy-key"
+    }
+  },
+  {
+    "label": "privacy-revoke-valid",
+    "name": "hufu.project.privacy.revoke",
+    "input": {
+      "request_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "expected_revision": 1,
+      "reason": "synthetic",
+      "idempotency_key": "synthetic-original-legacy-key"
+    },
+    "ok": true,
+    "body": {
+      "request_id": "16f05f01-4a43-4e96-a16b-d8ed69eff77d",
+      "expected_revision": 1,
+      "reason": "synthetic",
+      "idempotency_key": "synthetic-original-legacy-key"
+    }
+  }
+]

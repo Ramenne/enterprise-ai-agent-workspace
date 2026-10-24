@@ -1,0 +1,98 @@
+apply plugin: 'com.android.application'
+
+// One release identity for both Android manifest and bundled Web UI.
+def releaseSource = new File(rootProject.projectDir.parentFile, "src/app/release.ts").getText("UTF-8")
+def codeMatch = releaseSource =~ /versionCode:\s*(\d+)/
+def nameMatch = releaseSource =~ /versionName:\s*'([^']+)'/
+if (codeMatch.count != 1 || nameMatch.count != 1) throw new GradleException("Invalid EmployeeClient release identity")
+def qnVersionCode = Integer.parseInt(codeMatch[0][1])
+def qnVersionName = nameMatch[0][1]
+if (qnVersionCode < 1 || !qnVersionName) throw new GradleException("Invalid EmployeeClient release version")
+
+android {
+    namespace "com.workspace.employeeclient"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.workspace.employeeclient"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode qnVersionCode
+        versionName qnVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // 无 manifestPlaceholders 是有意为之：阿里云推送 AppKey/AppSecret 与华为/小米/OPPO/vivo/荣耀厂商通道参数
+        // 已随第三方／厂商推送整体删除（2026-09-10 最新决定，不保留备用），因此不再从环境变量注入任何推送凭据。
+        // 本地系统通知只需 POST_NOTIFICATIONS 运行时权限（Android 13+）与运行时创建的通知渠道，无需构建期占位符。
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation "androidx.browser:browser:1.7.0"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+
+    // 无任何厂商／第三方推送依赖（阿里云自有通道 + 华为/小米/OPPO/vivo/荣耀辅助通道均已删除）。
+    // Capacitor 官方插件（app / network / local-notifications）由 capacitor.build.gradle 自动生成引入，
+    // 不在这里手写，避免与 `npx cap sync android` 的生成结果不一致。
+}
+
+apply from: 'capacitor.build.gradle'
+
+// 正式发布签名：仅当存在 android/keystore.properties（不纳入版本控制）时启用；
+// 调试包 `gradlew assembleDebug` 用自动生成的 debug keystore，无需公司签名即可产出可安装候选。
+def keystorePropertiesFile = rootProject.file(System.getenv('QN_SIGNING_PROPERTIES') ?: "keystore.properties")
+if (keystorePropertiesFile.exists()) {
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    android {
+        signingConfigs {
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['useAndroidDebugDefaults'] == 'true' ? signingConfigs.debug.storePassword : keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['useAndroidDebugDefaults'] == 'true' ? signingConfigs.debug.keyPassword : keystoreProperties['keyPassword']
+            }
+        }
+        buildTypes {
+            release { signingConfig signingConfigs.release }
+        }
+    }
+}
+
+// Existing signing identity is supplied from the controlled build environment.
+if (System.getenv('QN_RELEASE_STORE')) {
+    android {
+        signingConfigs {
+            nativeRelease {
+                storeFile file(System.getenv('QN_RELEASE_STORE'))
+                storePassword System.getenv('QN_RELEASE_STORE_PASSWORD')
+                keyAlias System.getenv('QN_RELEASE_ALIAS')
+                keyPassword System.getenv('QN_RELEASE_KEY_PASSWORD')
+            }
+        }
+        buildTypes { release { signingConfig signingConfigs.nativeRelease } }
+    }
+}

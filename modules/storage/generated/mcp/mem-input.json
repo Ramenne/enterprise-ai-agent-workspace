@@ -1,0 +1,4879 @@
+{
+  "origin": {
+    "owner": "mem",
+    "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+    "path": "source/apps/mem/src/input-contracts.mjs",
+    "sha256": "a66d1d7034c7e49003a8d5e793afaff60f0bfd4b270423d3b5737dc7c37f1230",
+    "sources": {
+      "source/apps/mem/src/input-contracts.mjs": "a66d1d7034c7e49003a8d5e793afaff60f0bfd4b270423d3b5737dc7c37f1230",
+      "source/apps/mem/src/core-contracts.mjs": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+      "source/apps/mem/src/description-contracts.mjs": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+      "source/apps/mem/src/agent-contracts.mjs": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+      "source/apps/mem/src/processing-contracts.mjs": "05e1cdcdfe1b29c798d114be662959d8ca7eb0e8f848bd330ca68bb883a2b68b",
+      "source/apps/mem/src/navigation-contracts.mjs": "d8bff1a3ca76133cc4a4b3960022432163082d8621e3f8e3c1a9d653999ecf91",
+      "source/apps/mem/src/legacy-contracts.mjs": "5df54506b5c6fd0f8b370f4fdd53b31c5a08e30589442f6aa5a438e5ad0e68f6",
+      "source/apps/mem/src/effect-contracts.mjs": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+      "source/apps/mem/src/upload-contracts.mjs": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+      "source/apps/mem/src/external-model-contracts.mjs": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+      "source/apps/mem/src/equivalence-contracts.mjs": "c7612ed3d0ae005d9253d3d4bd9436f545149a2c9178d6fced39d04fad686ce1",
+      "source/apps/mem/src/vector-contracts.mjs": "17f15e782e8b54a24850ce6dac598acb389ff3b7a4afb8f56690b4d380177b93",
+      "source/apps/mem/src/governance-contracts.mjs": "5fea01699f54519dac71e64a9d2c1dfc760b9d4299fd77bd31cc2eb11e6078f3",
+      "source/apps/mem/src/search-contracts.mjs": "e005faea37871e8f9f0c352182d51d306451c1fb4c5027020a4a34651dec5197"
+    },
+    "projection": "per-route;default-free-except-existing-legacy-normalization",
+    "removed_defaults": 54,
+    "maintenance": "generated; edit domain contracts and republish, never edit the consumer copy"
+  },
+  "contracts": [
+    {
+      "method": "POST",
+      "path": "/v2/uploads",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_version_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "logical_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "origin_kind": {
+            "type": "string",
+            "enum": [
+              "member_submission",
+              "service_generated",
+              "agent_processed"
+            ]
+          },
+          "producer": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "properties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "expected_revision",
+          "sha256",
+          "size",
+          "logical_path"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/rebase",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_version_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "operation_id",
+          "expected_revision",
+          "expected_version_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-enumerations",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-enumerations/page",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "cursor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          }
+        },
+        "required": [
+          "project_id",
+          "snapshot_id",
+          "cursor"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/operations/query",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/collections",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "collection_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/metadata",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "properties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "collection_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "material_id",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/placements/patch",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "placement_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "logical_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "placement_id",
+          "expected_revision",
+          "logical_path"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/trash",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "restore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "material_id",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/restore-content",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "material_id",
+          "version_id",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs/retry",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_attempt": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "project_id",
+          "run_id",
+          "expected_attempt"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/archive-callback/copy-source",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "inputs": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "version_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "material_id",
+                "version_id",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "outputs": {
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "version_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "material_id",
+                "version_id",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "inputs",
+          "outputs"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs/finish",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "fencing_token": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "attempt": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "outputs": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "version_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "material_id",
+                "version_id",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "output_kind": {
+            "type": "string",
+            "enum": [
+              "transcript",
+              "experience",
+              "skill",
+              "context",
+              "summary",
+              "other"
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "run_id",
+          "fencing_token",
+          "attempt",
+          "outputs",
+          "output_kind"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/index-text",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 500000
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "version_id",
+          "sha256",
+          "text",
+          "coverage"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/sources/invalidate",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "version_id",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/read-receipts",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "read_receipt_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "acknowledged"
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "read_receipt_id",
+          "state"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/publish",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "attempt": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "fencing_token": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-batches",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "metadata"
+                    },
+                    "material_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "expected_revision": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "properties": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "collection_id": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "material_id",
+                    "expected_revision"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "placement"
+                    },
+                    "placement_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "expected_revision": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "logical_path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "placement_id",
+                    "expected_revision",
+                    "logical_path"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "trash"
+                    },
+                    "material_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "expected_revision": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "restore": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "material_id",
+                    "expected_revision"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "restore_content"
+                    },
+                    "material_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "version_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "expected_revision": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "material_id",
+                    "version_id",
+                    "expected_revision"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/offline-exports",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/offline-exports/page",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "cursor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        },
+        "required": [
+          "project_id",
+          "snapshot_id",
+          "cursor"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/fixed-reference",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/core-contracts.mjs",
+        "sha256": "1260b5127c314cbb93376277a27a7028634cd2f628eea38a2595b8ffb185d582",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/description-read",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "description_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/description-contracts.mjs",
+        "sha256": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/description-save",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1500000
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "source_declaration": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "draft",
+              "withdrawn"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "reason": {},
+          "evidence": {}
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "sha256",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/description-contracts.mjs",
+        "sha256": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/description-vector-index",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "description_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "description_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "embedding": {
+            "minItems": 512,
+            "maxItems": 512,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "space": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "dimension": {
+                "type": "number",
+                "const": 512
+              },
+              "recipe": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "required": [
+                  "name",
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "provider",
+              "model",
+              "dimension",
+              "recipe"
+            ],
+            "additionalProperties": false
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "sha256",
+          "description_revision",
+          "description_sha256",
+          "embedding",
+          "space"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/description-contracts.mjs",
+        "sha256": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/description-vector-search",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "embedding": {
+            "minItems": 512,
+            "maxItems": 512,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "space": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "dimension": {
+                "type": "number",
+                "const": 512
+              },
+              "recipe": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "required": [
+                  "name",
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "provider",
+              "model",
+              "dimension",
+              "recipe"
+            ],
+            "additionalProperties": false
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "hnsw",
+              "ivfflat"
+            ]
+          },
+          "include_historical": {
+            "type": "boolean"
+          },
+          "compare_exact": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "embedding",
+          "space"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/description-contracts.mjs",
+        "sha256": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/description-pending",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "cursor": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "include_historical": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/description-contracts.mjs",
+        "sha256": "65aca30215dc57309c9a41fd0c6ec6193199fbbd5dbfded91b10e4a625816165",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/write-text",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "logical_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1500000
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "base_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "base_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "properties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "source": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id",
+          "logical_path",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/agent-contracts.mjs",
+        "sha256": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/files/read-chunk",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 131072
+          },
+          "encoding": {
+            "type": "string",
+            "enum": [
+              "utf8",
+              "base64"
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/agent-contracts.mjs",
+        "sha256": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/write-text/resume",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "resume_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "base_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "base_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "save_as_new": {
+            "type": "boolean"
+          },
+          "logical_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "project_id",
+          "resume_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/agent-contracts.mjs",
+        "sha256": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/write-text/query",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "resume_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "resume_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/agent-contracts.mjs",
+        "sha256": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/write-text/read-chunk",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "resume_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32768
+          }
+        },
+        "required": [
+          "project_id",
+          "resume_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/agent-contracts.mjs",
+        "sha256": "72129685c232400c7d14ee6669ef1da956da0bec5873f82bace727354ddf9eef",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "inputs": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "version_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "material_id",
+                "version_id",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "output_kind": {
+            "type": "string",
+            "enum": [
+              "transcript",
+              "experience",
+              "skill",
+              "context",
+              "summary",
+              "other"
+            ]
+          },
+          "semantic_kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "recipe": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parameters": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "raw_export",
+              "user_attachment",
+              "agent_summary",
+              "partial",
+              "unknown"
+            ]
+          },
+          "declaration": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "reuse": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/processing-contracts.mjs",
+        "sha256": "05e1cdcdfe1b29c798d114be662959d8ca7eb0e8f848bd330ca68bb883a2b68b",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs/query",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "run_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/processing-contracts.mjs",
+        "sha256": "05e1cdcdfe1b29c798d114be662959d8ca7eb0e8f848bd330ca68bb883a2b68b",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs/resume",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "inputs": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "version_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "material_id",
+                "version_id",
+                "sha256"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "recipe": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parameters": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "semantic_kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "raw_export",
+              "user_attachment",
+              "agent_summary",
+              "partial",
+              "unknown"
+            ]
+          },
+          "declaration": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "expected_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "reclaim": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "run_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/processing-contracts.mjs",
+        "sha256": "05e1cdcdfe1b29c798d114be662959d8ca7eb0e8f848bd330ca68bb883a2b68b",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/processing-runs/cancel",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "project_id",
+          "run_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/processing-contracts.mjs",
+        "sha256": "05e1cdcdfe1b29c798d114be662959d8ca7eb0e8f848bd330ca68bb883a2b68b",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/trash-list",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/navigation-contracts.mjs",
+        "sha256": "d8bff1a3ca76133cc4a4b3960022432163082d8621e3f8e3c1a9d653999ecf91",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/head",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/navigation-contracts.mjs",
+        "sha256": "d8bff1a3ca76133cc4a4b3960022432163082d8621e3f8e3c1a9d653999ecf91",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/history",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/navigation-contracts.mjs",
+        "sha256": "d8bff1a3ca76133cc4a4b3960022432163082d8621e3f8e3c1a9d653999ecf91",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/legacy/references/import",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "import_scope_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "source_system": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "enum": [
+                    "file_alias",
+                    "plan_versions",
+                    "code_versions",
+                    "artifact_addresses",
+                    "issue_sources",
+                    "supplement_sources",
+                    "activity_sources",
+                    "personal_archive",
+                    "group_attachment"
+                  ]
+                },
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "field_path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                },
+                "original_address": {
+                  "default": "",
+                  "type": "string",
+                  "maxLength": 8192
+                },
+                "reference_kind": {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "latest",
+                    "unknown",
+                    "unfinished"
+                  ]
+                },
+                "expected_revision": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "legacy_version": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "fixed_ref": {
+                  "type": "object",
+                  "properties": {
+                    "material_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "version_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "material_id",
+                    "version_id",
+                    "sha256",
+                    "size"
+                  ],
+                  "additionalProperties": false
+                },
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "source_record_sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "original_content_sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "declaration": {
+                  "default": {},
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "category",
+                "source_id",
+                "field_path",
+                "reference_kind",
+                "expected_revision"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "import_scope_id",
+          "source_system",
+          "idempotency_key",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/legacy-contracts.mjs",
+        "sha256": "5df54506b5c6fd0f8b370f4fdd53b31c5a08e30589442f6aa5a438e5ad0e68f6",
+        "projection": "legacy-domain-defaults-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/legacy/references/resolve",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "binding_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "binding_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/legacy-contracts.mjs",
+        "sha256": "5df54506b5c6fd0f8b370f4fdd53b31c5a08e30589442f6aa5a438e5ad0e68f6",
+        "projection": "legacy-domain-defaults-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/plan",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "target_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "judgment": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/scan",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "plan_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "plan_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/retry",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "plan_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "irreversible_confirmed": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "project_id",
+          "plan_id",
+          "irreversible_confirmed"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/destroy",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "plan_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "irreversible_confirmed": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "project_id",
+          "plan_id",
+          "irreversible_confirmed"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/status",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "plan_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "plan_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc/read-lease",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "read_receipt_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "ttl_seconds": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 900
+          },
+          "command": {
+            "type": "string",
+            "enum": [
+              "renew",
+              "release"
+            ]
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "read_receipt_id",
+          "command"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/move-scope",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "target_project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "placement_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_scope_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_content_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_version_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expected_metadata_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_placement_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_target_project_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "target_collection_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target_area_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "logical_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "execute",
+              "proposal"
+            ]
+          },
+          "judgment": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "target_project_id",
+          "placement_id",
+          "idempotency_key"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/objects/probe",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "judgment": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "idempotency_key"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/objects/repair",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "judgment": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "fixed_copy": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "const": "s3-compatible"
+              },
+              "bucket": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "key": {
+                "type": "string",
+                "pattern": "^final\\/[0-9a-f-]{36}$"
+              },
+              "version_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "provider",
+              "bucket",
+              "key",
+              "version_id"
+            ],
+            "additionalProperties": false
+          },
+          "source_ref": {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "material_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "version_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              }
+            },
+            "required": [
+              "project_id",
+              "material_id",
+              "version_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "idempotency_key"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/compensations/plan",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/compensations/apply",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "choices": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "operation_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "mem.write",
+                    "mem.delete"
+                  ]
+                },
+                "material_id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                },
+                "effect_ids": {
+                  "minItems": 1,
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                  }
+                },
+                "judgment": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "operation_id",
+                "action",
+                "material_id",
+                "effect_ids"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "idempotency_key",
+          "choices"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/effect-contracts.mjs",
+        "sha256": "eff0331d6512d56332e3b84d4298cb701fe97c1b9356f3a200e8c3db5ea2bdc4",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/put-ticket",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/put/status",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/put/complete",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/begin",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "part_size": {
+            "type": "integer",
+            "minimum": 5242880,
+            "maximum": 5368709120
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "part_size",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/part-ticket",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "part_number": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "size": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "part_number",
+          "size",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/list",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/resume",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/complete",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/multipart/abort",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/uploads/:operation_id/publish-archive",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "expected_project_revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "expected_owner_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "attempt": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "fencing_token": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id",
+          "expected_project_revision",
+          "expected_owner_id",
+          "operation_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/gc-candidates",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/upload-contracts.mjs",
+        "sha256": "5ff5f290d4f4cbad1ada97f10601ee8f0f8a89e74f42cfa49c3c0584ab48410c",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/asr/prepare",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "input": {
+            "type": "object",
+            "properties": {
+              "material_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "version_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "material_id",
+              "version_id",
+              "sha256"
+            ],
+            "additionalProperties": false
+          },
+          "provider_target_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "parameters": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "declaration": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "reuse": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "input",
+          "provider_target_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/asr/status",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "provider_target_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "continuation",
+              "source"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/asr/poll",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "provider_target_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "continuation",
+              "source"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/asr/start",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "input": {
+                "type": "object",
+                "properties": {
+                  "material_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                  },
+                  "version_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "material_id",
+                  "version_id",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              },
+              "provider_target_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "parameters": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "declaration": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "reuse": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "project_id",
+              "input",
+              "provider_target_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "job_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "run_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "provider_target_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "usage": {
+                "type": "string",
+                "enum": [
+                  "continuation",
+                  "source"
+                ]
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "project_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/disclosures",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "version_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "output_hash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "actual_source_closure": {
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                }
+              },
+              "audience_project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "excluded_content": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reshare_conditions": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "continued_source_access": {
+                "type": "string",
+                "enum": [
+                  "required",
+                  "not_required"
+                ]
+              }
+            },
+            "required": [
+              "project_id",
+              "idempotency_key",
+              "version_id",
+              "output_hash",
+              "actual_source_closure",
+              "audience_project_id",
+              "excluded_content",
+              "scope",
+              "reshare_conditions",
+              "reason",
+              "continued_source_access"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "provider_target_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "resource_selector": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "number",
+                    "const": 1
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "project",
+                      "set"
+                    ]
+                  },
+                  "materials": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    }
+                  },
+                  "collections": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    }
+                  }
+                },
+                "required": [
+                  "version",
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              "fixed_constraints": {
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "material_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "version_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  },
+                  "required": [
+                    "material_id",
+                    "version_id",
+                    "sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "purpose": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "until_revoked": {
+                "type": "boolean"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "reason": {},
+              "evidence": {},
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "project_id",
+              "provider_target_id",
+              "resource_selector",
+              "idempotency_key"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/disclosures/revoke",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "disclosure_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              }
+            },
+            "required": [
+              "project_id",
+              "idempotency_key",
+              "disclosure_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "release_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "project_id",
+              "release_id",
+              "idempotency_key"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/external-model-contracts.mjs",
+        "sha256": "776738f2be345b7eeb94213a3ec72d815edc3de3a6a3244db40f21e0ad9efb42",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-equivalences",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "canonical_material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "collection_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "alias",
+              "proposal"
+            ]
+          },
+          "reason": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "basis": {
+            "$ref": "#/$defs/__schema1"
+          },
+          "claim": {
+            "$ref": "#/$defs/__schema2"
+          },
+          "expected_alias_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "__schema0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              }
+            ]
+          },
+          "__schema1": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema1"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema1"
+                }
+              }
+            ]
+          },
+          "__schema2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema2"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema2"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/equivalence-contracts.mjs",
+        "sha256": "c7612ed3d0ae005d9253d3d4bd9436f545149a2c9178d6fced39d04fad686ce1",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-equivalences/query",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "equivalence_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "collection_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/equivalence-contracts.mjs",
+        "sha256": "c7612ed3d0ae005d9253d3d4bd9436f545149a2c9178d6fced39d04fad686ce1",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/material-equivalences/undo",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "equivalence_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "reason": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "basis": {
+            "$ref": "#/$defs/__schema1"
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "equivalence_id"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "__schema0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              }
+            ]
+          },
+          "__schema1": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema1"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema1"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/equivalence-contracts.mjs",
+        "sha256": "c7612ed3d0ae005d9253d3d4bd9436f545149a2c9178d6fced39d04fad686ce1",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/vector-index",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "version_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "embedding": {
+            "minItems": 1,
+            "maxItems": 16000,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "space": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dimension": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 16000
+              },
+              "recipe": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "segment": {
+            "type": "object",
+            "properties": {
+              "byte_start": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "byte_end": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "byte_start",
+              "byte_end"
+            ],
+            "additionalProperties": false
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "unknown"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "project_id",
+          "material_id",
+          "version_id",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/vector-contracts.mjs",
+        "sha256": "17f15e782e8b54a24850ce6dac598acb389ff3b7a4afb8f56690b4d380177b93",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/vector-search",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "embedding": {
+            "minItems": 1,
+            "maxItems": 16000,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "space": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dimension": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 16000
+              },
+              "recipe": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "hnsw",
+              "ivfflat"
+            ]
+          },
+          "compare_exact": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "embedding"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/vector-contracts.mjs",
+        "sha256": "17f15e782e8b54a24850ce6dac598acb389ff3b7a4afb8f56690b4d380177b93",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/governance/fields",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "material_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "collection_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "self",
+              "project"
+            ]
+          },
+          "dynamic_containers": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          },
+          "window_start": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "window_end": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "max_objects": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "max_requests": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "max_paths": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/governance-contracts.mjs",
+        "sha256": "5fea01699f54519dac71e64a9d2c1dfc760b9d4299fd77bd31cc2eb11e6078f3",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/search",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "semantic": {
+            "type": "boolean"
+          },
+          "query": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/search-contracts.mjs",
+        "sha256": "e005faea37871e8f9f0c352182d51d306451c1fb4c5027020a4a34651dec5197",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v2/materials/retrieve",
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|f7683d48-2c4d-473a-ac07-ebe487d79e6c)$"
+          },
+          "semantic": {
+            "type": "boolean"
+          },
+          "query": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "name": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string",
+            "pattern": "^(?:F-[0-9]+(?:-[0-9]+)?|#?[0-9]+)$"
+          },
+          "candidate_limit": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 100
+          },
+          "version_created_after": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "version_created_before": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "origin": {
+        "owner": "mem",
+        "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+        "path": "source/apps/mem/src/search-contracts.mjs",
+        "sha256": "e005faea37871e8f9f0c352182d51d306451c1fb4c5027020a4a34651dec5197",
+        "projection": "domain-input-without-default-injection-v1"
+      }
+    }
+  ]
+}

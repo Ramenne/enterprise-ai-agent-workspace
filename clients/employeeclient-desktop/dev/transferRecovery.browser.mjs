@@ -1,0 +1,32 @@
+// Actual built app, HTTP handlers and IndexedDB; all identities/providers are local simulations.
+import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {mkdirSync,writeFileSync} from 'node:fs';
+import {startMediaForwardPreview} from './mediaForward.preview.mjs';
+const {chromium}=createRequire(import.meta.url)('/Users/developer/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const port=Number(process.env.QN_TRANSFER_TEST_PORT||5298),origin='http://127.0.0.1:'+port,server=startMediaForwardPreview(port);await new Promise(r=>server.listening?r():server.once('listening',r));
+const output=process.env.QN_TRANSFER_TEST_OUTPUT||'/tmp/employeeclient-transfer-recovery';mkdirSync(output,{recursive:true});
+const report={scope:'current-built-app-real-HTTP-and-IDB;simulated-members-and-memory-provider',checks:[],runtimeErrors:[]};
+const browser=await chromium.launch({headless:true,executablePath:'/Users/developer/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+try{
+ const page=await browser.newPage({viewport:{width:390,height:844},serviceWorkers:'block'});page.setDefaultTimeout(15000);page.on('pageerror',e=>report.runtimeErrors.push(e.message));
+ await page.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
+ const ready=async()=>{await page.waitForFunction(()=>document.querySelector('.message-input')&&!document.querySelector('.message-input').disabled);};
+ const records=()=>page.evaluate(async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('employeeclient-transfer-outbox',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});const rows=await new Promise(resolve=>{const r=db.transaction('tasks').objectStore('tasks').getAll();r.onsuccess=()=>resolve(r.result);});db.close();return rows.map(r=>({id:r.id,key:r.requestKey,peer:r.peer,name:r.file.name,hash:r.file.sha256,hasSource:r.source instanceof Blob,smallMedia:r.smallMedia,state:r.state}));});
+ await page.goto(origin+'/simulation/sim-a');await ready();await page.getByRole('textbox',{name:'群消息',exact:true}).fill('恢复链小文件附言');
+ const attempts=[],receipts=[];let lose=true;
+ await page.route('**/business/v1/media-transfers',async route=>{attempts.push({key:route.request().headers()['idempotency-key'],bytes:route.request().postDataBuffer().toString('base64')});const response=await route.fetch();assert.ok(response.ok());receipts.push((await response.json()).message);if(lose){lose=false;return route.abort('connectionfailed');}return route.fulfill({response});});
+ await page.getByRole('button',{name:'更多消息工具'}).click();await page.getByLabel('选择聊天文件',{exact:true}).setInputFiles({name:'恢复小文件.txt',mimeType:'text/plain',buffer:Buffer.from('小文件原始字节')});await page.getByRole('button',{name:'确认发送',exact:true}).click();
+ await page.getByRole('button',{name:'重试发送',exact:true}).waitFor();const before=await records();assert.equal(before.length,1);assert.equal(before[0].hasSource,true);assert.equal(before[0].smallMedia,true);
+ await page.reload();await ready();assert.equal(attempts.length,1,'reload does not silently resend');assert.deepEqual((await records()).map(r=>[r.key,r.hash,r.peer]),before.map(r=>[r.key,r.hash,r.peer]));
+ await page.getByRole('button',{name:'重试发送',exact:true}).click();await page.locator('.transfer-message').waitFor({state:'hidden'});assert.deepEqual(attempts[0],attempts[1]);assert.equal(receipts[0].id,receipts[1].id);report.checks.push('lost small-file response survives reload with original bytes/recipient/key/protocol and one committed message; no automatic resend');
+ await page.unroute('**/business/v1/media-transfers');
+ const bytes=Buffer.alloc(9*1024*1024,7),wrong=Buffer.from(bytes);wrong[Math.floor(wrong.length/2)]=8;let puts=0;
+ await page.route('**/native/upload?*',async route=>{puts++;const response=await route.fetch();assert.ok(response.ok(),await response.text());return route.abort('connectionfailed');});
+ await page.getByRole('textbox',{name:'群消息',exact:true}).fill('恢复链大文件附言');await page.getByRole('button',{name:'更多消息工具'}).click();await page.getByLabel('选择聊天文件',{exact:true}).setInputFiles({name:'原大文件.bin',mimeType:'application/octet-stream',buffer:bytes});await page.getByRole('button',{name:'确认发送',exact:true}).click();
+ await page.getByRole('button',{name:'重试发送',exact:true}).waitFor();const pending=(await records()).find(r=>r.name==='原大文件.bin');assert.ok(pending);assert.equal(pending.hasSource,false);assert.equal(pending.smallMedia,false);assert.equal(puts,1);
+ await page.unroute('**/native/upload?*');await page.reload();await ready();await page.getByLabel('选择原待发文件继续').waitFor({state:'attached'});assert.equal(puts,1);
+ await page.getByLabel('选择原待发文件继续').setInputFiles({name:'错误但首尾相同.bin',mimeType:'application/octet-stream',buffer:wrong});await page.getByText('选择的文件与原待发内容不一致，请选择原文件').waitFor();assert.equal(puts,1);assert.equal((await records()).find(r=>r.name==='原大文件.bin').key,pending.key);
+ await page.getByLabel('选择原待发文件继续').setInputFiles({name:'重新选择的副本.bin',mimeType:'application/octet-stream',buffer:bytes});await page.locator('.transfer-message').waitFor({state:'hidden'});assert.equal(puts,1,'already staged bytes are not reuploaded');
+ const response=await page.request.get(origin+'/business/v1/messages');const rows=(await response.json()).messages;report.messageBodies=rows.map(m=>({body:m.body,attachments:m.attachments?.map(a=>a.name)}));assert.equal(rows.filter(m=>m.attachments.some(a=>a.name==='原大文件.bin')).length,1);assert.equal(rows.find(m=>m.attachments.some(a=>a.name==='原大文件.bin')).attachments[0].name,'原大文件.bin');report.checks.push('9MiB job survives reload without duplicating raw bytes, rejects same-size/same-edge wrong file, and resumes original operation with one PUT and original name/key');
+ assert.deepEqual(report.runtimeErrors,[]);await page.screenshot({path:output+'/recovered-390.png'});console.log(JSON.stringify(report));
+}catch(error){report.failure=String(error);report.transfers=await browser.contexts().flatMap(c=>c.pages())[0]?.locator('.transfer-message').allTextContents();for(const page of browser.contexts().flatMap(c=>c.pages()))await page.screenshot({path:output+'/failure.png'}).catch(()=>{});throw error;}
+finally{writeFileSync(output+'/browser-report.json',JSON.stringify(report,null,2));await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}

@@ -1,0 +1,3 @@
+import{startCallbackProducer749}from'/srv/workspace';
+import{boot,readConfig}from'./bootstrap.mjs';
+try{if(process.argv.length!==4||process.argv[2]!=='--config')throw Error('private_config_required');const app=await boot(await readConfig(process.argv[3]));await startCallbackProducer749();console.log('{"state":"registered_loopback_asr_runtime","secrets_logged":false}');let closing;const close=()=>{closing??=app.close().catch(()=>{console.error('{"state":"shutdown_unknown","secrets_logged":false}');process.exitCode=1;});};process.once('SIGTERM',close);process.once('SIGINT',close);}catch{console.error('{"state":"asr_runtime_unregistered_or_unavailable","secrets_logged":false}');process.exitCode=1;}

@@ -1,0 +1,65 @@
+import {UsageSpool,type UsageObservation} from './usage-spool.js';
+import { createHash,randomUUID } from 'node:crypto';
+import type pg from 'pg';
+import type { FastifyInstance,FastifyRequest } from 'fastify';
+import { sqlFunction } from './db.js';
+import {beginObservedScope,observedHandles} from './observed-scope.js';
+
+export interface UsedPath {path:string;purpose:'filter'|'sort'|'return'|'write';}
+/** Input paths record observed API parameter use, never field values or inferred model understanding. */
+export function inputPaths(body:unknown,method:string,route:string):UsedPath[]{
+ const result=new Map<string,UsedPath>();
+ const read=method==='GET'||/\/(read(?:-chunk)?|query|search|page|history|head|snapshot|materialize|enumerations|manager-candidates|pending-registration|fields)(\/|$)/.test(route)||/^\/v2\/(material-enumerations|offline-exports)(\/|$)/.test(route);
+ const visit=(value:unknown,path:string,depth:number)=>{
+  if(depth>8||result.size>=190)return;
+  if(Array.isArray(value)){result.set(path,{path,purpose:read?'filter':'write'});for(const item of value.slice(0,16))visit(item,path+'[]',depth+1);return;}
+  if(value&&typeof value==='object'){
+   const entries=Object.entries(value as Record<string,unknown>);
+   if(!entries.length)result.set(path,{path,purpose:read?'filter':'write'});
+   for(const [key,item]of entries){
+    if(['password','token','secret','access_token','refresh_token','authorization'].includes(key.toLowerCase()))continue;
+    const next=/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)?path+'.'+key:path+'['+JSON.stringify(key)+']';
+    visit(item,next,depth+1);
+   }
+   return;
+  }
+  result.set(path,{path,purpose:/\.(sort|sort_by|order_by)$/.test(path)?'sort':read?'filter':'write'});
+ };
+ if(body!==undefined)visit(body,'request',0);
+ result.set('response',{path:'response',purpose:'return'});
+ return [...result.values()].filter(item=>item.path.length<=240&&!/[\u0000-\u001f]/.test(item.path));
+}
+
+function logicalId(request:FastifyRequest,route:string){
+ const body=request.body as Record<string,unknown>|undefined;
+ const provided=typeof body?.['idempotency_key']==='string'?body['idempotency_key']:request.headers['idempotency-key'];
+ if(typeof provided!=='string')return /^[0-9a-f-]{36}$/i.test(request.id)?request.id:randomUUID();
+ // Authenticated channel credential partitions retry keys; only the derived UUID is persisted.
+ const hex=createHash('sha256').update(String(request.headers.authorization??request.headers.cookie??'')+'\0'+route+'\0'+provided).digest('hex').slice(0,32);
+ return hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
+}
+
+const statuses=new WeakMap<FastifyInstance,()=>unknown>();
+const closers=new WeakMap<FastifyInstance,()=>Promise<void>>();
+/** Flush once after HTTP drain, while the caller-owned DB pool is still open. */
+export async function closeUsage(app:FastifyInstance):Promise<void>{await closers.get(app)?.();}
+export function usageStatus(app:FastifyInstance):unknown{return statuses.get(app)?.()??{state:'unknown'};}
+export function installUsage(app:FastifyInstance,pool:pg.Pool,options:{pool?:pg.Pool;directory?:string;scopeHandles?:(request:FastifyRequest,observation:UsageObservation)=>Promise<string[]>}={}){
+ const spool=options.pool&&options.directory?new UsageSpool(options.pool,options.directory):undefined;
+ statuses.set(app,()=>spool?.status()??{state:'shared_pool_legacy',coverage:'direct_usage_observation'});
+ if(spool){let closing:Promise<void>|undefined;const closeOnce=()=>closing??=spool.close();closers.set(app,closeOnce);app.addHook('onReady',()=>spool.start());app.addHook('onClose',closeOnce);}
+ const started=new WeakMap<FastifyRequest,number>();
+ app.addHook('onRequest',(request,_reply,done)=>{started.set(request,performance.now());beginObservedScope(request,done);});
+ app.addHook('onResponse',async(request,reply)=>{
+  const route=request.routeOptions.url??request.url.split('?')[0]??'unknown';
+  if(route==='/health'||route.startsWith('/internal/')||!route.startsWith('/v2/'))return;
+  const duration=Math.max(0,performance.now()-(started.get(request)??performance.now()));
+  const traffic=/batch|offline-export/.test(route)?'batch':'work';
+  const observed=request.method==='GET'?request.query:request.body;
+  const paths=inputPaths(observed,request.method,route);
+  try{const observation:UsageObservation={request:logicalId(request,route),action:route,schema_version:'api-params.v2',traffic,success:reply.statusCode<400,coverage:'api_parameter_paths_observed;consumer_field_use_unknown',result_count:null,duration_ms:duration,paths,handles:observedHandles(request)};
+   if(options.scopeHandles)observation.handles=await options.scopeHandles(request,observation);
+   if(spool)await spool.enqueue(observation);else await sqlFunction(pool,'evidence.record_usage_scoped',[observation.request,route,observation.schema_version,traffic,observation.success,observation.coverage,null,duration,JSON.stringify(paths),observation.handles]);}
+  catch{request.log.warn({error_code:'usage_observation_not_persisted',route,request_id:request.id,coverage:'governance_observation_incomplete'},'governance observation unavailable');}
+ });
+}

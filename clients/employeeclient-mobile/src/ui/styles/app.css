@@ -1,0 +1,117 @@
+/* src/ui/styles/app.css —— 员工客户端工程补充样式（在已通过原型 base.css/readability.css 之上，只加不改视觉基线）。 */
+html, body, #app { height: 100%; }
+body { overscroll-behavior-y: contain; }
+.app-root { min-height: 100dvh; }
+
+/* 启动加载屏的转圈 */
+.splash-spinner { width: 26px; height: 26px; margin: 4px auto 18px; border-radius: 50%; border: 2px solid #dcebe2; border-top-color: var(--green); animation: qn-spin .8s linear infinite; }
+@keyframes qn-spin { to { transform: rotate(360deg); } }
+
+/* 通用可点反馈与布局小工具 */
+.pressable:active { transform: scale(.985); }
+.row-flex { display: flex; align-items: center; gap: 10px; }
+.col-flex { display: flex; flex-direction: column; gap: 10px; }
+.spread { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.qn-muted { color: var(--muted); }
+.qn-center { text-align: center; }
+
+/* 列表拉到底/空态的轻量提示 */
+.list-foot { padding: 14px 20px; text-align: center; color: #9aa8a0; font-size: 11px; }
+
+/* 覆盖层内的滚动区在移动端的安全底部 */
+.overlay .modal-body { -webkit-overflow-scrolling: touch; }
+
+/* 段控件在小屏不溢出（复用原型 segmented，补充横向滚动兜底） */
+.segmented.scrollable { overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+.segmented.scrollable::-webkit-scrollbar { display: none; }
+
+/* ===== 手机竖屏单一 UI：结构上恒用移动布局（真机由 base.css ≤600px 精修排版；桌面浏览器仅调试同一手机页面）=====
+   只覆盖结构（display/position/padding），不改视觉基线；加载顺序在 base/readability 之后，同级选择器以此为准。 */
+.shell { display: block; min-height: 100dvh; }
+.sidebar { display: none; }
+.breadcrumb { display: none; }
+.mobile-brand { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; letter-spacing: 2px; }
+.mobile-brand img { width: 26px; height: 26px; border-radius: 8px; }
+.topbar { height: calc(64px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 16px 0; position: sticky; top: 0; z-index: 20; background: #f5f8f5ee; backdrop-filter: blur(10px); border: 0; border-bottom: 1px solid var(--line); justify-content: space-between; }
+.content { padding: 16px 17px calc(88px + env(safe-area-inset-bottom)); }
+.bottom-nav { position: fixed; display: flex; left: 0; right: 0; bottom: 0; background: #fdfefcf5; backdrop-filter: blur(14px); border-top: 1px solid #e6ece6; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); z-index: 25; justify-content: space-around; }
+.bottom-nav button { border: 0; background: transparent; position: relative; color: #a1afa2; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 56px; font-size: 10px; padding: 3px 5px; }
+.bottom-nav button.active { color: #368e67; font-weight: 600; }
+.bottom-nav .icon { width: 20px; height: 20px; }
+.bottom-nav .nav-indicator { position: absolute; right: 16px; top: 1px; width: 5px; height: 5px; border-radius: 50%; background: #d67666; }
+/* 覆盖层在移动端为底部抽屉 */
+.overlay { padding: 0; align-items: flex-end; }
+.confirm-overlay { align-items: center; padding: 20px; }
+.confirm-overlay .modal { border-radius: 18px; max-height: 90dvh; }
+.modal, .modal.wide, .modal.full { width: 100%; max-width: 100%; border-radius: 18px 18px 0 0; max-height: 93dvh; border-bottom: 0; }
+.modal-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+/* 悬浮提醒队列：移动端占满安全区宽度（真机 ≤600px 已由 readability.css 精确定位，这里保证桌面调试也可见） */
+.floating-notices { top: calc(72px + env(safe-area-inset-top)); left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); width: auto; }
+
+/* 本轮手机细节：消息卡片留白与按钮触控间距，不改变列表层级。 */
+.notification-item { padding: 18px 16px; gap: 12px; align-items: flex-start; }
+.notification-item .row-icon { flex: 0 0 34px; width: 34px; height: 34px; }
+.notification-item .grow { min-width: 0; }
+.notification-item .notif-open, .notification-item small { overflow-wrap: anywhere; }
+.notification-item small { line-height: 1.55; }
+.notification-actions { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 13px; }
+.notification-actions .btn { min-height: 36px; padding: 7px 10px; line-height: 1.25; white-space: normal; }
+.notification-item .read-dot { flex: none; }
+
+/* 统一的轻量选择控件：列表筛选与表单选择共用，不再露出系统原生下拉。 */
+.choice-select { position: relative; display: inline-block; min-width: 0; max-width: 100%; }
+.choice-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 40px; padding: 8px 11px; border: 1px solid #dce8e2; border-radius: 9px; background: #fff; color: #415e51; font: inherit; text-align: left; cursor: pointer; }
+.choice-select-trigger span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.choice-caret { flex: none; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.choice-select-menu { position: absolute; z-index: 35; top: calc(100% + 5px); left: 0; min-width: max(100%, 170px); max-width: min(280px, calc(100vw - 34px)); max-height: min(260px, 48dvh); overflow-y: auto; padding: 5px; border: 1px solid #dce8e2; border-radius: 11px; background: #fff; box-shadow: 0 12px 30px #29493d20; }
+.choice-select-option { padding: 10px 11px; min-height: 40px; border-radius: 7px; color: #496254; cursor: pointer; overflow-wrap: anywhere; }
+.choice-select-option:hover, .choice-select-option:focus-visible { background: #eef7f1; }
+.choice-select-option.selected { color: #166c60; background: #eef8f3; font-weight: 600; }
+.list-toolbar .choice-select { max-width: 48%; }
+.list-toolbar .choice-select:last-child .choice-select-menu { left: auto; right: 0; }
+.company-scope-row > .choice-select { margin-left: auto; min-width: 150px; }
+.company-scope-row > .choice-select .choice-select-menu { left: auto; right: 0; }
+.company-filters > .choice-select { min-width: 110px; }
+.form-field > .choice-select { display: block; width: 100%; max-width: none; }
+.form-field > .choice-select .choice-select-trigger { min-height: 42px; padding: 10px 12px; font-size: 12px; }
+/* 底部抽屉内让选项随内容展开，避免弹层被抽屉的滚动裁切。 */
+.form-field > .choice-select .choice-select-menu { position: static; width: 100%; min-width: 0; max-width: none; margin-top: 6px; }
+.form-field input[type="date"] { color-scheme: light; accent-color: var(--green); }
+
+/* 简短成功提示更快离开；错误/需操作信息保留更久。只在显示/隐藏时轻微浮起。 */
+.toast { animation: none; }
+.toast.attention { background: #75613f; }
+.qn-toast-enter-active, .qn-toast-leave-active { transition: opacity .18s ease, transform .18s ease; }
+.qn-toast-enter-from { opacity: 0; transform: translateY(7px); }
+.qn-toast-leave-to { opacity: 0; transform: translateY(-5px); }
+
+/* Focus stays inside the control, without an expanding outer ring. */
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: none; box-shadow: inset 0 0 0 1px #6b9c8e; }
+.choice-select-option:focus-visible { box-shadow: none; background: #eef7f1; }
+@media (forced-colors: active) {
+  button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 1px solid Highlight; outline-offset: -1px; }
+}
+
+@media (max-width: 600px) {
+  .notification-item { padding: 16px 14px; }
+  .company-scope-row > .choice-select { width: 115px; min-width: 0; max-width: 115px; flex: none; }
+  .company-filters > .choice-select { flex: 1; min-width: 0; max-width: none; }
+  .choice-select-trigger { min-height: 40px; padding: 8px 9px; font-size: 11px; }
+}
+@media (max-width: 350px) {
+  .company-scope-row > .choice-select { width: 102px; max-width: 102px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qn-toast-enter-active, .qn-toast-leave-active { transition: none; }
+  .splash-spinner { animation: none; }
+}
+
+/* Chat is a viewport-filling app screen: only messages scroll, composer stays in flow. */
+.shell.shell-chat { position:fixed; left:0; right:0; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+.shell-chat .workspace { display:flex; flex-direction:column; flex:1; min-height:0; }
+.shell-chat .topbar { flex:none; position:relative; }
+.shell-chat .content { display:flex; flex:1; min-height:0; padding:0; overflow:hidden; }
+.shell-chat .bottom-nav { position:static; flex:none; }
+.shell-chat.chat-keyboard .bottom-nav { display:none; }
+.shell-chat.chat-keyboard .chat-composer { padding-bottom:8px; }
+.shell-chat.chat-keyboard .topbar { height:calc(44px + env(safe-area-inset-top)); padding-top:env(safe-area-inset-top); }

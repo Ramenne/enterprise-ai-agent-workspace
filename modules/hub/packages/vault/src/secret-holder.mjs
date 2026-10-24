@@ -1,0 +1,2 @@
+/** Adapt an already scoped SecretSDK client. Never accept a caller-supplied ref or Root token. */
+export function secretRuntimeFromClient(client){if(!client?.readKV)throw Error('scoped_secret_client_required');return{async optionalSecret(ref){if(typeof ref!=='string'||!ref.startsWith('bao:hub2/hufu/vault2/')||ref.includes('..'))throw Error('vault_namespace_only');return(await client.readKV(ref)).data;}};}

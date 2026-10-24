@@ -1,0 +1,3 @@
+import http from 'node:http';
+const html='<!doctype html><meta charset="utf-8"><title>员工客户端手机布局预览</title><style>html,body{margin:0;background:#eceff2}body{width:390px}iframe{display:block;border:0;width:390px;height:844px}</style><iframe title="员工客户端390像素手机预览" src="http://127.0.0.1:5184/#/work"></iframe>';
+http.createServer((req,res)=>{const page=new URL(req.url,'http://127.0.0.1:5185').searchParams.get('page');res.setHeader('content-type','text/html; charset=utf-8');res.end(['chat','personal','notifications','announcements'].includes(page)?html.replace('/#/work','/#/'+page):html);}).listen(5185,'127.0.0.1',()=>console.log('Local phone layout only: http://127.0.0.1:5185'));

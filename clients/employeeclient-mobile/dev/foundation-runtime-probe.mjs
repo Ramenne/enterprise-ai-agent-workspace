@@ -1,0 +1,2 @@
+import {loadNotificationFoundation} from '../server/business/hub-notifications.mjs';
+try{const f=await loadNotificationFoundation();const members=await f.directory();console.log(JSON.stringify({state:'verified',identity_kind:'product_service',actor_id:f.actor_id,project_member_count:members.length}));}catch(e){console.log(JSON.stringify({state:'unavailable',error_code:e.code||'foundation_verification_failed'}));process.exitCode=1;}

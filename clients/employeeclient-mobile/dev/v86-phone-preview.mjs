@@ -1,0 +1,3 @@
+import http from 'node:http';
+const pages=new Set(['work','personal','chat','notifications','announcements']);
+http.createServer((req,res)=>{const requested=new URL(req.url,'http://127.0.0.1:5189').searchParams.get('page'),page=pages.has(requested)?requested:'personal';res.setHeader('content-type','text/html;charset=utf-8');res.setHeader('cache-control','no-store');res.end(`<!doctype html><meta charset="utf-8"><title>员工客户端v86手机预览</title><style>html,body{margin:0;background:#eceff2}body{width:390px}iframe{display:block;border:0;width:390px;height:844px}</style><iframe title="员工客户端390像素手机预览" src="http://127.0.0.1:5188/#/${page}"></iframe>`);}).listen(5189,'127.0.0.1',()=>console.log('Local v86 mobile preview: http://127.0.0.1:5189'));

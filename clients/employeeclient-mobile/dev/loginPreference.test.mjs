@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {rememberEmail,rememberedEmail} from '../src/session/login-preference.mjs';
+test('verified email preference survives next visit without storing OTP or tokens',()=>{const items=new Map(),storage={getItem:k=>items.get(k),setItem:(k,v)=>items.set(k,v)};assert.equal(rememberedEmail(storage),'');rememberEmail(' member@example.invalid ',storage);assert.equal(rememberedEmail(storage),'member@example.invalid');assert.deepEqual([...items.keys()],['qn.pref.member-email']);rememberEmail('000000',storage);assert.equal(rememberedEmail(storage),'member@example.invalid');});
+test('unavailable preference storage never blocks login',()=>{const storage={getItem(){throw Error('quota');},setItem(){throw Error('quota');}};assert.equal(rememberedEmail(storage),'');assert.doesNotThrow(()=>rememberEmail('member@example.invalid',storage));});

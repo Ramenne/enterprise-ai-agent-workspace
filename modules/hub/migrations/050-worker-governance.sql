@@ -1,0 +1,27 @@
+-- Worker owns durable transport/projections/maintenance evidence only.
+SET ROLE hub2_evidence_owner;
+ALTER TABLE evidence.outbox ADD COLUMN event_group uuid NOT NULL DEFAULT gen_random_uuid();
+ALTER TABLE evidence.outbox ADD CONSTRAINT outbox_group_size CHECK(group_size>0);
+CREATE INDEX outbox_pending ON evidence.outbox(occurred_at,id) WHERE delivered_at IS NULL;
+CREATE TABLE evidence.stream_state(id boolean PRIMARY KEY DEFAULT true CHECK(id), retained_after bigint NOT NULL DEFAULT 0 CHECK(retained_after>=0));
+INSERT INTO evidence.stream_state DEFAULT VALUES;
+CREATE TABLE evidence.service_binding(db_role name PRIMARY KEY,principal_id uuid NOT NULL,client_id uuid NOT NULL,credential_id uuid NOT NULL,security_era uuid NOT NULL,active boolean NOT NULL DEFAULT true);
+CREATE TABLE evidence.consumers(name text PRIMARY KEY,active boolean NOT NULL DEFAULT true,created_at timestamptz NOT NULL DEFAULT clock_timestamp());
+INSERT INTO evidence.consumers(name) VALUES('worker-projection');
+CREATE TABLE evidence.projection(consumer text NOT NULL REFERENCES evidence.consumers,domain text NOT NULL,aggregate_id uuid NOT NULL,project_id uuid,revision bigint NOT NULL DEFAULT 0 CHECK(revision>=0),state text NOT NULL DEFAULT 'current' CHECK(state IN ('current','gap','incomplete_group','resync_required')),event_types text[] NOT NULL DEFAULT '{}',last_seq bigint NOT NULL DEFAULT 0,updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),PRIMARY KEY(consumer,domain,aggregate_id));
+CREATE TABLE evidence.consumer_progress(consumer text PRIMARY KEY REFERENCES evidence.consumers,scanned_seq bigint NOT NULL DEFAULT 0,replay_count bigint NOT NULL DEFAULT 0,gap_count bigint NOT NULL DEFAULT 0);
+INSERT INTO evidence.consumer_progress(consumer) VALUES('worker-projection');
+CREATE TABLE evidence.logical_requests(request_id uuid NOT NULL,service text NOT NULL,action text NOT NULL,schema_version text NOT NULL,source_context_id uuid,traffic_kind text NOT NULL CHECK(traffic_kind IN ('work','monitor','batch')),success boolean NOT NULL,coverage text NOT NULL CHECK(coverage IN ('instrumented','partial','unknown')),result_count bigint CHECK(result_count>=0),duration_ms double precision CHECK(duration_ms>=0),occurred_at timestamptz NOT NULL DEFAULT clock_timestamp(),PRIMARY KEY(request_id,service,action));
+CREATE TABLE evidence.usage_reports(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),period_start timestamptz NOT NULL,period_end timestamptz NOT NULL,report jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT clock_timestamp(),UNIQUE(period_start,period_end),CHECK(period_end>period_start));
+CREATE TABLE evidence.property_snapshots(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),service text NOT NULL,schema_version text NOT NULL,observed_objects bigint NOT NULL CHECK(observed_objects>=0),unknown_objects bigint NOT NULL CHECK(unknown_objects>=0),counts jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE TABLE jobs.tasks(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),kind text NOT NULL CHECK(kind IN ('index','verification_compensation','projection_invalidation','maintenance','governance_rollup','mem_gc_dry_run','read_temp_cleanup')),dedupe_key text NOT NULL UNIQUE,payload jsonb NOT NULL DEFAULT '{}',state text NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','running','retry','done','dead')),attempt bigint NOT NULL DEFAULT 0,fencing_token uuid,lease_until timestamptz,run_after timestamptz NOT NULL DEFAULT clock_timestamp(),max_attempts integer NOT NULL DEFAULT 5 CHECK(max_attempts BETWEEN 1 AND 20),result jsonb,error_code text,created_at timestamptz NOT NULL DEFAULT clock_timestamp(),updated_at timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE INDEX tasks_ready ON jobs.tasks(run_after,created_at) WHERE state IN ('pending','retry','running');
+CREATE TABLE jobs.attempts(task_id uuid NOT NULL REFERENCES jobs.tasks,attempt bigint NOT NULL,fencing_token uuid NOT NULL,started_at timestamptz NOT NULL DEFAULT clock_timestamp(),finished_at timestamptz,state text NOT NULL CHECK(state IN ('running','expired','done','retry','dead')),error_code text,PRIMARY KEY(task_id,attempt));
+CREATE TABLE jobs.maintenance_plans(task_id uuid PRIMARY KEY REFERENCES jobs.tasks,kind text NOT NULL,domain text,aggregate_id uuid,state text NOT NULL CHECK(state IN ('awaiting_domain_capability','held','completed')),reason_code text NOT NULL,created_at timestamptz NOT NULL DEFAULT clock_timestamp());
+REVOKE ALL ON ALL TABLES IN SCHEMA evidence,jobs FROM PUBLIC,hub2_worker;
+RESET ROLE;
+GRANT USAGE ON SCHEMA jobs TO hub2_worker;
+SET ROLE hub2_evidence_owner;
+CREATE TABLE evidence.feed_cursors(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),actor_id uuid NOT NULL,client_id uuid NOT NULL,project_id uuid NOT NULL,seq bigint NOT NULL CHECK(seq>=0),created_at timestamptz NOT NULL DEFAULT clock_timestamp());
+REVOKE ALL ON evidence.feed_cursors FROM PUBLIC,hub2_worker,hub2_mem,hub2_v8;
+RESET ROLE;

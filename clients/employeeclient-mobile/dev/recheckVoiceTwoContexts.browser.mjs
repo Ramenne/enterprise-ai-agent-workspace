@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {writeFileSync} from 'node:fs';
+import {startMediaForwardPreview} from './mediaForward.preview.mjs';
+const require=createRequire(import.meta.url),{chromium}=require('/Users/developer/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const until=async(fn)=>{const end=Date.now()+30000;while(Date.now()<end){if(await fn())return;await new Promise(r=>setTimeout(r,100));}throw Error('condition not reached');};
+const origin='http://ui-notices.localhost:5260',server=startMediaForwardPreview(5260,{host:'ui-notices.localhost'});await new Promise(r=>server.listening?r():server.once('listening',r));
+const browser=await chromium.launch({headless:true,executablePath:'/Users/developer/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell'}),checks=[];
+try{
+ const other=await browser.newContext({serviceWorkers:'block'}),b=await other.newPage();await b.goto(origin+'/simulation/sim-b');await b.locator('.message-input').waitFor();await b.goto(origin+'/#/messages');
+ const ctx=await browser.newContext({viewport:{width:390,height:780},serviceWorkers:'block'}),a=await ctx.newPage();a.on('crash',()=>checks.push('renderer-crashed'));const cdp=await browser.newBrowserCDPSession();await cdp.send('Target.setDiscoverTargets',{discover:true});cdp.on('Target.targetCrashed',e=>checks.push({targetCrash:e}));await a.goto(origin+'/simulation/sim-a');await a.locator('.message-input').waitFor();
+ const wav=Buffer.alloc(44+8000);wav.write('RIFF',0);wav.writeUInt32LE(wav.length-8,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(8000,24);wav.writeUInt32LE(16000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(8000,40);
+ const seed=await a.request.post(origin+'/simulation/seed-file',{data:{name:'转发语音.wav',mime:'audio/wav',purpose:'voice',duration_ms:500,base64:wav.toString('base64')}});assert.ok(seed.ok(),await seed.text());const voice=(await seed.json()).message;
+ await a.reload({waitUntil:'domcontentloaded'});await a.locator('[data-message-id="'+voice.id+'"]').waitFor({timeout:8000});checks.push('minimal-seeded-voice-reload-passed');await a.screenshot({path:'/Users/developer/Downloads/超强学习/research/employeeclient-chain-research-20261015/ui-review/v138-voice-minimal.png'});
+}finally{await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));writeFileSync('/Users/developer/Downloads/超强学习/research/employeeclient-chain-research-20261015/ui-review/v138-voice-two-context-isolation.json',JSON.stringify({checks},null,2));console.log(checks);}

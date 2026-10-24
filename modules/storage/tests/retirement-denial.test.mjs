@@ -1,0 +1,14 @@
+import test from'node:test';import assert from'node:assert/strict';import{mkdtemp,writeFile,chmod,rm}from'node:fs/promises';import{tmpdir}from'node:os';import{join}from'node:path';
+import{knownRetirementDenial}from'../source/packages/storage-tiers/src/known-copy-evidence.mjs';
+import{createArchiveLifecycle}from'../source/packages/storage-tiers/src/archive-lifecycle.mjs';
+const ticket={state:'unknown',retirement_id:'2c52ea08-38cd-4e8f-a62c-4337450bef62',hot:{provider:'fixture',bucket:'test',key:'old',version_id:'v1'},cold:{provider:'fixture',bucket:'test',key:'new',version_id:'v2'}};
+test('only explicit matching private provider denial proves DELETE had no effect',async()=>{const directory=await mkdtemp(join(tmpdir(),'synthetic-denial-'));await chmod(directory,0o700);
+ try{const file=join(directory,ticket.retirement_id+'.jsonl'),dispatch={phase:'retire_dispatch',hot:ticket.hot,cold:ticket.cold};
+ const put=async row=>writeFile(file,[dispatch,row].map(JSON.stringify).join('\n')+'\n',{mode:0o600});
+ const read=knownRetirementDenial(directory,process.getuid());await put({phase:'retire_unknown',code:'provider_denied'});assert.equal(await read(ticket),true);
+ assert.equal(await read({...ticket,hot:{...ticket.hot,version_id:'different'}}),false);
+ await put({phase:'retire_unknown',code:'provider_outcome_unknown'});assert.equal(await read(ticket),false);
+ }finally{await rm(directory,{recursive:true,force:true});}});
+test('known denied operation becomes retryable while unknown timeout cannot authorize resend',async()=>{for(const denied of[true,false]){const phases=[];
+ const lifecycle=createArchiveLifecycle({provider:{},loadKnownRetirementDenial:async()=>denied,call:async(token,source,name,action,b)=>{phases.push(b.phase);if(b.phase==='status')return ticket;if(b.phase==='outcome'){assert.equal(b.outcome,'no_effect');return{...ticket,state:'pending'};}return{...ticket,state:denied?'pending':'unknown'};}});
+ const result=await lifecycle('synthetic-token',null,{},{switchOnly:true});assert.equal(result.state,denied?'pending':'unknown');assert.deepEqual(phases,denied?['status','outcome','switch']:['status','switch']);}});

@@ -1,0 +1,8 @@
+import {z} from 'zod';
+const uuid=z.uuid(),scope={project_id:uuid};
+export const textSchema=z.object({ ...scope, logical_path: z.string().min(1).max(1024), text: z.string().max(1500000), material_id: uuid.optional(), base_version_id: uuid.optional(), base_revision: z.number().int().nonnegative().optional(), properties: z.record(z.string(), z.unknown()).optional(), source: z.record(z.string(), z.unknown()).optional(), idempotency_key: z.string().min(1).max(200).optional() }).strict();
+export const readChunkSchema=z.object({ ...scope, material_id: uuid, version_id: uuid, offset: z.number().int().nonnegative().default(0), limit: z.number().int().min(1).max(131072).default(65536), encoding: z.enum(['utf8', 'base64']).default('utf8') }).strict();
+export const textResumeSchema=z.object({ ...scope, resume_id: uuid, material_id: uuid.optional(), base_version_id: uuid.optional(), base_revision: z.number().int().nonnegative().optional(), save_as_new: z.boolean().optional(), logical_path: z.string().min(1).max(1024).optional() }).strict();
+export const textQuerySchema=z.object({ ...scope, resume_id: uuid, material_id: uuid.optional() }).strict();
+export const textReadChunkSchema=z.object({ ...scope, resume_id: uuid, material_id: uuid.optional(), offset: z.number().int().nonnegative().default(0), limit: z.number().int().min(1).max(32768).default(32768) }).strict();
+export const agentInputContracts=[['/v2/materials/write-text',textSchema],['/v2/files/read-chunk',readChunkSchema],['/v2/materials/write-text/resume',textResumeSchema],['/v2/materials/write-text/query',textQuerySchema],['/v2/materials/write-text/read-chunk',textReadChunkSchema]];

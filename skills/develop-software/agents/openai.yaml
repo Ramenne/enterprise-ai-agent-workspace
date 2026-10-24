@@ -1,0 +1,6 @@
+interface:
+  display_name: "通用软件开发"
+  short_description: "按当前任务开发、修复、评审并验证真实软件能力"
+  default_prompt: "Use $develop-software to implement or review this software task with proportional architecture, relevant tests, and honest delivery status."
+policy:
+  allow_implicit_invocation: true

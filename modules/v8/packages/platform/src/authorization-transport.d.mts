@@ -1,0 +1,1 @@
+export function requestAuthorization(config:{hufuUrl:string;serviceKey:string},token:string,path:string,body:Record<string,unknown>,DomainError:new(code:string,status?:number,retryable?:boolean)=>Error,options?:{fetchImpl?:typeof fetch;timeoutMs?:number}):Promise<{handle:string;[key:string]:unknown}>;

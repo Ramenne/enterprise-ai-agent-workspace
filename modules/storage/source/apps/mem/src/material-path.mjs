@@ -1,0 +1,3 @@
+/** Mem owns exact active-path lookup; transport validation is defined once here. */
+export function materialPathContract(z){return{method:'POST',path:'/v2/materials/by-path',action:'mem.read',function:'find_material_paths',schema:z.object({project_id:z.uuid(),paths:z.array(z.string().min(1).max(1024)).min(1).max(2)}).strict()};}
+export function registerMaterialPath(app,{z,bearer,sourceFromRequest,call,DomainError}){const c=materialPathContract(z);app.post(c.path,async request=>{const parsed=c.schema.safeParse(request.body);if(!parsed.success)throw new DomainError('invalid_input');return call(bearer(request),sourceFromRequest(request),c.function,c.action,parsed.data);});}

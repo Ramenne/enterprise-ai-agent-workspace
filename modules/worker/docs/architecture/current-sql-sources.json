@@ -1,0 +1,97 @@
+{
+  "scope": "Current complete SQL definitions touched by the gateway, authorization and state-model optimization; not a whole-database catalog.",
+  "maintenance": "Follow project_id and path to the owning registered repository. Edit the complete current definition there; publish a guarded migration and update this index after verifying installation. Historical migrations are retained; do not execute a baseline or replay a completed migration to inspect current behavior.",
+  "source_of_truth": "The referenced owning source is authoritative; this index contains locations and verification evidence, not another SQL implementation.",
+  "verified_at": "2026-10-18T11:18:14.030Z",
+  "verification": "Verification is per entry. Prior four read-only source matches are retained. Three handle functions were replaced by a guarded registered migration; complete pg_proc metadata except prosrc, including owner/ACL/security/search_path, was asserted unchanged in the same transaction. This is not a whole-database verification.",
+  "entries": [
+    {
+      "owner": "hufu",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "signature": "vault2.custody_inventory(text,jsonb)",
+      "path": "source-schema-v1.2/resources--custody-migration.sql",
+      "definition_line": 20,
+      "body_md5": "c228717f66381213d8c15ceb87f28f9b",
+      "source_sha256": "89c0fe261f8aa68dbdbc0962f12511c4566dc718d20ec13d5aa440150ce86e5b",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T08:12:24.599Z",
+      "verification": "Read-only installed body MD5, SECURITY DEFINER and search_path assertion; retained from previous phase."
+    },
+    {
+      "owner": "mem",
+      "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+      "signature": "mem.find_material_paths(uuid,text,text)",
+      "path": "migrations/mem/20261018-exact-material-path.sql",
+      "definition_line": 8,
+      "body_md5": "45422e2b5f05bfd10cd6a38e927b4a2a",
+      "source_sha256": "d17a3cf8269a1b9f1a6191b10a1271f773089c2ac27203de020818978e9a6484",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T08:12:24.599Z",
+      "verification": "Read-only installed body MD5, SECURITY DEFINER and search_path assertion; retained from previous phase."
+    },
+    {
+      "owner": "mem",
+      "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+      "signature": "mem.description_vector_search(uuid,text,text)",
+      "path": "migrations/mem/20261018-description-search-ranked-authorization.sql",
+      "definition_line": 1,
+      "body_md5": "cd2702a73460bfa3d3701353e9234268",
+      "source_sha256": "2c817abf3ddbcf9c3a210f24b9b8669834e7fe9dee9b7c7e29489863d4d7c72a",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T08:12:24.599Z",
+      "verification": "Read-only installed body MD5, SECURITY DEFINER and search_path assertion; retained from previous phase."
+    },
+    {
+      "owner": "mem",
+      "project_id": "2a2817e6-2f04-42ff-a97b-56417c451af8",
+      "signature": "mem.workspace_query(uuid,text,text)",
+      "path": "migrations/mem/20261018-workspace-row-hydration.sql",
+      "definition_line": 2,
+      "body_md5": "759d1cae213ea6ff42d1ded4b24eb3cc",
+      "source_sha256": "91f09a5ea254cc18538b4703212465808d0bb6c69862894f28b0f69b6b06c5d2",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T08:12:24.599Z",
+      "verification": "Read-only installed body MD5, SECURITY DEFINER and search_path assertion; retained from previous phase."
+    },
+    {
+      "owner": "hufu",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "signature": "authz.issue_handle(text,text,text,jsonb,text,jsonb)",
+      "path": "migrations/hufu/20261018-resource-precision.sql",
+      "definition_line": 16,
+      "body_md5": "b5c4e7afd5ceef89d58ecffaf42de924",
+      "source_sha256": "dbdfa2b1b76ed5cae5eb63f454fc5d112c7e2a62c3b90b99839cc51c3f502784",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T11:18:14.030Z",
+      "verification": "Installed through guarded migration; all pg_proc metadata except body unchanged; exact file selector positive/negative, fixed bytes and revoked grant tested.",
+      "installation_operation_id": "a3172759-a8a0-4229-ac82-b95d5382a8ac"
+    },
+    {
+      "owner": "hufu",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "signature": "authz.consume_handle(uuid,text,text)",
+      "path": "migrations/hufu/20261018-resource-precision.sql",
+      "definition_line": 39,
+      "body_md5": "dd4d07d943a5919a17df79731f30c37c",
+      "source_sha256": "dbdfa2b1b76ed5cae5eb63f454fc5d112c7e2a62c3b90b99839cc51c3f502784",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T11:18:14.030Z",
+      "verification": "Installed through guarded migration; all pg_proc metadata except body unchanged; exact file selector positive/negative, fixed bytes and revoked grant tested.",
+      "installation_operation_id": "a3172759-a8a0-4229-ac82-b95d5382a8ac"
+    },
+    {
+      "owner": "hufu",
+      "project_id": "fbe863aa-824f-4688-a24d-bc3398754704",
+      "signature": "authz.assert_effect(uuid)",
+      "path": "migrations/hufu/20261018-resource-precision.sql",
+      "definition_line": 59,
+      "body_md5": "1946ba494d2694fe23b097267f8dd46b",
+      "source_sha256": "dbdfa2b1b76ed5cae5eb63f454fc5d112c7e2a62c3b90b99839cc51c3f502784",
+      "definition": "complete; no historical string substitution required",
+      "verified_at": "2026-10-18T11:18:14.030Z",
+      "verification": "Installed through guarded migration; all pg_proc metadata except body unchanged; exact file selector positive/negative, fixed bytes and revoked grant tested.",
+      "installation_operation_id": "a3172759-a8a0-4229-ac82-b95d5382a8ac"
+    }
+  ],
+  "historical_location": "Historical migrations remain in the owning repositories and implementation evidence in work #1000123."
+}

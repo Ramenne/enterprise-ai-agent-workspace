@@ -1,0 +1,1 @@
+import type{FastifyInstance}from'fastify';import type pg from'pg';export function installHufuUsage(app:FastifyInstance,options:{pool:pg.Pool;usagePool?:pg.Pool|undefined;memberAuth?:unknown;directory?:string|undefined}):void;

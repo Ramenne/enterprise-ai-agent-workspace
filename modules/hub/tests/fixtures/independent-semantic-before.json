@@ -1,0 +1,48 @@
+[
+  {
+    "label": "ordinary",
+    "ok": true
+  },
+  {
+    "label": "defaults",
+    "ok": true
+  },
+  {
+    "label": "boolean_top",
+    "ok": false,
+    "error_code": "invalid_query_options"
+  },
+  {
+    "label": "too_many",
+    "ok": false,
+    "error_code": "invalid_query_options"
+  },
+  {
+    "label": "utf8_budget",
+    "ok": false,
+    "error_code": "query_text_budget_exceeded"
+  },
+  {
+    "label": "whitespace",
+    "ok": false,
+    "error_code": "query_text_budget_exceeded"
+  },
+  {
+    "label": "compact_uuid",
+    "ok": true
+  },
+  {
+    "label": "unknown",
+    "ok": false,
+    "error_code": "invalid_input"
+  },
+  {
+    "label": "fixed",
+    "ok": true
+  },
+  {
+    "label": "newline_hash",
+    "ok": false,
+    "error_code": "invalid_fixed_reference"
+  }
+]
