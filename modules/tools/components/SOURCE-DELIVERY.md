@@ -1,11 +1,11 @@
-# FF AI客服与闲鱼管理实际源码协作入口
+# 工具业务模块公开范围
 
-本目录由杰按用户明确的YYY接手授权，从FF服务器2026-10-21实际源码取回，供FF和YYY在既有工具团队工程内读取、修改、提交和Git合并。
+本目录保留工具业务服务、知识／HTML／Skill／硬件网页及相关MCP适配源码，用于理解成员网页入口与Agent接口如何共用业务能力。
 
-- ai-customer/：来自FF服务器/opt/xianyu-lab/source，闲鱼自动回复、AI回复、多账号与商品业务源码。
-- accounts/：来自FF服务器/opt/xianyu/current，当前工具集与账号管理Node源码；保留原工具团队范围。
-- SOURCE-MANIFEST.json：原路径逐文件摘要；未携带Git历史，因此本次提交是实际快照导入基线，不冒充FF原始提交历史。
+- `accounts/`：账号非敏感资料及工具库相关Node实现，包括知识、报告、方法包和硬件记录等业务模块。
+- `tools-central-mcp/`：中枢工具接入相关源码。
+- 原导出包含的第三方AI客服整包未并入本平台仓库；电商客服项目单独发布并保留原许可。
 
-使用现有Hufu /v2/engineering/execute，project_id=69197d56-41b0-4c8b-ac19-181f63e87c1f。read/write/commit对应本工作区；command可在项目身份下执行git diff、git branch、git merge等。合并权限沿resource.write，不存在另外的Git托管站账号。
+这是脱敏源码快照，不包含原始生产环境、凭据、业务数据库、运行日志或原Git历史。原生产部署入口没有随目录重组而自动适配，不能把源码导出视为已完成新环境部署。
 
-FF原生产文件没有覆盖或重启。现有core build/deploy仍是旧python兼容入口，不能把它当作本目录Node/闲鱼源码发布；本次交付是源码协作，生产发布按实际产品资源继续接线。成员数据、Cookie、环境密钥、数据库、依赖、日志不包含在本快照中。
+业务结构与各入口的关系见根目录README及 `docs/tools-library.md`。
